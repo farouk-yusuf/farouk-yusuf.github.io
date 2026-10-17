@@ -1,0 +1,13 @@
+,value
+platform_TP01,64.6
+platform_TP01_prev,62.56865230249261
+large_median_TP01,64.6
+n_large,17
+platform_method,Telephone
+platform_sample,2316.0
+top_quartile,5
+bottom_quartile,7
+platform_mal_rate,38.0
+peer_mal_rate_median,56.5
+platform_mal_rank,1
+n_peers_om,21

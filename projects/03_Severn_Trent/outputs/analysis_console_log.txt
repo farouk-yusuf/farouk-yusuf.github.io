@@ -1,0 +1,64 @@
+   year  overflows_listed  with_spill_data  total_spills  total_hours  monitors_below_90pct  share_monitors_below_90pct  reliable_overflows  avg_spills_reliable  avg_hours_reliable  avg_spills_all  midlands_rain_mm  expected_from_rain
+0  2020              2288             2288       60982.0    558699.39                   456                        0.20                1832                27.04              260.69           26.65             927.3               24.86
+1  2021              2658             2412       59676.0    461127.69                   560                        0.23                1872                25.26              197.72           24.74             811.2               22.98
+2  2022              2466             2438       44765.0    249115.91                   720                        0.30                1737                19.42              105.46           18.36             721.4               21.52
+3  2023              2472             2421       60253.0    440446.19                   413                        0.17                2013                24.63              173.01           24.89             999.7               26.04
+4  2024              2459             2445       62085.0    454155.43                   215                        0.09                2233                25.11              180.30           25.39            1000.2               26.04
+5  2025              2452             2431       36471.0    200361.39                    90                        0.04                2342                15.01               82.46           15.00             716.6               21.45
+
+slope_spills_per_100mm                                                           1.620905
+intercept                                                                        9.831561
+r2_2020_24                                                                       0.478558
+expected_2025                                                                   21.446969
+actual_2025                                                                     15.011102
+gap_2025_pct                                                                   -30.008283
+fall_2024_25                                                                    10.098616
+fall_explained_by_rain                                                           4.596888
+share_explained_by_rain                                                            0.4552
+headline_total_spills_change_pct                                               -41.256342
+headline_hours_change_pct                                                      -55.882639
+rain_change_pct                                                                -28.354329
+dry_2022_rain                                                                       721.4
+dry_2022_avg                                                                    19.415083
+dry_2025_rain                                                                       716.6
+dry_2025_avg                                                                    15.011102
+dry_year_change_pct                                                            -22.683301
+share_below90_2022                                                               0.295324
+share_below90_2025                                                               0.037022
+national_change_2024_25_pct                                                    -35.401662
+england_rain_change_pct                                                        -23.039074
+panel_linked                                                                         2382
+panel_reliable_all3                                                                  1802
+persistent_high_n                                                                      74
+persistent_high_no_improvement                                                         17
+persistent_high_share_of_2025_spills                                             0.188588
+persistent_high_share_of_overflows                                               0.041065
+not_improving_n                                                                        65
+asset_type_of_persistent                {'Storm tank at WwTW': 33, 'SO on sewer networ...
+
+year              2022  2024  2025  change_2024_25_pct  change_2022_25_pct
+company                                                                   
+Anglian           15.3  30.6  12.0               -60.6               -21.1
+Thames            17.0  39.4  15.9               -59.7                -6.5
+Southern          17.8  30.2  16.0               -47.2               -10.2
+Wessex            18.5  33.9  18.3               -45.9                -0.9
+Dwr Cymru         23.3  41.1  23.3               -43.4                -0.1
+Severn Trent      18.4  25.4  15.0               -40.9               -18.3
+Northumbrian      20.3  26.3  17.9               -32.1               -12.0
+Yorkshire         25.6  31.4  23.6               -24.7                -7.8
+United Utilities  35.1  34.7  26.8               -22.7               -23.7
+South West        28.5  41.3  34.0               -17.6                19.5
+                                    site_name              receiving_water           asset_type  spills_2023  spills_2024  spills_2025  adj_2023  adj_2024  adj_2025  adj_mean  hours_2025                                              improvement_2025                                                                                         investigation_2025
+unique_id                                                                                                                                                                                                                                                                                                                                                          
+SVT02251      SUTTON ON TRENT (CROMWELL) WWTW                  RIVER TRENT   Storm tank at WwTW        177.0        237.0        125.0     177.0     237.0     152.0     189.0      1601.0                             Operational improvement completed                                           UWWTR investigation ongoing, Operational investigation completed
+SVT02076    SNARESTONE SEWAGE TREATMENT WORKS                  RIVER MEASE   Storm tank at WwTW        169.0        208.0        121.0     169.0     208.0     147.0     175.0      1969.0  UWWTR improvement ongoing, Operational improvement completed                                         UWWTR investigation completed, Operational investigation completed
+SVT00778   DONINGTON-LE-HEATH TOWNSEND LN CSO                  RIVER SENCE  SO on sewer network        256.0        135.0         74.0     256.0     135.0      90.0     160.0       294.0                     No improvement action in reporting period  Env Act (SODRP) investigation ongoing, UWWTR investigation completed, Operational investigation completed
+SVT00130                          ASHOVER STW                  RIVER AMBER     Inlet SO at WwTW        150.0        148.0        103.0     150.0     148.0     125.0     141.0       911.0                             Operational improvement completed                                           UWWTR investigation ongoing, Operational investigation completed
+SVT00150       AVENING SEWAGE TREATMENT WORKS            NAILSWORTH STREAM     Inlet SO at WwTW        118.0        154.0        113.0     118.0     154.0     137.0     136.0       759.0                             Operational improvement completed                                         UWWTR investigation completed, Operational investigation completed
+SVT00693                CROWLE-SCUNTHORPE STW  TRIBUTARY OF PAUPER'S DRAIN   Storm tank at WwTW        106.0        216.0         51.0     106.0     216.0      62.0     128.0       925.0                                   UWWTR improvement completed                                           UWWTR investigation ongoing, Operational investigation completed
+SVT01573        MILTON SEWAGE TREATMENT WORKS                  RIVER TRENT   Storm tank at WwTW        136.0        147.0         76.0     136.0     147.0      92.0     125.0       806.0                             Operational improvement completed                                         UWWTR investigation completed, Operational investigation completed
+SVT01511   MATLOCK BATH - DALE ROAD (COAL ME-                RIVER DERWENT  SO on sewer network        117.0        109.0        118.0     117.0     109.0     143.0     123.0       977.0                               Operational improvement ongoing                                         UWWTR investigation completed, Operational investigation completed
+SVT02635                        WORCESTER STW                 RIVER SEVERN   Storm tank at WwTW        122.0        150.0         68.0     122.0     150.0      83.0     118.0       975.0                     No improvement action in reporting period                                         UWWTR investigation completed, Operational investigation completed
+SVT01799    PITTS MILL SEWAGE TREATMENT WORKS                 GLYNCH BROOK   Storm tank at WwTW        110.0        179.0         51.0     110.0     179.0      62.0     117.0       907.0  UWWTR improvement ongoing, Operational improvement completed                                           UWWTR investigation ongoing, Operational investigation completed
+SVT00289      BLAKENEY SEWAGE TREATMENT WORKS                 RIVER SEVERN     Inlet SO at WwTW        127.0        130.0         77.0     127.0     130.0      93.0     117.0       452.0                     No improvement action in reporting period                                         UWWTR investigation completed, Operational investigation completed
+SVT00180       MALVERN SEWAGE TREATMENT WORKS                 RIVER SEVERN   Storm tank at WwTW        117.0        148.0         57.0     117.0     148.0      69.0     111.0       637.0                     No improvement action in reporting period                                         UWWTR investigation completed, Operational investigation completed
