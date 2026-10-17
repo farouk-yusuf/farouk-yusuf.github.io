@@ -28,6 +28,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 ### Editing and rebuilding
 
 - `site/projects.json`: project copy, facts, limitations and dashboard plans.
+- `site/about.json`: the agreed homepage introduction and the personal/professional timeline. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/resources.json`: the original GitHub write-up and download links.
 - `scripts/build_site.py`: shared HTML components, homepage/research copy and chart definitions. Uses only the Python standard library.
 - `assets/css/site.css`: shared layout, responsive styles, dark mode and print rules.
@@ -45,6 +46,8 @@ node --check assets/js/site.js
 For browser review, check all pages at desktop and narrow phone widths, keyboard navigation, the sector filters, theme persistence and the chart data disclosures. Also check the pages with JavaScript disabled. Do not treat build/link checks as validation of the original analytical calculations.
 
 ### Power BI and organisation logos
+
+The About timeline alternates on desktop and follows a single path on phones. Scroll reveals are optional: all text stays visible without JavaScript, with reduced motion, or when printing. To add the profile photo, put the user-provided image at `assets/images/headshot-3.jpg` (also supports `.jpeg`, `.png`, `.webp`) and rebuild. The photo is omitted until the file exists; do not substitute a generated portrait.
 
 The dashboards are planned work. When ready, add `assets/bcc-dashboard.png` and `assets/uhb-dashboard.png`, then rebuild. The original paths are preserved. Missing previews are omitted at build time; if a published image subsequently fails, JavaScript hides its container. No dashboard or deployment is implied by a placeholder.
 

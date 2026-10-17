@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
 RESOURCES = json.loads((ROOT / 'site/resources.json').read_text())
+ABOUT = json.loads((ROOT / 'site/about.json').read_text())
 OUTPUTS = {}
 EXTERNAL_ARROW = '<svg class="arrow-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10"/></svg>'
 
@@ -201,15 +202,47 @@ def project_card(project, index):
       <div class="card-body">{organisation(project)}<h3>{e(project['title'])}</h3><p>{e(project['summary'])}</p><div class="card-bottom"><div class="tags">{tags}</div><span>Read case study <span class="card-arrow" aria-hidden="true">↗</span></span></div></div></a>'''
 
 
+
+def about_section():
+    steps = []
+    for index, milestone in enumerate(ABOUT['milestones'], 1):
+        note = f'<p class="journey-note">{e(milestone["note"])}</p>' if milestone.get('note') else ''
+        steps.append(f'''<li class="journey-step journey-step--{e(milestone['kind'])}" data-journey-step>
+          <span class="journey-node" aria-hidden="true">{index:02d}</span>
+          <article class="journey-card"><div class="journey-date">{e(milestone['date'])}</div>
+          <span class="journey-chapter">{e(milestone['chapter'])}</span><h3>{e(milestone['title'])}</h3>
+          {paragraph(milestone['text'])}{note}</article>
+        </li>''')
+    portrait = ''
+    for extension in ('jpg', 'jpeg', 'png', 'webp'):
+        filename = f'assets/images/headshot-3.{extension}'
+        if (ROOT / filename).is_file():
+            portrait = f'<figure class="journey-portrait"><img src="{filename}" alt="Farouk Yusuf" width="400" height="500" loading="lazy"><figcaption>Farouk Yusuf · Birmingham, UK</figcaption></figure>'
+            break
+    return f'''<section class="section container" id="about">
+      <div class="journey-intro"><div><span class="eyebrow">03 / The person behind the projects</span>
+      <h2>How I got here.</h2><p>{e(ABOUT['opening'])}</p>
+      <a class="text-link" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Experience on LinkedIn ↗</a></div>{portrait}</div>
+      <p class="journey-invitation"><span aria-hidden="true">↓</span> Follow the chapters, from Nigeria to the next opportunity.</p>
+      <ol class="journey" aria-label="My personal and professional journey" data-journey>{''.join(steps)}</ol>
+      <div class="journey-work"><h3>Alongside the research.</h3><div class="journey-work-grid">
+        <article><span class="journey-chapter">NatCen · 2024–2025</span><h4>Listening in the field</h4><p>As an English Housing Survey interviewer, I achieved a 67% response rate against a 30% programme benchmark.</p></article>
+        <article><span class="journey-chapter">Outlier · Since March 2026</span><h4>Testing AI responses</h4><p>I write prompts designed to expose errors in language models and assess responses against guidelines.</p></article>
+        <article><span class="journey-chapter">uHired · Launched April 2026</span><h4>Building and measuring</h4><p>I co-founded a job-search platform that reached 1,025 users with no paid marketing, tracking usage through Google Analytics and Google Sheets.</p></article>
+      </div></div>
+    </section>'''
+
+
 def home():
     filters=''.join(f'<button type="button" data-filter="{e(s)}" aria-pressed="false">{e(s)}</button>' for s in ['Local government','Housing','Utilities','NHS'])
     cards=''.join(project_card(p,i) for i,p in enumerate(PROJECTS))
+    intro_html=''.join(paragraph(text) for text in ABOUT['introduction'])
     hero_chart=bars(['March 2026','August 2026'],[89544,96303],maximum=125000,compact=True)
     content=f'''<main id="main">
     <section class="hero container"><div class="hero-grid"><div>
       <div class="availability">Birmingham, UK · Open to analyst opportunities</div>
       <h1>Good analysis starts with <em>a closer look.</em></h1>
-      <p class="intro">I’m Farouk, a researcher moving into data and performance analysis. I work with messy public data to explain what changed, check what can be trusted, and give teams a useful next step.</p>
+      <div class="intro">{intro_html}</div>
       <div class="actions"><a class="button" href="#projects">Explore my work <span aria-hidden="true">↗</span></a><a class="text-link" href="#about">A little about me →</a></div>
       <p class="hero-note">SQL · Python · Excel · Power BI · A research background that makes me question the first answer.</p>
     </div><aside class="evidence-card" aria-label="A finding from my NHS analysis"><div class="paper"><div class="paper-top"><span>A closer look / 04</span><span>NHS performance</span></div><h2>A recovery worth protecting.</h2>{hero_chart}<p class="paper-note">UHB’s waiting list grew 7.5% after March. I looked at referrals and completed pathways to understand the pressure.</p><a class="text-link" href="case-studies/uhb-waiting-times.html">Read the analysis →</a></div><div class="evidence-footer"><span>Public data. Independent analysis.</span><span>Apr 2023–Aug 2026</span></div></aside></div></section>
@@ -217,7 +250,7 @@ def home():
     <section class="section container" id="projects"><div class="section-heading"><div><span class="eyebrow">01 / Selected work</span><h2>Behind the headline number.</h2></div><p>Four independent projects on UK public data. Each follows a question through to a practical recommendation.</p></div>
     <div class="filter-row" data-project-filters role="group" aria-label="Filter projects by sector" hidden><button type="button" data-filter="all" aria-pressed="true">All projects</button>{filters}</div><p class="sr-only" data-filter-status role="status" aria-live="polite">4 projects shown</p><div class="project-grid">{cards}</div><p class="project-caption">Each case study includes methods, limitations and the original analysis files. Power BI dashboards are being developed separately.</p></section>
     <section class="section container" id="research"><div class="research-feature"><div><span class="eyebrow">02 / Research that shaped my approach</span><h2>The disagreement changed my research.</h2><p>During my PhD, I tested human and AI coding before applying it to a corpus of 29,182 cleaned social media posts about leaving Nigeria.</p><p class="quote">The average looked reassuring. The question-level breakdown told a more complicated story.</p><p>I investigated disagreements, revised the coding rules and set aside a finer scheme when the pilot proved unstable.</p><div class="actions"><a class="button" href="case-studies/research-validation.html">Explore the research <span aria-hidden="true">↗</span></a></div></div><div class="research-proof"><div class="proof-line"><strong>Test the measurement.</strong><span>A question had drifted from the theory it was meant to capture.</span></div><div class="proof-line"><strong>Make the workflow usable.</strong><span>I built a coding app with saved progress and CSV export.</span></div><div class="proof-line"><strong>Keep the uncertainty visible.</strong><span>Some questions performed poorly despite strong overall agreement.</span></div></div></div></section>
-    <section class="section container" id="about"><div class="about-grid"><div class="about-copy"><span class="eyebrow">03 / A little about me</span><h2>Curiosity, fieldwork<br>and a habit of checking.</h2><p>I’m completing a PhD in International Development at the University of Birmingham, with my viva pending. My research examines why skilled Nigerians migrate to the UK.</p><p>I taught myself Python during the PhD and learned SQL for the council payments project. I enjoy the point where a technical check changes the explanation you would give someone.</p><p>I’m interested in analyst roles in performance reporting, data quality and public-service insight. My toolkit includes SQL, Python, Excel and Power BI, alongside research design and communicating with different audiences.</p><div class="actions"><a class="text-link" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Experience on LinkedIn ↗</a></div></div><ul class="experience-list"><li><small>Communication / NatCen</small><strong>English Housing Survey interviewer</strong><p>Achieved a 67% response rate against a 30% programme benchmark, September 2024–January 2025.</p></li><li><small>Learning / Research and technical training</small><strong>From social research to analytical tools</strong><p>MA Social Research, MSc with Distinction, Oxford’s ESRC-funded LLM Spring School, and a Data and AI Skills Bootcamp.</p></li><li><small>Building / uHired</small><strong>Co-founded a job-search platform</strong><p>1,025 users since its April 2026 launch, with no paid marketing. I tracked usage with Google Analytics and Google Sheets.</p></li><li><small>Evaluation / Outlier</small><strong>Testing language-model responses</strong><p>Since March 2026, I have written prompts designed to expose errors and assessed responses against guidelines.</p></li></ul></div></section>
+    {about_section()}
     <section class="section container" id="contact"><div class="contact"><div><span class="eyebrow">Let’s talk</span><h2>Bring a closer look to your team.</h2><p>I’m open to data analyst, performance and insight opportunities.</p></div><div><p><a href="mailto:faroukyusuf.code@gmail.com">faroukyusuf.code@gmail.com</a></p><div class="actions"><a class="button" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Connect on LinkedIn <span aria-hidden="true">↗</span></a></div></div></div></section>
     </main>'''
     emit('index.html', document('Data & performance analyst portfolio','Farouk Yusuf, Birmingham-based researcher moving into data analysis. Explore independent SQL, Python and Excel projects in NHS performance, housing, utilities and council finance.',content))
