@@ -1,319 +1,1200 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-GB">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Farouk Yusuf Portfolio</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Data analyst portfolio: four projects on UK public data covering council spend, social housing, water and NHS waiting times.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-/* Layout: a statistical-bulletin page. One reading column, each project a numbered "release" with a figure, key numbers and links to the work. */
-:root {
-  --bg: #f7f8fa;
-  --surface: #ffffff;
-  --ink: #17202b;
-  --muted: #566170;
-  --rule: #d9dee5;
-  --accent: #1d4e89;
-  --accent-soft: #e6eef8;
-  --good: #2f6b3a;
-  --bad: #a3382c;
-  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --font-body: "Public Sans", "Segoe UI", Arial, sans-serif;
-  --font-data: "IBM Plex Mono", Consolas, "Courier New", monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #11161d; --surface: #18202a; --ink: #e7ecf2; --muted: #9aa6b4; --rule: #2b3643;
-    --accent: #8db7ea; --accent-soft: #1c2c40; --good: #7dc08a; --bad: #e48a7d; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #11161d; --surface: #18202a; --ink: #e7ecf2; --muted: #9aa6b4; --rule: #2b3643;
-  --accent: #8db7ea; --accent-soft: #1c2c40; --good: #7dc08a; --bad: #e48a7d; color-scheme: dark;
-}
-* { box-sizing: border-box; }
-body {
-  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 1rem; line-height: 1.6;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.wrap { max-width: 860px; margin: 0 auto; padding-block: 2.5rem 4rem; display: flex; flex-direction: column; gap: 3rem; }
-a { color: var(--accent); text-underline-offset: 2px; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
-h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
-h2 { font-size: clamp(1.4rem, 3.4vw, 1.75rem); }
-h3 { font-size: 1.05rem; font-family: var(--font-body); font-weight: 600; }
-p { margin: 0; max-width: 65ch; }
-.label { font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farouk Yusuf | Data & Performance Analyst Portfolio</title>
+  <meta name="description" content="Portfolio of Farouk Yusuf: requirement elicitation, data validation, SQL, Python and Power BI reporting across local government, social housing, regulated utilities and the NHS.">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-alt: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --accent: #0f4c81;
+      --accent-soft: #e0f2fe;
+      --amber-bg: #fef3c7;
+      --amber-text: #92400e;
+      --green-bg: #dcfce7;
+      --green-text: #166534;
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --radius: 10px;
+    }
 
-header { display: flex; flex-direction: column; gap: 1rem; border-bottom: 2px solid var(--ink); padding-bottom: 1.75rem; }
-.role { font-size: 1.15rem; color: var(--muted); margin-top: -.4rem; }
-.links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .95rem; }
-.links span { color: var(--muted); }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1120;
+        --surface: #111827;
+        --surface-alt: #1e293b;
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --border: #1e293b;
+        --accent: #38bdf8;
+        --accent-soft: #0c4a6e;
+        --amber-bg: #451a03;
+        --amber-text: #fde68a;
+        --green-bg: #052e16;
+        --green-text: #86efac;
+        --red-bg: #450a0a;
+        --red-text: #fca5a5;
+        --shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      }
+    }
 
-.index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--rule); }
-.index a { display: flex; flex-direction: column; gap: .35rem; padding: 1rem 1rem 1.1rem 0; border-bottom: 1px solid var(--rule); text-decoration: none; color: var(--ink); }
-.index a:nth-child(odd) { padding-right: 1.25rem; border-right: 1px solid var(--rule); }
-.index a:nth-child(even) { padding-left: 1.25rem; }
-.index a:hover h3 { color: var(--accent); text-decoration: underline; }
-.index .num { font-family: var(--font-data); font-size: .8rem; color: var(--accent); }
-.index p { font-size: .92rem; color: var(--muted); }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-section.project { display: flex; flex-direction: column; gap: 1.25rem; scroll-margin-top: 1.5rem; }
-.project-head { display: flex; flex-direction: column; gap: .4rem; border-top: 1px solid var(--rule); padding-top: 1.5rem; }
-.tools { font-family: var(--font-data); font-size: .8rem; color: var(--muted); }
-.task { font-size: 1.02rem; }
-.keyfigs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-.keyfigs div { background: var(--surface); padding: .9rem 1rem; display: flex; flex-direction: column; gap: .25rem; min-width: 0; }
-.keyfigs b { font-family: var(--font-data); font-size: 1.35rem; font-weight: 500; font-variant-numeric: tabular-nums; }
-.keyfigs span { font-size: .85rem; color: var(--muted); line-height: 1.4; }
-ul.findings { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .5rem; max-width: 70ch; }
-figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); padding: 1rem; display: flex; flex-direction: column; gap: .6rem; }
-figcaption { font-size: .85rem; color: var(--muted); }
-.chart { position: relative; height: 280px; width: 100%; }
-.dash img { width: 100%; height: auto; border: 1px solid var(--rule); }
-.more { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .92rem; }
-.check { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: .75rem 1rem; font-size: .95rem; max-width: 70ch; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.about { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; border-top: 2px solid var(--ink); padding-top: 1.75rem; }
-.about dl { margin: 0; display: grid; gap: .6rem; font-size: .92rem; }
-.about dt { font-weight: 600; }
-.about dd { margin: 0; color: var(--muted); }
-footer { font-size: .85rem; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 1rem; }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-@media (max-width: 640px) {
-  .index { grid-template-columns: minmax(0, 1fr); }
-  .index a:nth-child(odd) { border-right: 0; padding-right: 0; }
-  .index a:nth-child(even) { padding-left: 0; }
-  .keyfigs { grid-template-columns: minmax(0, 1fr); }
-  .about { grid-template-columns: minmax(0, 1fr); }
-  .chart { height: 240px; }
-}
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
-</style>
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* Top Navigation */
+    header.site-nav {
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 0;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .headshot-wrap {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--border);
+      background: var(--surface-alt);
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .headshot-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%);
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-lead {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+      max-width: 78ch;
+    }
+
+    .contact-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      margin-top: 1.1rem;
+      font-size: 0.9rem;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-block;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Section Scaffolding */
+    section {
+      padding: 2.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-eyebrow {
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    h2.section-title {
+      font-size: 1.5rem;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      max-width: 76ch;
+    }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .four-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .behaviour-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .behaviour-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.45rem;
+      color: var(--text);
+    }
+
+    .behaviour-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* KPI Strip */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .kpi-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 0.9rem;
+    }
+
+    .kpi-val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .kpi-lbl {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--surface-alt);
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-amber { background: var(--amber-bg); color: var(--amber-text); }
+    .badge-green { background: var(--green-bg); color: var(--green-text); }
+    .badge-red { background: var(--red-bg); color: var(--red-text); }
+
+    /* Project Case Study Blocks */
+    .project-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .audience-tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .project-block h3 {
+      font-size: 1.28rem;
+      line-height: 1.32;
+      margin-bottom: 0.85rem;
+      color: var(--text);
+    }
+
+    .project-body p {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-body ul, .project-body ol {
+      padding-left: 1.2rem;
+      margin-bottom: 0.85rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .project-body li {
+      margin-bottom: 0.35rem;
+    }
+
+    .project-body strong {
+      color: var(--text);
+    }
+
+    .chart-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .chart-title {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .canvas-holder {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    .dashboard-preview {
+      margin-top: 1.1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .dashboard-preview img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.1rem;
+      margin-top: 1.1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.86rem;
+    }
+
+    details.method-drawer {
+      margin-top: 0.75rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.86rem;
+    }
+
+    details.method-drawer summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    details.method-drawer p {
+      margin-top: 0.5rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    footer {
+      padding: 2.25rem 0;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+      .headshot-wrap {
+        width: 115px;
+        height: 115px;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 {
+        font-size: 1.65rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="wrap">
-  <header>
-    <span class="label">Portfolio</span>
-    <h1>Farouk Yusuf</h1>
-    <p class="role">Data analyst, Birmingham</p>
-    <p>I use SQL, Python, Excel and Power BI to clean and check data, analyse it and produce performance reports. My background is in social research and product development. Below are four projects built on data published by Birmingham City Council, the Regulator of Social Housing, the Environment Agency and NHS England, each written up as the task an analyst in that organisation would be given.</p>
-    <div class="links">
-      <a href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io" target="_blank" rel="noopener">Code on GitHub</a>
-      <span>faroukyusuf.code@gmail.com</span>
+  <!-- Top Navigation -->
+  <header class="site-nav">
+    <div class="container nav-inner">
+      <div class="brand">Farouk Yusuf</div>
+      <nav class="nav-links">
+        <a href="#phd-case-study">Model Validation</a>
+        <a href="#my-approach">My Approach &amp; QA</a>
+        <a href="#projects">Sector Case Studies</a>
+        <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io" target="_blank" rel="noopener">GitHub Repo</a>
+      </nav>
     </div>
   </header>
 
-  <nav aria-label="Projects">
-    <div class="index">
-      <a href="#council-spend"><span class="num">01 · Local government</span><h3>Spend and payment controls</h3><p>Birmingham City Council: monthly spend, variance and payment exceptions.</p></a>
-      <a href="#tenant-satisfaction"><span class="num">02 · Social housing</span><h3>Tenant satisfaction benchmarking</h3><p>Platform Housing Group: annual board report against peer landlords.</p></a>
-      <a href="#storm-overflows"><span class="num">03 · Water</span><h3>Storm overflow performance pack</h3><p>Severn Trent: annual return checks and exception lists.</p></a>
-      <a href="#waiting-times"><span class="num">04 · NHS</span><h3>Elective waiting times report</h3><p>University Hospitals Birmingham: monthly performance against national targets.</p></a>
-    </div>
-  </nav>
+  <main class="container">
 
-  <!-- 01 -->
-  <section class="project" id="council-spend">
-    <div class="project-head">
-      <span class="label">01 · Local government</span>
-      <h2>Spend and payment controls: Birmingham City Council</h2>
-      <span class="tools">SQL · Python · Excel · Power BI</span>
-    </div>
-    <p class="task"><strong>The task.</strong> Produce the monthly spend report for finance, explain this year's variance against last year, and give accounts payable a list of payments to check.</p>
-    <div class="keyfigs">
-      <div><b>247,785</b><span>payment records, July 2024 to July 2026 (£3.9bn)</span></div>
-      <div><b>£4.45m</b><span>in 281 possible duplicate payments flagged for checking</span></div>
-      <div><b>213</b><span>payments to individuals that could be re-identified despite redaction</span></div>
-    </div>
-    <figure>
-      <div class="chart"><canvas id="c-spend" aria-label="Bar chart of monthly council spend"></canvas></div>
-      <figcaption>Payments over £500 by month, £ million, net of credits. July 2026 runs to the 23rd.</figcaption>
-    </figure>
-    <ul class="findings">
-      <li>Built a SQL star-schema database and the monthly spend and year-to-date variance report by directorate. Year-to-date spend is 21% above last year, mainly because of the timing of payments on the highways PFI contract.</li>
-      <li>Agency staff cost £101m in 2025/26 and is up 29% year to date, with one agency taking 84% of it.</li>
-      <li>Flagged 281 possible duplicate payments (the same one-off amount to the same supplier within three days) and 260 suppliers held under more than one supplier record.</li>
-      <li>The council redacts individuals' names but still publishes their supplier numbers. Twelve of those numbers also appear with a name, so 213 payments can be re-identified. I pseudonymised them and wrote the issue up for information governance.</li>
-    </ul>
-    <figure class="dash">
-      <img src="assets/bcc-dashboard.png" alt="Power BI dashboard showing council spend by directorate and month, top suppliers, agency staff costs and payment exceptions" onerror="this.closest('figure').hidden = true">
-      <figcaption>Power BI dashboard built on the star-schema model.</figcaption>
-    </figure>
-    <div class="more">
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/01_BCC_Payments/outputs/00_Management_Summary.md" target="_blank" rel="noopener">Management summary</a>
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/01_BCC_Payments/sql" target="_blank" rel="noopener">SQL queries</a>
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/01_BCC_Payments" target="_blank" rel="noopener">Code and Excel pack</a>
-    </div>
-  </section>
+    <!-- 1. Personal Opening -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="headshot-wrap">
+          <img src="Headshot.jpeg" alt="Farouk Yusuf" onerror="if(this.src.indexOf('assets/')===-1){this.src='assets/Headshot.jpeg';}else{this.parentElement.style.display='none';}">
+        </div>
+        <div>
+          <h1>Farouk Yusuf</h1>
+          <p class="hero-lead">
+            I research why skilled migrants move to the UK, and I build public-sector analysis where the first number on the page is rarely the full story.
+          </p>
+          <p>
+            I am finishing my PhD in International Development at the University of Birmingham (viva pending), following an MSc with Distinction, an MA in Social Research, and a First Class BSc in Geography. Across my doctoral research and my work as a Social Research Interviewer for NatCen on the English Housing Survey, I learned that clean spreadsheets often sit on top of shifting definitions, missing fields and human recording habits.
+          </p>
+          <p>
+            I taught myself Python during my PhD to clean text data, learned SQL to structure 247,785 council payment lines, and completed the ESRC-funded Oxford Spring School in Large Language Models alongside a Data and AI Skills Bootcamp covering Power BI, Power Automate and data governance. I focus on requirement elicitation, data quality auditing and performance reporting for local government, social housing, regulated utilities and the NHS.
+          </p>
+          <div class="contact-bar">
+            <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io" target="_blank" rel="noopener">GitHub Code &amp; Packs</a>
+            <a href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">LinkedIn</a>
+            <span>Email: <strong>faroukyusuf.code@gmail.com</strong></span>
+          </div>
+          <div class="contact-bar" style="margin-top: 0.75rem;">
+            <span class="pill">Requirement Elicitation</span>
+            <span class="pill">Data Governance &amp; QA</span>
+            <span class="pill">SQL &amp; Star Schemas</span>
+            <span class="pill">Python (pandas, NumPy)</span>
+            <span class="pill">Power BI &amp; Excel</span>
+            <span class="pill">ArcGIS</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- 02 -->
-  <section class="project" id="tenant-satisfaction">
-    <div class="project-head">
-      <span class="label">02 · Social housing</span>
-      <h2>Tenant satisfaction benchmarking: Platform Housing Group</h2>
-      <span class="tools">Python · Excel</span>
-    </div>
-    <p class="task"><strong>The task.</strong> Prepare the annual Tenant Satisfaction Measures report for the board: how Platform compares with similar landlords, where to focus, and whether the data can be trusted.</p>
-    <div class="keyfigs">
-      <div><b>64.6%</b><span>overall satisfaction, exactly at the median of 17 large housing associations</span></div>
-      <div><b>38%</b><span>Ombudsman maladministration rate, lowest of 21 Midlands landlords (median 57%)</span></div>
-      <div><b>6 of 12</b><span>satisfaction measures in the bottom quartile, mostly communication and neighbourhoods</span></div>
-    </div>
-    <figure>
-      <div class="chart"><canvas id="c-tsm" aria-label="Bar chart of Platform's gap to the large landlord median for each satisfaction measure"></canvas></div>
-      <figcaption>Platform's tenant satisfaction measures against the median large housing association (40,000+ homes), percentage points, 2024/25.</figcaption>
-    </figure>
-    <ul class="findings">
-      <li>Benchmarked all 22 measures against two peer groups. Large landlords score lower across the sector, so they are the fair comparison.</li>
-      <li>Set three priorities by combining Platform's gaps with the measures most closely linked to overall satisfaction: listening and acting on tenants' views, keeping tenants informed, and keeping homes well maintained.</li>
-      <li>Extracted complaint outcomes from 21 Housing Ombudsman PDF reports with a script, and checked that category totals reconcile with the headline figures.</li>
-    </ul>
-    <p class="check"><strong>Caught before the board saw it.</strong> Non-emergency repairs in target appeared to fall from 92% to 62%. The underlying counts showed the number of repairs recorded had fallen from 90,250 to 13,872 with the same 28-day target, which points to a change in how repairs were counted, not a fall in performance.</p>
-    <div class="more">
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/02_Platform_Housing/outputs/00_Board_Summary.md" target="_blank" rel="noopener">Board summary</a>
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/02_Platform_Housing" target="_blank" rel="noopener">Code and Excel pack</a>
-    </div>
-  </section>
+    <!-- 2. Centrepiece PhD Case Study -->
+    <section id="phd-case-study">
+      <div class="section-eyebrow">Centrepiece Case Study &bull; Automated Text Classification Audit</div>
+      <h2 class="section-title">Overall agreement reached 90.8%, until the question-by-question breakdown exposed where the coding failed.</h2>
+      <p class="section-sub">
+        Before using OpenAI and Google Gemini models to classify 29,182 cleaned social media posts across ten binary questions (Q0–Q9), I ran a two-stage validation benchmark on 500 posts (a 100-post pilot followed by 400 posts) against two human coders.
+      </p>
 
-  <!-- 03 -->
-  <section class="project" id="storm-overflows">
-    <div class="project-head">
-      <span class="label">03 · Water</span>
-      <h2>Storm overflow performance pack: Severn Trent Water</h2>
-      <span class="tools">Python · Excel</span>
+      <div class="card two-col">
+        <div class="project-body">
+          <div class="kpi-row">
+            <div class="kpi-box">
+              <div class="kpi-val">29,182</div>
+              <div class="kpi-lbl">Cleaned posts in corpus</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-val">0.807</div>
+              <div class="kpi-lbl">Model–human alpha (90.8%)</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-val">0.758</div>
+              <div class="kpi-lbl">Human–human alpha (88.5%)</div>
+            </div>
+          </div>
+
+          <p>
+            <strong>The headline trap:</strong> Judged solely by the overall average, both the human coders (Krippendorff's alpha 0.758) and the language models (alpha 0.807) cleared the 0.70 reliability target. Stopping there would have let bad data through.
+          </p>
+          <p>
+            <strong>What the breakdown showed:</strong> Human coders disagreed systematically on four of the ten questions (Q1, Q3, Q7 and Q8), dropping to an alpha of <strong>0.484 on Q7</strong>. Model-to-human reliability dropped to <strong>0.445 on Q9</strong>. On <strong>Q3 (spatial horizon)</strong>, raw agreement hit 99.7% but alpha was <strong>0.000</strong>: almost every post was a "no", so extreme prevalence made chance agreement near total.
+          </p>
+          <p>
+            <strong>Requirement elicitation &amp; redesign:</strong> Auditing the disagreements showed Q3 had drifted from the concept it was meant to measure. I rewrote the classification rules across iterations from v1.1 to v3.3, built a custom web app to present one question at a time with saved progress and CSV exports, and set aside a finer 40-post instance-level pilot after testing showed it was unstable.
+          </p>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0;">
+            <em>Note: Unpublished thesis validation results; exact figures subject to supervisor sign-off prior to formal publication.</em>
+          </p>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-title">Headline vs. Weakest Question Reliability (Krippendorff's Alpha, n = 500)</div>
+          <div class="canvas-holder">
+            <canvas id="phdChart"></canvas>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.6rem;">
+            Both human and model averages pass the 0.70 threshold, but single-question audits expose where definitions fail.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. My Approach & Show-Don't-Tell Validation Table -->
+    <section id="my-approach">
+      <div class="section-eyebrow">My Approach &bull; Requirement Elicitation &amp; Data Quality</div>
+      <h2 class="section-title">Tools are the baseline. Here is how I scope, validate and challenge numbers.</h2>
+      <p class="section-sub">
+        Every project in this portfolio starts with a written requirements brief and a decision log before any chart is built.
+      </p>
+
+      <div class="four-grid">
+        <div class="behaviour-card">
+          <h3>1. Requirement Elicitation</h3>
+          <p>
+            I start by defining who reads the output and what decision they face—separating Accounts Payable control checks from Information Governance risks in council data, or matching peer group scale before briefing a housing board.
+          </p>
+        </div>
+        <div class="behaviour-card">
+          <h3>2. Questioning Unusual Swings</h3>
+          <p>
+            When a metric jumps or collapses, I check the denominator and collection rules first. Since March 2026 I have also worked as an AI model evaluator for Outlier, writing prompts designed to expose logic errors in language models.
+          </p>
+        </div>
+        <div class="behaviour-card">
+          <h3>3. Self-Taught Technical Build</h3>
+          <p>
+            When manual coding slowed my research, I built a web app to run it. To analyse public spending and Ombudsman PDFs, I taught myself SQL star-schema modelling and Python extraction scripts.
+          </p>
+        </div>
+        <div class="behaviour-card">
+          <h3>4. Clear Communication</h3>
+          <p>
+            On NatCen's English Housing Survey I achieved a 67% household response rate against a 30% programme benchmark. In April 2026 I co-founded uHired, reaching 1,025 users with zero paid marketing, tracked via Google Analytics and Sheets.
+          </p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.12rem; margin-bottom: 0.4rem;">Show, Don't Tell: Validation Traps Caught Across These Projects</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Real administrative data rarely arrives ready to chart. Below are five examples from this repository where accepting the first query output would have misled decision-makers.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Project &amp; Check</th>
+              <th>What the Raw Output Showed (Before)</th>
+              <th>The Validation Error Found</th>
+              <th>How I Cleaned &amp; Reported It (After)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>BCC Payments</strong><br><span class="badge badge-amber">Duplicate Control</span></td>
+              <td><strong>6,553 pairs</strong> of identical payments (£1,000+) to the same supplier within 3 days.</td>
+              <td>Adult Social Care providers bill identical package rates for different residents, flooding standard duplicate rules with false positives.</td>
+              <td>Added an "appears exactly twice in two years" rule to isolate one-off amounts paid twice: <strong>281 pairs (£4.45m)</strong>, including <strong>73 same-day pairs</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>BCC Payments</strong><br><span class="badge badge-red">GDPR &amp; Restructure</span></td>
+              <td>Council Management spend "fell 100%", and <strong>7,681 individual payments (£24.5m)</strong> had redacted names.</td>
+              <td>A Sept 2025 restructure moved budgets across corporate directorates. Redacted rows still published supplier numbers, and <strong>12 numbers appeared with names elsewhere (213 payments)</strong>.</td>
+              <td>Mapped 18 source directorate names into stable groups, and <strong>one-way pseudonymised</strong> individual supplier IDs so spend totals reconcile safely.</td>
+            </tr>
+            <tr>
+              <td><strong>Platform Housing</strong><br><span class="badge badge-amber">Pre-Board Check</span></td>
+              <td>Non-emergency repairs in target dropped from <strong>92% to 62%</strong>; ASB cases rose from <strong>33 to 118 per 1,000 homes</strong>.</td>
+              <td>Total non-emergency repairs counted fell 85% (<strong>90,250 to 13,872</strong>) under the same 28-day target, pointing to a recording change rather than service collapse.</td>
+              <td>Held both figures—plus Stage 1 complaints rising from <strong>43 to 73 per 1,000 homes</strong>—out of the headline narrative for internal verification before board sign-off.</td>
+            </tr>
+            <tr>
+              <td><strong>Severn Trent</strong><br><span class="badge badge-green">Sensor &amp; Weather Bias</span></td>
+              <td>Headline storm spills fell <strong>41%</strong> (62,085 to 36,471) across changing monitor counts (2,288 to 2,452).</td>
+              <td>Broken monitors (<90% uptime) record fewer spills because they miss events, and 2025 Midlands rainfall was <strong>28% lower</strong> (717 mm vs 1,000 mm).</td>
+              <td>Restricted trend comparisons to monitors working <strong>&ge;90% of the year</strong> and compared 2025 against 2022 (721 mm rainfall), showing a <strong>23% underlying drop</strong> per overflow.</td>
+            </tr>
+            <tr>
+              <td><strong>UHB Waiting Times</strong><br><span class="badge badge-red">Schema &amp; Forecast Audit</span></td>
+              <td>First Python run returned a <strong>waiting list of 0</strong>; time-series models missed the March 2026 turn (6–8% back-test error).</td>
+              <td>In NHS England Part 2 extracts, the <code>Total</code> column is blank and only <code>Total All</code> is populated. Standard models failed when referrals jumped.</td>
+              <td>Summed weekly time bands directly (<strong>96,303 patients</strong>) and reported that a 'no change' baseline beat the models (2.5% error), framing March 2027 as a scenario.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. Four Sector Case Studies -->
+    <section id="projects">
+      <div class="section-eyebrow">Four Sector Case Studies &bull; Under 30 Seconds Each</div>
+      <h2 class="section-title">Analysis written for the people who have to act on it.</h2>
+      <p class="section-sub">
+        Each project is tailored to a specific public-sector or regulated-industry audience, leading with the finding that requires action.
+      </p>
+
+      <!-- Project 1: BCC Payments (Audit & Exception Briefing Layout) -->
+      <article class="project-block">
+        <div class="project-meta">
+          <span class="audience-tag">Audience: Finance Team, Accounts Payable &amp; Information Governance</span>
+          <span class="pill">SQL &bull; Python &bull; Excel &bull; Power BI</span>
+        </div>
+        <h3>Birmingham City Council: 281 possible duplicate payments worth £4.45m and 213 redacted payments that can still be re-identified.</h3>
+
+        <div class="kpi-row">
+          <div class="kpi-box">
+            <div class="kpi-val">£1.81bn</div>
+            <div class="kpi-lbl">FY2025/26 outturn (110,426 payments)</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-val">£4.45m</div>
+            <div class="kpi-lbl">281 possible duplicate pairs (73 same-day)</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-val">£101m</div>
+            <div class="kpi-lbl">FY25/26 agency spend (+29% YTD; 84% Hays)</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-val">260</div>
+            <div class="kpi-lbl">Suppliers under multiple supplier numbers</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="project-body">
+            <p>
+              <strong>The question:</strong> Across 247,785 payments over £500 (£3.87bn from July 2024 to 23 July 2026), where are the immediate payment control risks and what is driving the 21% year-to-date spend increase (£677m vs £559m from 1 Apr to 23 Jul)?
+            </p>
+            <p>
+              <strong>What matters most:</strong> First, the YTD jump is heavily driven by Birmingham Highways PFI timing (£88m paid this year vs £21m last year, partly offset by a £12m credit), while 35% of FY2025/26 spend sits under a generic "PO accrual" label. Second, 260 suppliers appear under multiple accounts (such as "T C Training Ltd" and "T.C. Training Limited"), and 281 one-off payments (£1,000+) were paid twice within three days. Third, 7,681 redacted payments to individuals (£24.5m) still publish supplier numbers, and 12 of those numbers appear with names elsewhere in the file.
+            </p>
+            <p>
+              <strong>What I recommend:</strong>
+            </p>
+            <ol>
+              <li><strong>Accounts Payable:</strong> Check the 281 possible duplicate pairs against invoice references in the finance system, starting with the 73 same-day pairs, and merge the 260 duplicate supplier records.</li>
+              <li><strong>City Operations:</strong> Confirm the Birmingham Highways PFI payment schedule before reporting the YTD position.</li>
+              <li><strong>Information Governance:</strong> Stop publishing supplier numbers on redacted individual payments (all IDs are pseudonymised in my outputs).</li>
+            </ol>
+          </div>
+
+          <div class="chart-box">
+            <div class="chart-title">Monthly Council Spend (£m), Jul 2024 – 23 Jul 2026</div>
+            <div class="canvas-holder">
+              <canvas id="bccChart"></canvas>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+              Adult Social Care &amp; Health is 28% of FY25/26 spend; top 10 suppliers receive 40% of outflow.
+            </p>
+          </div>
+        </div>
+
+        <div class="dashboard-preview">
+          <img src="assets/bcc-dashboard.png" alt="Birmingham City Council Power BI Dashboard" onerror="this.parentElement.style.display='none'">
+        </div>
+
+        <div class="project-links">
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/01_BCC_Payments/outputs/00_Management_Summary.md" target="_blank" rel="noopener">Management Summary</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/01_BCC_Payments/outputs/01_Requirements_Brief.md" target="_blank" rel="noopener">Requirements Brief</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/01_BCC_Payments/outputs/02_Decisions_and_Reasoning.md" target="_blank" rel="noopener">Decisions &amp; Reasoning</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/raw/main/projects/01_BCC_Payments/outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx" target="_blank" rel="noopener">Download Excel Control Pack (.xlsx)</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/01_BCC_Payments/sql" target="_blank" rel="noopener">SQL Queries</a>
+        </div>
+      </article>
+
+      <!-- Project 2: Platform Housing (Board Paper Challenge Layout) -->
+      <article class="project-block">
+        <div class="project-meta">
+          <span class="audience-tag">Audience: Housing Association Board</span>
+          <span class="pill">Python PDF Extraction &bull; RSH TSM &amp; Ombudsman Data</span>
+        </div>
+        <h3>Platform Housing Group: Overall satisfaction matches the 64.6% large-landlord median and Ombudsman rulings lead the Midlands, but six tenant relationship measures sit in the bottom quartile.</h3>
+
+        <div class="two-col">
+          <div class="chart-box">
+            <div class="chart-title">Platform Gap to Large-Landlord Median (Percentage Points, TP01–TP12)</div>
+            <div class="canvas-holder">
+              <canvas id="platformChart"></canvas>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+              Benchmarked against 17 large housing associations (40,000+ homes).
+            </p>
+          </div>
+
+          <div class="project-body">
+            <p>
+              <strong>Why peer group choice matters:</strong> Comparing Platform with all Midlands landlords (median 77%) would make it look worse than it is because large landlords score lower across the sector. Against 17 peer landlords with 40,000+ homes, Platform's 64.6% overall satisfaction (+2 pts YoY) is right on the median.
+            </p>
+            <p>
+              <strong>Operational strength vs. relationship gap:</strong> Building safety compliance is 100% across all five checks, emergency repairs in target hit 98.2% (top quartile), and Platform has the lowest Housing Ombudsman maladministration rate of 21 Midlands landlords (<strong>38% vs a 57% peer median</strong>, down from 64% two years ago, though repairs still account for 23 of 43 upheld findings). However, Platform sits in the bottom quartile on six relationship and neighbourhood measures: communal areas (-9.1 pts), keeping tenants informed (-7.3), neighbourhood contribution (-6.0), listening and acting (-4.9), ASB handling (-4.2) and fair treatment (-1.4).
+            </p>
+            <p>
+              <strong>What I recommend to the Board:</strong> Focus improvement on <strong>listening and acting</strong> (-4.9 pts), <strong>keeping tenants informed</strong> (-7.3 pts) and <strong>home well maintained</strong> (-2.0 pts, the strongest correlate with overall satisfaction). Before the board paper is finalised, ask management to confirm three shifts that look like recording changes: non-emergency repairs in target falling from 92% to 62% alongside an 85% drop in counted repairs (90,250 to 13,872), ASB cases jumping from 33 to 118 per 1,000 homes, and Stage 1 complaints rising from 43 to 73 per 1,000 homes.
+            </p>
+          </div>
+        </div>
+
+        <div class="project-links">
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/02_Platform_Housing/outputs/00_Board_Summary.md" target="_blank" rel="noopener">Board Summary</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/02_Platform_Housing/outputs/01_Requirements_Brief.md" target="_blank" rel="noopener">Requirements Brief</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/02_Platform_Housing/outputs/02_Decisions_and_Reasoning.md" target="_blank" rel="noopener">Decisions &amp; Reasoning</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/raw/main/projects/02_Platform_Housing/outputs/Platform_TSM_Benchmarking_Pack.xlsx" target="_blank" rel="noopener">Download Benchmarking Pack (.xlsx)</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/02_Platform_Housing/scripts" target="_blank" rel="noopener">Python Scripts</a>
+        </div>
+      </article>
+
+      <!-- Project 3: Severn Trent (Compact Table + Weather vs Asset Split) -->
+      <article class="project-block">
+        <div class="project-meta">
+          <span class="audience-tag">Audience: Environmental Performance Team</span>
+          <span class="pill">Environment Agency Return &bull; Python &bull; Excel</span>
+        </div>
+        <h3>Severn Trent Storm Overflows: Reported spills fell 41% in 2025, but a 28% drop in Midlands rainfall explains half the fall and 76 sites still spilled 60+ times.</h3>
+
+        <div class="two-col">
+          <div class="project-body">
+            <div class="table-wrap" style="margin-top: 0; margin-bottom: 0.9rem;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Metric (EA Annual Return)</th>
+                    <th>2024</th>
+                    <th>2025</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Total spills</td>
+                    <td>62,085</td>
+                    <td>36,471</td>
+                    <td><strong>-41%</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Total spill hours</td>
+                    <td>454,155</td>
+                    <td>200,361</td>
+                    <td><strong>-56%</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Overflows with 60+ spills</td>
+                    <td>312</td>
+                    <td>76</td>
+                    <td><strong>-76%</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Monitors working &ge;90% of year</td>
+                    <td>91.3%</td>
+                    <td>96.3%</td>
+                    <td><strong>+5.0 pts</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Midlands rainfall</td>
+                    <td>1,000 mm</td>
+                    <td>717 mm</td>
+                    <td><strong>-28%</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              <strong>Separating weather from engineering:</strong> Comparing 2025 (717 mm rainfall) directly with 2022 (721 mm rainfall) removes the need for a complex weather model and shows that at equal rainfall, spills per active overflow are <strong>23% lower</strong>. Storm tanks at treatment works represent just 13% of overflows but generated <strong>47% of all 2025 spill hours</strong>, and the Trent basin holds 58 of the 76 high-spilling sites.
+            </p>
+            <p>
+              <strong>Recommended actions:</strong> Fix the <strong>27 repeat-failure monitors</strong> that worked under 90% in both 2024 and 2025 (out of 87 below threshold in 2025, driven by 29 installation/design issues, 21 sensor faults and 18 comms faults); review the <strong>13 high-spilling overflows (60+ spills)</strong> that have no improvement action logged; and confirm 11 new, 18 removed and 2 surging overflows (+50 spills in a dry year) before publication.
+            </p>
+          </div>
+
+          <div class="chart-box">
+            <div class="chart-title">Total Spills (Thousands) vs. Midlands Rainfall (mm), 2020–2025</div>
+            <div class="canvas-holder">
+              <canvas id="stChart"></canvas>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+              2022 (721 mm, 44.8k spills) vs. 2025 (717 mm, 36.5k spills) isolates genuine progress.
+            </p>
+          </div>
+        </div>
+
+        <div class="project-links">
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/03_Severn_Trent/outputs/00_Management_Summary_2025.md" target="_blank" rel="noopener">Management Summary</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/03_Severn_Trent/outputs/01_Requirements_Brief.md" target="_blank" rel="noopener">Requirements Brief</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/03_Severn_Trent/outputs/03_Data_Quality_Log.md" target="_blank" rel="noopener">Data Quality Log</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/03_Severn_Trent/outputs/04_Decisions_and_Reasoning.md" target="_blank" rel="noopener">Decisions &amp; Reasoning</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/raw/main/projects/03_Severn_Trent/outputs/Severn_Trent_Overflow_Performance_Pack_2025.xlsx" target="_blank" rel="noopener">Download Performance Pack (.xlsx)</a>
+        </div>
+      </article>
+
+      <!-- Project 4: UHB Waiting Times (COO Early Warning Note Layout) -->
+      <article class="project-block">
+        <div class="project-meta">
+          <span class="audience-tag">Audience: Hospital Trust Chief Operating Officer</span>
+          <span class="pill">NHS England RTT Data &bull; Python &bull; Power BI</span>
+        </div>
+        <h3>University Hospitals Birmingham: A 15% jump in referrals—not a drop in treatments—has pushed the waiting list up 7.5% since March 2026 and put the March 2027 milestone at risk.</h3>
+
+        <div class="kpi-row">
+          <div class="kpi-box">
+            <div class="kpi-val">66.6%</div>
+            <div class="kpi-lbl">Under 18 wks in Aug 2026 (down from 68.6% in Mar)</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-val">96,303</div>
+            <div class="kpi-lbl">Total list in Aug 2026 (up from 89,544 in Mar)</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-val">+15%</div>
+            <div class="kpi-lbl">Referrals YoY (133,091 vs 115,481 Apr–Aug)</div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-val">+1,550/mo</div>
+            <div class="kpi-lbl">Extra clock stops (+7%) needed to hold list flat</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="project-body">
+            <p>
+              <strong>Where UHB stands:</strong> UHB met its March 2026 milestones, lifting 18-week performance from 50.2% (Mar 2025) to 68.6% (target 65%) and cutting 52+ week waits to 397 (0.44%, target under 1%). By August 2026, 52+ week waits fell further to 175 (0.18%, a tenth of England's 1.57% rate), and UHB still leads all seven large Midlands trusts compared and sits above England (65.2%).
+            </p>
+            <p>
+              <strong>Why performance slipped 2 points since March:</strong> Splitting list growth into clock starts (referrals) and clock stops (treatments and discharges) shows clinics and theatres did not slow down—clock stops were flat year-on-year in April to August (104,806 vs 103,997). Instead, referrals rose 15% (133,091 vs 115,481). If current referral demand continues, the list reaches roughly <strong>107,000 by March 2027</strong>, threatening the 70% milestone.
+            </p>
+            <p>
+              <strong>Where to focus clinical capacity:</strong> Stabilising the list requires about <strong>1,550 extra clock stops a month (+7% activity)</strong> or referral triage with commissioners. <strong>ENT (57) and Ophthalmology (53)</strong> hold 63% of remaining 52-week waiters, while <strong>Gynaecology</strong> has seen its waiting list grow 38% in a year and 18-week performance fall 11 points to <strong>45.9%</strong> (with Oral Surgery also below 50%).
+            </p>
+          </div>
+
+          <div class="chart-box">
+            <div class="chart-title">UHB % Waiting Under 18 Weeks (Jul 2025 – Aug 2026) vs. Milestones</div>
+            <div class="canvas-holder">
+              <canvas id="uhbChart"></canvas>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+              Milestones: 65% (Mar 2026, met at 68.6%) and 70% (Mar 2027 target).
+            </p>
+          </div>
+        </div>
+
+        <details class="method-drawer">
+          <summary>Why I present the 107,000 March 2027 figure as a scenario, not a point prediction</summary>
+          <p>
+            I back-tested both a demand-and-capacity model and a simple trend on the last six months of data. Both missed the March 2026 turning point (6–8% error), whereas a 'no change' baseline had a 2.5% error. Hiding a failed back-test is bad practice, so I report the error rates openly and present March 2027 as a continuation scenario to be refreshed monthly.
+          </p>
+        </details>
+
+        <div class="dashboard-preview">
+          <img src="assets/uhb-dashboard.png" alt="UHB Waiting Times Power BI Dashboard" onerror="this.parentElement.style.display='none'">
+        </div>
+
+        <div class="project-links">
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/04_UHB_Waiting_Times/outputs/00_Performance_Summary.md" target="_blank" rel="noopener">Performance Summary</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/04_UHB_Waiting_Times/outputs/01_Requirements_Brief.md" target="_blank" rel="noopener">Requirements Brief</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/04_UHB_Waiting_Times/outputs/02_Decisions_and_Reasoning.md" target="_blank" rel="noopener">Decisions &amp; Reasoning</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/raw/main/projects/04_UHB_Waiting_Times/outputs/UHB_RTT_Performance_Report.xlsx" target="_blank" rel="noopener">Download RTT Report Pack (.xlsx)</a>
+          <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/04_UHB_Waiting_Times/scripts" target="_blank" rel="noopener">Python Scripts</a>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>
+        Farouk Yusuf &bull; Birmingham, UK &bull;
+        <a href="https://farouk-yusuf.github.io">farouk-yusuf.github.io</a> &bull;
+        <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io" target="_blank" rel="noopener">GitHub</a> &bull;
+        <a href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">LinkedIn</a> &bull;
+        faroukyusuf.code@gmail.com
+      </p>
     </div>
-    <p class="task"><strong>The task.</strong> Check the annual storm overflow return before it is published, build the year-end performance pack, and send exception lists to the teams who act on them.</p>
-    <div class="keyfigs">
-      <div><b>2,452</b><span>overflows validated in the 2025 Environment Agency return</span></div>
-      <div><b>27</b><span>repeat monitor failures sent to maintenance</span></div>
-      <div><b>13</b><span>high-spilling overflows with no improvement action, for investment review</span></div>
-    </div>
-    <figure>
-      <div class="chart"><canvas id="c-spills" aria-label="Chart of total spills and Midlands rainfall by year"></canvas></div>
-      <figcaption>Severn Trent recorded spills (bars) and Midlands annual rainfall (line), 2020–2025.</figcaption>
-    </figure>
-    <ul class="findings">
-      <li>Combined six years of returns, published in four different formats, into one overflow-level dataset that reconciles with the Environment Agency's own totals.</li>
-      <li>Spills fell 41% in 2025, but rainfall fell 28%. About half the fall is explained by the drier year. Comparing 2025 with 2022, an equally dry year, spills per overflow were 23% lower.</li>
-      <li>Storm tanks at treatment works are 13% of overflows but produced 47% of 2025 spill hours.</li>
-    </ul>
-    <div class="more">
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/03_Severn_Trent/outputs/00_Management_Summary_2025.md" target="_blank" rel="noopener">Management summary</a>
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/03_Severn_Trent" target="_blank" rel="noopener">Code and Excel pack</a>
-    </div>
-  </section>
+  </footer>
 
-  <!-- 04 -->
-  <section class="project" id="waiting-times">
-    <div class="project-head">
-      <span class="label">04 · NHS</span>
-      <h2>Elective waiting times report: University Hospitals Birmingham</h2>
-      <span class="tools">Python · Excel · Power BI</span>
-    </div>
-    <p class="task"><strong>The task.</strong> Produce the monthly waiting times report for the trust: progress against national targets, why the waiting list is moving, which specialties hold the long waits, and where the list is heading.</p>
-    <div class="keyfigs">
-      <div><b>68.6%</b><span>within 18 weeks in March 2026, against a 65% target</span></div>
-      <div><b>+15%</b><span>referrals, April to August 2026 against a year earlier; treatments flat</span></div>
-      <div><b>41</b><span>monthly NHS England extracts processed (3.3 GB)</span></div>
-    </div>
-    <figure>
-      <div class="chart"><canvas id="c-rtt" aria-label="Line chart of the share of patients waiting under 18 weeks"></canvas></div>
-      <figcaption>Share of UHB patients waiting under 18 weeks, July 2025 to August 2026, with the 65% target for March 2026 and 70% for March 2027.</figcaption>
-    </figure>
-    <ul class="findings">
-      <li>UHB met its March 2026 targets and has the best 18-week performance of seven large Midlands trusts.</li>
-      <li>The waiting list has grown 7.5% since March. Splitting the change into referrals and treatments showed the cause is demand, not falling activity.</li>
-      <li>Back-tested two forecasting models on the last six months. Both missed the turning point, so the March 2027 outlook is presented as a scenario, not a prediction.</li>
-    </ul>
-    <figure class="dash">
-      <img src="assets/uhb-dashboard.png" alt="Power BI dashboard showing 18-week performance, waiting list, referrals against treatments and waits by specialty" onerror="this.closest('figure').hidden = true">
-      <figcaption>Power BI dashboard for the monthly performance report.</figcaption>
-    </figure>
-    <div class="more">
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/projects/04_UHB_Waiting_Times/outputs/00_Performance_Summary.md" target="_blank" rel="noopener">Performance summary</a>
-      <a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io/tree/main/projects/04_UHB_Waiting_Times" target="_blank" rel="noopener">Code and Excel report</a>
-    </div>
-  </section>
+  <script>
+    (function() {
+      const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const textColor = isDark ? '#cbd5e1' : '#334155';
+      const gridColor = isDark ? 'rgba(148, 163, 184, 0.15)' : 'rgba(15, 23, 42, 0.08)';
+      const primaryBlue = isDark ? '#38bdf8' : '#0f4c81';
+      const secondaryTeal = isDark ? '#2dd4bf' : '#0d9488';
+      const alertRed = isDark ? '#f87171' : '#dc2626';
+      const mutedSlate = isDark ? '#64748b' : '#94a3b8';
 
-  <section class="about" id="about">
-    <div style="display:flex;flex-direction:column;gap:.9rem;min-width:0">
-      <h2>About</h2>
-      <p>I am finishing a PhD at the University of Birmingham, where I built a Python workflow to classify 29,000 social media posts and tested large language models against human coders. Before that I collected English Housing Survey data for NatCen, with a 67% response rate against a 30% benchmark. I also co-founded uHired, a job-search platform that has reached 1,025 users since launching in April 2026.</p>
-      <p>I am looking for a role in performance reporting or data quality.</p>
-    </div>
-    <dl>
-      <div><dt>Data and tools</dt><dd>SQL, Python (pandas, NumPy, matplotlib), Excel, Power BI, Power Automate, Google Sheets, Google Analytics, ArcGIS</dd></div>
-      <div><dt>Analysis</dt><dd>Performance reporting, variance analysis, benchmarking, data validation, forecasting, text classification</dd></div>
-      <div><dt>Data governance</dt><dd>Data classification, pseudonymisation, GDPR</dd></div>
-    </dl>
-  </section>
+      Chart.defaults.color = textColor;
+      Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      Chart.defaults.font.size = 11;
 
-  <footer>All data used here is published by public bodies under the Open Government Licence. The analysis is my own and is not endorsed by the organisations named.</footer>
-</div>
+      // 1. PhD Chart: Krippendorff's Alpha
+      new Chart(document.getElementById('phdChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Human–Human Overall', 'Model–Human Overall', 'Weakest Human (Q7)', 'Weakest Model (Q9)'],
+          datasets: [{
+            label: "Krippendorff's Alpha",
+            data: [0.758, 0.807, 0.484, 0.445],
+            backgroundColor: [primaryBlue, secondaryTeal, alertRed, alertRed],
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                afterBody: function() {
+                  return 'Target reliability threshold: 0.70';
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 1.0,
+              grid: { color: gridColor },
+              title: { display: true, text: 'Alpha (Target >= 0.70)' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script>
-(function () {
-  if (!window.Chart) return;
-  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  const charts = [];
-  function base(extra) {
-    const ink = css('--muted'), grid = css('--rule');
-    return Object.assign({
-      responsive: true, maintainAspectRatio: false, animation: false,
-      plugins: { legend: { labels: { color: ink, font: { family: 'Public Sans' } } }, tooltip: { mode: 'index', intersect: false } },
-      scales: {
-        x: { ticks: { color: ink, font: { family: 'IBM Plex Mono', size: 11 } }, grid: { display: false } },
-        y: { ticks: { color: ink, font: { family: 'IBM Plex Mono', size: 11 } }, grid: { color: grid } }
-      }
-    }, extra || {});
-  }
-  function draw() {
-    charts.forEach(c => c.destroy()); charts.length = 0;
-    const accent = css('--accent'), muted = css('--muted'), good = css('--good'), bad = css('--bad'), ink = css('--ink');
+      // 2. BCC Monthly Spend Chart (Jul 2024 – Jul 2026)
+      const bccLabels = [
+        'Jul 24','Aug 24','Sep 24','Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25',
+        'Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25',
+        'Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26*'
+      ];
+      const bccData = [
+        190.7,128.7,151.7,171.4,148.6,145.7,146.2,128.2,172.4,
+        152.2,152.3,165.7,139.2,144.1,149.9,149.7,127.4,175.4,
+        145.1,147.3,164.5,163.3,136.2,202.2,175.7
+      ];
 
-    const months = ['Jul 24','Aug 24','Sep 24','Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
-    const spend = [190.7,128.7,151.7,171.4,148.6,145.7,146.2,128.2,172.4,152.2,152.3,165.7,139.2,144.1,149.9,149.7,127.4,175.4,145.1,147.3,164.5,163.3,136.2,202.2,175.7];
-    const o1 = base(); o1.plugins.legend.display = false; o1.scales.y.title = { display: true, text: '£ million', color: muted };
-    charts.push(new Chart(document.getElementById('c-spend'), { type: 'bar', data: { labels: months, datasets: [{ label: 'Spend £m', data: spend, backgroundColor: accent }] }, options: o1 }));
+      new Chart(document.getElementById('bccChart'), {
+        type: 'line',
+        data: {
+          labels: bccLabels,
+          datasets: [{
+            label: 'Monthly Spend (£m)',
+            data: bccData,
+            borderColor: primaryBlue,
+            backgroundColor: isDark ? 'rgba(56, 189, 248, 0.12)' : 'rgba(15, 76, 129, 0.1)',
+            fill: true,
+            tension: 0.25,
+            pointRadius: 2.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              grid: { color: gridColor },
+              title: { display: true, text: '£ Millions' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 8 }
+            }
+          }
+        }
+      });
 
-    const tp = ['Overall satisfaction','Repairs service','Time taken for repair','Home well maintained','Home is safe','Listens and acts','Keeps tenants informed','Treats fairly','Complaints handling','Communal areas','Contribution to neighbourhood','ASB handling'];
-    const gap = [0.0,1.3,-1.5,-2.0,1.4,-4.9,-7.3,-1.4,2.0,-9.1,-6.0,-4.2];
-    const o2 = base({ indexAxis: 'y' }); o2.plugins.legend.display = false;
-    o2.scales.x.title = { display: true, text: 'Percentage points vs median', color: muted }; o2.scales.x.grid = { color: css('--rule') }; o2.scales.y.grid = { display: false };
-    o2.scales.y.ticks.font = { family: 'Public Sans', size: 11 };
-    charts.push(new Chart(document.getElementById('c-tsm'), { type: 'bar', data: { labels: tp, datasets: [{ data: gap, backgroundColor: gap.map(v => v < 0 ? bad : good) }] }, options: o2 }));
+      // 3. Platform Housing Gap to Peer Median (TP01–TP12)
+      const tpLabels = [
+        'TP01 Overall','TP02 Repairs','TP03 Time taken','TP04 Well maintained',
+        'TP05 Safe home','TP06 Listen & act','TP07 Kept informed','TP08 Fair treatment',
+        'TP09 Complaints','TP10 Communal','TP11 Neighbourhood','TP12 ASB handling'
+      ];
+      const tpGaps = [0.0, 1.3, -1.5, -2.0, 1.4, -4.9, -7.3, -1.4, 2.0, -9.1, -6.0, -4.2];
 
-    const years = ['2020','2021','2022','2023','2024','2025'];
-    const o3 = base();
-    o3.scales.y.title = { display: true, text: 'Spills (thousands)', color: muted }; o3.scales.y.beginAtZero = true;
-    o3.scales.y2 = { position: 'right', title: { display: true, text: 'Rainfall (mm)', color: muted }, ticks: { color: muted, font: { family: 'IBM Plex Mono', size: 11 } }, grid: { display: false }, min: 600, max: 1100 };
-    charts.push(new Chart(document.getElementById('c-spills'), { data: { labels: years, datasets: [
-      { type: 'bar', label: 'Recorded spills (thousands)', data: [61.0,59.7,44.8,60.3,62.1,36.5], backgroundColor: accent, yAxisID: 'y' },
-      { type: 'line', label: 'Midlands rainfall (mm)', data: [927,811,721,1000,1000,717], borderColor: ink, backgroundColor: ink, pointRadius: 3, yAxisID: 'y2' } ] }, options: o3 }));
+      new Chart(document.getElementById('platformChart'), {
+        type: 'bar',
+        data: {
+          labels: tpLabels,
+          datasets: [{
+            label: 'Gap to Large-Landlord Median (pts)',
+            data: tpGaps,
+            backgroundColor: tpGaps.map(v => v < 0 ? alertRed : secondaryTeal),
+            borderRadius: 3
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: gridColor },
+              title: { display: true, text: 'Percentage Points vs. Peer Median' }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 10 } }
+            }
+          }
+        }
+      });
 
-    const m2 = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'];
-    const pct = [53.6,55.7,59.0,60.6,61.5,61.5,61.2,62.5,68.6,68.4,68.6,68.9,67.3,66.6];
-    const o4 = base(); o4.scales.y.min = 50; o4.scales.y.max = 75; o4.scales.y.title = { display: true, text: '% under 18 weeks', color: muted };
-    charts.push(new Chart(document.getElementById('c-rtt'), { type: 'line', data: { labels: m2, datasets: [
-      { label: 'UHB', data: pct, borderColor: accent, backgroundColor: accent, pointRadius: 3, tension: .2 },
-      { label: 'Target, Mar 2026 (65%)', data: m2.map(() => 65), borderColor: bad, borderDash: [6, 4], pointRadius: 0 },
-      { label: 'Target, Mar 2027 (70%)', data: m2.map(() => 70), borderColor: muted, borderDash: [2, 4], pointRadius: 0 } ] }, options: o4 }));
-  }
-  draw();
-  try {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
-    new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  } catch (e) {}
-})();
-</script>
+      // 4. Severn Trent Spills vs Rainfall (2020–2025)
+      new Chart(document.getElementById('stChart'), {
+        data: {
+          labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Total Spills (Thousands)',
+              data: [61.0, 59.7, 44.8, 60.3, 62.1, 36.5],
+              backgroundColor: primaryBlue,
+              yAxisID: 'y',
+              borderRadius: 4
+            },
+            {
+              type: 'line',
+              label: 'Midlands Rainfall (mm)',
+              data: [927, 811, 721, 1000, 1000, 717],
+              borderColor: secondaryTeal,
+              backgroundColor: secondaryTeal,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12 } }
+          },
+          scales: {
+            y: {
+              type: 'linear',
+              position: 'left',
+              beginAtZero: true,
+              grid: { color: gridColor },
+              title: { display: true, text: 'Spills (k)' }
+            },
+            y1: {
+              type: 'linear',
+              position: 'right',
+              beginAtZero: true,
+              grid: { display: false },
+              title: { display: true, text: 'Rainfall (mm)' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      // 5. UHB % Within 18 Weeks (Jul 2025 – Aug 2026)
+      const uhbLabels = [
+        'Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26',
+        'Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'
+      ];
+      const uhbActual = [53.6,55.7,59.0,60.6,61.5,61.5,61.2,62.5,68.6,68.4,68.6,68.9,67.3,66.6];
+
+      new Chart(document.getElementById('uhbChart'), {
+        type: 'line',
+        data: {
+          labels: uhbLabels,
+          datasets: [
+            {
+              label: 'UHB % <18 Weeks',
+              data: uhbActual,
+              borderColor: primaryBlue,
+              backgroundColor: primaryBlue,
+              borderWidth: 2.5,
+              tension: 0.2,
+              pointRadius: 3
+            },
+            {
+              label: 'Mar 2026 Milestone (65%)',
+              data: Array(14).fill(65),
+              borderColor: mutedSlate,
+              borderDash: [5, 5],
+              borderWidth: 1.5,
+              pointRadius: 0
+            },
+            {
+              label: 'Mar 2027 Milestone (70%)',
+              data: Array(14).fill(70),
+              borderColor: alertRed,
+              borderDash: [3, 3],
+              borderWidth: 1.5,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12 } }
+          },
+          scales: {
+            y: {
+              min: 48,
+              max: 74,
+              grid: { color: gridColor },
+              title: { display: true, text: '% Within 18 Weeks' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 7 }
+            }
+          }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
