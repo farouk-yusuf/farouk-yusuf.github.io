@@ -9,61 +9,73 @@
       "date": "2019",
       "position": 0,
       "tag": "Geographer",
-      "title": "I learned to think like a geographer.",
+      "title": "Spatial Analyst and Real-World Impact",
       "item": "graduation",
       "item_label": "Geography",
-      "text": "I graduated top of my geography class at Ahmadu Bello University with first-class honours and straight As in statistics. My final project mapped rainfall variability and rice yields in a Nigerian local government area, connecting quantitative analysis with local context.",
-      "note": "Geography taught me that context is crucial; a seemingly healthy average can mask significant local disparities."
+      "text": "I graduated top of my geography class, achieving first-class honours and straight As in statistics. My final project involved mapping how changes in rainfall affected rice harvests in a specific local government area, combining quantitative analysis with an understanding of real-world consequences.",
+      "note": "A strong foundation in geography, statistics, and ArcGIS means I can analyse spatial data to solve real-world challenges.",
+      "note_label": "Takeaway",
+      "emphasise_body": false
     },
     {
       "date": "2020–2021",
       "position": 0.14285714285714285,
       "tag": "Chevening scholar",
-      "title": "I received a Chevening Scholarship and graduated with distinction.",
+      "title": "Academic Excellence & Media Analysis",
       "item": "scholarship",
       "item_label": "Chevening",
-      "text": "A Chevening Scholarship funded my MSc in Conflict, Statebuilding and Development at the University of Birmingham. I analysed newspaper coverage and interviewed readers to explore framing effects. I graduated with distinction, scoring 82% in my dissertation.",
-      "note": "Chevening: the UK government’s highly competitive scholarship programme for future leaders worldwide."
+      "text": "A Chevening scholarship enabled me to pursue an MSc in Conflict, Statebuilding and Development at the University of Birmingham. My research analysed newspaper coverage and included interviews with readers to examine media framing effects. The findings indicated that biased media coverage influenced readers’ perceptions of conflict actors. I graduated with distinction, achieving 82% for my dissertation, which led my supervisor to recommend that I consider pursuing a PhD.",
+      "note": "The Chevening Scholarship is the UK’s highly competitive and prestigious scholarship programme for future global leaders.",
+      "note_label": "",
+      "emphasise_body": false
     },
     {
       "date": "2022",
       "position": 0.42857142857142855,
       "tag": "Researcher",
-      "title": "I trained in qualitative and quantitative research design and analysis.",
+      "title": "Expert in mixed-methods research design and analysis.",
       "item": "research",
       "item_label": "Research design",
-      "text": "ESRC funding supported my MA in Social Research at the University of Birmingham. I trained in qualitative and quantitative research design and analysis, including regression modelling, interviews and qualitative coding. I scored 75% in the quantitative module.",
-      "note": "To find a good answer, first define the evidence you need. Let that decision guide data collection."
+      "text": "My MA in Social Research at the University of Birmingham, supported by ESRC funding, provided training in qualitative and quantitative research design and analysis. This included regression modelling, interviews, and qualitative coding, and I scored 75% in the quantitative module.",
+      "note": "",
+      "note_label": "",
+      "emphasise_body": true
     },
     {
       "date": "September 2022 · PhD",
       "position": 0.5238095238095238,
       "tag": "Doctoral researcher",
-      "title": "I started my PhD.",
+      "title": "Doctoral Research",
       "item": "doctorate",
       "item_label": "PhD research",
-      "text": "I started my PhD in International Development at the University of Birmingham with ESRC funding. I analysed nearly 29,000 posts on X and conducted interviews about skilled Nigerians’ migration to the UK, using Python and language models to examine textual data.",
-      "note": "Online posts and personal conversations offer different perspectives. Effective social listening needs both, with their context intact."
+      "text": "My doctoral research investigated the emigration of skilled professionals to the UK, combining large-scale computational analysis with qualitative fieldwork. By analysing nearly 29,000 posts from X (formerly Twitter) alongside in-person qualitative interviews, I identified significant discrepancies between public digital sentiment and the underlying motivations expressed in personal narratives. I used Python and Large Language Models (LLMs) to scale text analysis across large unstructured datasets.",
+      "note": "I can build Python workflows, use LLMs to analyse large-scale text data, and validate digital sentiment against real-world evidence.",
+      "note_label": "Takeaway",
+      "emphasise_body": false
     },
     {
       "date": "2025",
       "position": 0.8571428571428571,
       "tag": "AI evaluator",
-      "title": "I trained in LLMs and evaluated AI-assisted analysis.",
+      "title": "Skilled in Machine Learning",
       "item": "ai",
       "item_label": "AI evaluation",
-      "text": "At the University of Oxford’s Spring School in Large Language Models, I studied LLM architecture, configuration and evaluation. I compared AI and human text coding in my research, investigated disagreements and checked whether the coding scheme measured the intended concepts.",
-      "note": "AI can accelerate analysis, but human oversight is necessary to identify and correct its errors."
+      "text": "At Oxford’s Spring School in Large Language Models, I studied LLM architecture and configuration. I then evaluated their performance by comparing AI- and human-written code in my research, focusing on discrepancies rather than overlooking them.",
+      "note": "I use a human-in-the-loop approach to accelerate analysis with AI while ensuring human oversight identifies and corrects errors. I can easily transfer this skill to an AI-optimistic business.",
+      "note_label": "",
+      "emphasise_body": false
     },
     {
       "date": "2026 · Now",
       "position": 1,
       "tag": "Data analyst",
-      "title": "I completed data and AI training and built business analytics projects.",
+      "title": "Transitioning to the Commercial or Public Sector",
       "item": "analytics",
       "item_label": "Business analysis",
-      "text": "I completed The Development Manager’s government-funded Data and AI Automation bootcamp. Alongside this transition, I learned SQL for a council payments project and analysed public UK organisational data. These four projects connect business questions with evidence and recommendations.",
-      "note": "The core skills remain the same, but the application is new."
+      "text": "I completed a competitive, government-funded Data and AI Automation bootcamp and gained core technical skills in analytics and process automation. I then applied these skills to complex public-sector datasets, including council payment reconciliations, to derive actionable operational intelligence. The four projects in this portfolio show my ability to turn vague operational questions into strategic, data-informed recommendations.",
+      "note": "I’ve proactively built expertise in modern data tools to strengthen my analytical skills. Beyond writing code, I bring a commercial mindset and a track record of turning analysis into practical business value from day one.",
+      "note_label": "Takeaway",
+      "emphasise_body": false
     }
   ],
   "ending": {

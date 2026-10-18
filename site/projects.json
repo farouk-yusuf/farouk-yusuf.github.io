@@ -18,7 +18,7 @@
     "metrics": [
       [
         "281",
-        "possible duplicate payment pairs"
+        "possible duplicate payment pairs worth £4.45m flagged for review"
       ],
       [
         "£1.81bn",
@@ -73,9 +73,10 @@
       "results": "I flagged 281 possible duplicate payment pairs worth £4.45m, including 73 same-day pairs. I also identified a privacy risk affecting 213 redacted payments, which could be linked to names elsewhere in the published records.",
       "implications": "Accounts Payable can prioritise the same-day pairs and check invoices before confirming any overpayments. Information Governance should review how supplier identifiers appear alongside redacted payments. The flagged amount represents potential exceptions, not confirmed losses.",
       "key_figure": "281",
-      "key_label": "possible duplicate payment pairs",
+      "key_label": "possible duplicate payment pairs worth £4.45m flagged for review",
       "image": "local-government.svg",
-      "image_alt": "Illustration of a civic building and financial reporting documents"
+      "image_alt": "Illustration of a civic building and financial reporting documents",
+      "key_prefix": "Found"
     }
   },
   {
@@ -100,8 +101,8 @@
         "overall tenant satisfaction"
       ],
       [
-        "−7.3 pts",
-        "keeping tenants informed vs peer median"
+        "7 fewer in 100",
+        "tenants satisfied with communication, compared with similar large landlords"
       ],
       [
         "38%",
@@ -149,10 +150,10 @@
       "situation": "Platform’s overall satisfaction score offers a broad view of tenant experience, but conceals differences between services. Comparisons with smaller landlords can also distort its relative performance.",
       "task": "Benchmark Platform against similar-sized housing associations, identify improvement priorities and check unusual changes before preparing a board report.",
       "action": "I benchmarked satisfaction measures against 17 large housing associations and extracted Ombudsman findings for 21 Midlands landlords. I examined gaps in individual measures, compared complaint outcomes and checked annual movements against the underlying reporting volumes.",
-      "results": "Platform’s 64.6% overall satisfaction matched the large-landlord median. However, keeping tenants informed scored 7.3 percentage points below the median, while listening and acting scored 4.9 points below. Recorded repair volumes also fell sharply alongside the reported decline in repairs performance, raising concerns about comparability.",
+      "results": "Platform’s overall satisfaction was 64.6%, in line with similar large landlords. For every 100 tenants, around seven fewer were satisfied with communication and five fewer felt listened to. Recorded repair volumes fell sharply alongside reported repairs performance, so I flagged the figures for checks before drawing conclusions.",
       "implications": "Management should prioritise communication, listening and home maintenance. The performance team should confirm reporting definitions before presenting the repairs decline as a straightforward change in service quality.",
-      "key_figure": "−7.3 pts",
-      "key_label": "keeping tenants informed, versus peers",
+      "key_figure": "7 fewer in 100",
+      "key_label": "tenants satisfied with communication, compared with similar large landlords",
       "image": "housing.svg",
       "image_alt": "Illustration of homes and communal green space"
     }

@@ -27,36 +27,63 @@
   let length = 3000;
   let previousY = scrollY;
   let stride = 0;
+  let poseFrame = null;
+  let poseTime = null;
+  let movingUntil = 0;
   let framePending = false;
   let stopTimer;
   let celebrationTimer;
-  let previousTravel = null;
-  let celebrated = false;
+  let weddingVisible = false;
 
   function stopCelebrating() {
-    celebration.classList.remove('is-celebrating');
+    celebration.classList.remove('is-celebrating', 'is-bursting');
     clearTimeout(celebrationTimer);
   }
 
   function updateMilestones(travel) {
-    const wedding = Math.abs(travel - weddingPosition) < 0.033;
+    // All wedding imagery begins strictly AFTER the marriage tick.
+    const wedding = travel > weddingPosition && travel < weddingPosition + 0.045;
     const graduation = travel < 0.045 || Math.abs(travel - 2/7) < 0.025 || Math.abs(travel - 3/7) < 0.018;
     walker.dataset.outfit = wedding ? 'wedding' : travel >= 0.96 ? 'business' : graduation ? 'graduate' : 'explorer';
-    events.forEach(event => event.classList.toggle('is-past', travel >= Number(event.dataset.position)));
-    // Celebrate only a forward crossing near the marriage pin, once per visit.
-    // Chapter jumps past 2023 must not launch an unrelated celebration.
-    if (!celebrated && wedding && previousTravel !== null && previousTravel < weddingPosition && travel >= weddingPosition) {
-      celebrated = true;
-      celebration.classList.add('is-celebrating');
-      celebrationTimer = setTimeout(stopCelebrating, 3000);
-    }
-    if (!wedding) stopCelebrating();
-    previousTravel = travel;
+    events.forEach(event => {
+      const position = Number(event.dataset.position);
+      event.classList.toggle('is-past', event.dataset.routeEvent === 'wedding' ? travel > position : travel >= position);
+    });
+    if (wedding && !weddingVisible) {
+      // Replay the finite confetti on every return. Hearts and sparkles stay visible.
+      celebration.classList.add('is-celebrating', 'is-bursting');
+      clearTimeout(celebrationTimer);
+      celebrationTimer = setTimeout(() => celebration.classList.remove('is-bursting'), 2600);
+    } else if (!wedding) stopCelebrating();
+    weddingVisible = wedding;
   }
 
   function stopWalking() {
+    if (poseFrame !== null) cancelAnimationFrame(poseFrame);
+    poseFrame = null;
+    poseTime = null;
     walker.dataset.frame = '0';
+    walker.style.setProperty('--leg-swing', '0deg');
+    walker.style.setProperty('--arm-swing', '0deg');
+    walker.style.setProperty('--walker-lift', '0px');
     walker.classList.remove('is-walking');
+  }
+
+  function animateWalker(time) {
+    poseFrame = null;
+    if (!enhanced || time >= movingUntil) {
+      stopWalking();
+      return;
+    }
+    const elapsed = poseTime === null ? 16 : Math.min(32, time - poseTime);
+    poseTime = time;
+    stride += elapsed * 0.01;
+    const swing = Math.sin(stride);
+    walker.style.setProperty('--leg-swing', `${(swing * 17).toFixed(2)}deg`);
+    walker.style.setProperty('--arm-swing', `${(-swing * 12).toFixed(2)}deg`);
+    walker.style.setProperty('--walker-lift', `${(-Math.abs(swing) * 1.2).toFixed(2)}px`);
+    walker.dataset.frame = String(Math.floor((stride % (Math.PI * 2)) / (Math.PI / 2)));
+    poseFrame = requestAnimationFrame(animateWalker);
   }
 
   function render() {
@@ -84,10 +111,11 @@
 
     const delta = scrollY - previousY;
     previousY = scrollY;
+    if (travel <= 0.012) walker.style.setProperty('--facing', '1');
     if (Math.abs(delta) > 0.5 && progress > 0 && progress < 0.84) {
-      stride += Math.abs(delta);
-      walker.style.setProperty('--facing', delta < 0 ? '-1' : '1');
-      walker.dataset.frame = String(Math.floor(stride / 15) % 4);
+      walker.style.setProperty('--facing', travel <= 0.012 || delta > 0 ? '1' : '-1');
+      movingUntil = performance.now() + 140;
+      if (poseFrame === null) poseFrame = requestAnimationFrame(animateWalker);
       walker.classList.add('is-walking');
       clearTimeout(stopTimer);
       stopTimer = setTimeout(stopWalking, 140);
@@ -123,7 +151,7 @@
       clearTimeout(stopTimer);
       stopWalking();
       stopCelebrating();
-      previousTravel = null;
+      weddingVisible = false;
       walker.dataset.outfit = 'graduate';
       links.forEach(link => link.removeAttribute('aria-current'));
     }

@@ -66,6 +66,17 @@ def main():
                 box = page.locator('[data-route-walker]').bounding_box()
                 assert abs(box['x']+box['width']/2 - 1440*.35) < 2
 
+            assert page.locator('.route-chapter h3').all_text_contents() == [
+                'Spatial Analyst and Real-World Impact', 'Academic Excellence & Media Analysis',
+                'Expert in mixed-methods research design and analysis.', 'Doctoral Research',
+                'Skilled in Machine Learning', 'Transitioning to the Commercial or Public Sector',
+            ]
+            for chapter, approved in zip(page.locator('.route-card > p:first-of-type').all(), about['milestones']):
+                assert chapter.inner_text() == approved['text']
+            assert page.get_by_role('link', name='Connect on LinkedIn').count() == 1
+            assert page.get_by_text('Illustrative sector image', exact=True).count() == 0
+            assert 'Congratulations' not in page.locator('.route-section').inner_text()
+
             # Dated employment entries stay in HTML reading order alongside study.
             entries = page.locator('.route-life-entry').all_text_contents()
             for date, role, organisation in (
@@ -82,43 +93,60 @@ def main():
             assert 'Outlier' in page.locator('.route-footnote').inner_text()
             assert page.locator('.route-tool').all_text_contents() == ['Geography','Chevening','Research design','PhD research','AI evaluation','Business analysis']
 
-            # Outfits follow dates, and only a nearby forward marriage crossing celebrates.
+            # Wedding partner/effects must never appear before the tick, even on return.
             scroll_to_year_position(page, 0)
             assert page.locator('[data-route-walker]').get_attribute('data-outfit') == 'graduate'
+            assert page.locator('[data-route-walker]').evaluate('(el)=>el.style.getPropertyValue("--facing")') == '1'
             scroll_to_year_position(page, .16)
             assert page.locator('[data-route-walker]').get_attribute('data-outfit') == 'explorer'
             scroll_to_year_position(page, 2/7)
             assert page.locator('[data-route-walker]').get_attribute('data-outfit') == 'graduate'
-            scroll_to_year_position(page, 4/7-.015)
+            for position in (4/7-.015, 4/7-.0005):
+                scroll_to_year_position(page, position)
+                assert page.locator('[data-route-walker]').get_attribute('data-outfit') != 'wedding'
+                assert not page.locator('.route-partner').is_visible()
+                assert page.locator('.route-event--wedding .route-event-dot').evaluate('(el)=>getComputedStyle(el).fontSize') == '0px'
+                assert page.locator('.route-celebration.is-celebrating').count() == 0
+            scroll_to_year_position(page, 4/7+.004)
             assert page.locator('[data-route-walker]').get_attribute('data-outfit') == 'wedding'
             assert page.locator('.route-partner').is_visible()
-            scroll_to_year_position(page, 4/7+.004)
-            assert page.locator('.route-celebration.is-celebrating').count() == 1
+            assert page.locator('.route-celebration.is-celebrating.is-bursting').count() == 1
             assert page.locator('.route-confetti i').count() == 18
-            page.wait_for_function("!document.querySelector('.route-celebration').classList.contains('is-celebrating')", timeout=4000)
+            page.wait_for_function("!document.querySelector('.route-celebration').classList.contains('is-bursting')", timeout=4000)
+            assert page.locator('.route-celebration.is-celebrating').count() == 1
+            assert page.locator('.route-love').is_visible()
             scroll_to_year_position(page, .65)
             assert page.locator('[data-route-walker]').get_attribute('data-outfit') == 'explorer'
             assert not page.locator('.route-partner').is_visible()
             scroll_to_year_position(page, 4/7+.004)
-            assert page.locator('.route-celebration.is-celebrating').count() == 0
+            assert page.locator('.route-celebration.is-celebrating.is-bursting').count() == 1
             scroll_to_year_position(page, 4/7-.015)
-            scroll_to_year_position(page, 4/7+.004)
             assert page.locator('.route-celebration.is-celebrating').count() == 0
+            assert not page.locator('.route-partner').is_visible()
+            scroll_to_year_position(page, 4/7+.004)
+            assert page.locator('.route-celebration.is-celebrating.is-bursting').count() == 1
 
             # Real incremental scroll must drive multiple poses, then stop at rest.
             page.locator('[data-route-jump="1"]').click()
             settle(page)
             poses = set()
+            angles = []
             for _ in range(8):
                 page.evaluate('scrollBy({top:19,behavior:"instant"})')
                 page.wait_for_timeout(35)
                 poses.add(page.locator('[data-route-walker]').get_attribute('data-frame'))
-            assert len(poses) >= 3, poses
+                angles.append(float(page.locator('[data-route-walker]').evaluate('(el)=>el.style.getPropertyValue("--leg-swing")').removesuffix('deg')))
+            assert len(poses) >= 2, poses
+            assert len(set(angles)) >= 6, angles
+            assert all(abs(a-b) < 14 for a,b in zip(angles,angles[1:])), angles
             page.wait_for_timeout(220)
             assert page.locator('[data-route-walker]').get_attribute('data-frame') == '0'
             page.evaluate('scrollBy({top:-40,behavior:"instant"})')
             page.wait_for_timeout(50)
             assert page.locator('[data-route-walker]').evaluate('(el)=>el.style.getPropertyValue("--facing")') == '-1'
+            page.locator('[data-route-jump="0"]').click()
+            settle(page)
+            assert page.locator('[data-route-walker]').evaluate('(el)=>el.style.getPropertyValue("--facing")') == '1'
 
             page.locator('[data-route-jump="ending"]').click()
             settle(page)
@@ -182,7 +210,7 @@ def main():
     finally:
         server.shutdown()
         server.server_close()
-    print('Passed: supplied portrait/logos; six-screen route; six keyboard chapter jumps; milestone patches; CV employment dates; graduation/wedding/business outfits; finite wedding celebration; scroll poses and reversal; idle stop; ending actions; list toggle; four desktop sizes; mobile/short-screen/reduced-motion/no-JS fallbacks; deep link; no overflow or script/request failures.')
+    print('Passed: supplied portrait/logos; six-screen route; six keyboard chapter jumps; milestone patches; CV employment dates; graduation/wedding/business outfits; repeatable post-2023 celebration and persistent sparkles; continuous scroll poses and reversal; idle stop; ending actions; list toggle; four desktop sizes; mobile/short-screen/reduced-motion/no-JS fallbacks; deep link; no overflow or script/request failures.')
 
 
 if __name__ == '__main__':

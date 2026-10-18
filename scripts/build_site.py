@@ -201,7 +201,7 @@ def project_highlight(project, index):
     tags = ''.join(f'<span class="tag">{e(tool)}</span>' for tool in project['tools'])
     return f'''<article class="project-highlight" aria-labelledby="project-{index}-title">
       <div class="project-art"><img class="sector-image" src="assets/illustrations/{e(highlight['image'])}" alt="{e(highlight['image_alt'])}" width="640" height="400" loading="lazy">
-      <div class="project-art-footer"><span class="eyebrow">{e(project['sector'])}</span><div class="project-key"><strong>{e(highlight['key_figure'])}</strong><span>{e(highlight['key_label'])}</span></div><div class="tags">{tags}</div><span class="image-note">Illustrative sector image</span></div></div>
+      <div class="project-art-footer"><span class="eyebrow">{e(project['sector'])}</span><div class="project-key">{('<span class="project-key-prefix">' + e(highlight['key_prefix']) + '</span>') if highlight.get('key_prefix') else ''}<strong>{e(highlight['key_figure'])}</strong><span>{e(highlight['key_label'])}</span></div><div class="tags">{tags}</div></div></div>
       <div class="project-narrative">{organisation(project)}<h3 id="project-{index}-title"><a href="case-studies/{project['slug']}.html">{e(highlight['headline'])}</a></h3>
       <dl class="star-list">{''.join(steps)}</dl><a class="project-detail-link" href="case-studies/{project['slug']}.html">View analysis and supporting files <span aria-hidden="true">↗</span><span class="sr-only">: {e(project['organisation'])}</span></a></div>
     </article>'''
@@ -241,9 +241,12 @@ def about_section():
         chapter_id = f'journey-{index+1:02d}'
         related_events = [event for event in ABOUT['events'] if event['after'] == index]
         life = '<ul class="route-life-static" aria-label="Along the way">' + ''.join(f'<li class="route-life-entry route-life-entry--{e(event["kind"])}"><span class="route-event-symbol" aria-hidden="true">{"♡" if event["kind"] == "wedding" else "·"}</span><div><span>{e(event["date"])}</span><strong>{e(event["label"])}</strong><span>{e(event["organisation"])}</span></div></li>' for event in related_events) + '</ul>' if related_events else ''
+        body = f'<p><strong>{e(milestone["text"])}</strong></p>' if milestone.get('emphasise_body') else paragraph(milestone['text'])
+        note_label = f'<span class="route-takeaway-label">{e(milestone["note_label"])}: </span>' if milestone.get('note_label') else ''
+        note = f'<p class="route-takeaway">{note_label}{e(milestone["note"])}</p>' if milestone['note'] else ''
         cards.append(f'''<li class="route-chapter" id="{chapter_id}" data-route-chapter data-stop="{milestone['position']}">
           <article class="route-card"><div class="route-card-top"><span class="route-date">{e(milestone['date'])}</span><span class="route-pickup">{toolkit_icon(milestone['item'])}<span>{e(milestone['item_label'])}</span></span></div>
-          <h3>{e(milestone['title'])}</h3>{paragraph(milestone['text'])}<p class="route-takeaway">{e(milestone['note'])}</p></article>{life}</li>''')
+          <h3>{e(milestone['title'])}</h3>{body}{note}</article>{life}</li>''')
         links.append(f'<a href="#{chapter_id}" data-route-jump="{index}" aria-label="Jump to {e(milestone["date"])}: {e(milestone["tag"])}" title="{e(milestone["date"])} · {e(milestone["tag"])}"><span aria-hidden="true"></span></a>')
         stops.append(f'<div class="route-stop" data-route-stop style="--stop:{milestone["position"]}"><span class="route-stop-dot"></span><span class="route-tag">{e(milestone["tag"])}</span></div>')
         toolkit.append(f'<span class="route-tool" data-route-tool>{toolkit_icon(milestone["item"])}<span>{e(milestone["item_label"])}</span></span>')
@@ -253,7 +256,7 @@ def about_section():
     partner_svg = (ROOT/'assets/illustrations/journey-partner.svg').read_text()
     walker = f'<div class="route-walker" data-route-walker data-frame="0" data-outfit="graduate" aria-hidden="true">{partner_svg}{walker_svg}</div>'
     confetti = ''.join(f'<i style="--piece:{index};--drift:{(index%7-3)*31}px;--rise:{70+(index%5)*20}px"></i>' for index in range(18))
-    celebration = f'<div class="route-celebration" data-route-celebration aria-hidden="true"><div class="route-confetti">{confetti}</div><span class="route-love">♡ ✧ ♡</span><strong>Congratulations!</strong><span>Love and a new chapter</span></div>'
+    celebration = f'<div class="route-celebration" data-route-celebration aria-hidden="true"><div class="route-confetti">{confetti}</div><span class="route-love">♡ ✧ ♡</span></div>'
     template = Template((ROOT/'site/templates/journey.html').read_text())
     ending = ABOUT['ending']
     return template.substitute(
