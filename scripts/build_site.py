@@ -181,7 +181,7 @@ def footer(prefix=''):
 
 
 def document(title, description, content, prefix=''):
-    home_styles = '<link rel="stylesheet" href="assets/css/home.css">' if not prefix else ''
+    home_styles = '<link rel="stylesheet" href="assets/css/home.css"><link rel="stylesheet" href="assets/css/journey.css"><script src="assets/js/journey.js" defer></script>' if not prefix else ''
     return f'''<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)} | Farouk Yusuf</title><meta name="description" content="{e(description)}">
@@ -229,28 +229,38 @@ def profile_picture():
 
 
 
+def toolkit_icon(name, css_class=''):
+    return f'<svg class="{css_class}" viewBox="0 0 32 32" aria-hidden="true"><use href="#kit-{e(name)}"/></svg>'
+
+
 def about_section():
-    steps = []
-    for index, milestone in enumerate(ABOUT['milestones'], 1):
-        note = f'<p class="journey-note">{e(milestone["note"])}</p>' if milestone.get('note') else ''
-        steps.append(f'''<li class="journey-step journey-step--{e(milestone['kind'])}" data-journey-step>
-          <span class="journey-node" aria-hidden="true">{index:02d}</span>
-          <article class="journey-card"><div class="journey-date">{e(milestone['date'])}</div>
-          <span class="journey-chapter">{e(milestone['chapter'])}</span><h3>{e(milestone['title'])}</h3>
-          {paragraph(milestone['text'])}{note}</article>
-        </li>''')
-    return f'''<section class="section container" id="about">
-      <div class="journey-intro"><div><span class="eyebrow">About me</span>
-      <h2>How I got here.</h2><p>{e(ABOUT['opening'])}</p>
-      <a class="text-link" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Experience on LinkedIn ↗</a></div></div>
-      <p class="journey-invitation"><span aria-hidden="true">↓</span> Follow the chapters, from Nigeria to the next opportunity.</p>
-      <ol class="journey" aria-label="My personal and professional journey" data-journey>{''.join(steps)}</ol>
-      <div class="journey-work"><h3>Alongside the research.</h3><div class="journey-work-grid">
-        <article><span class="journey-chapter">NatCen · 2024–2025</span><h4>Listening in the field</h4><p>As an English Housing Survey interviewer, I achieved a 67% response rate against a 30% programme benchmark.</p></article>
-        <article><span class="journey-chapter">Outlier · Since March 2026</span><h4>Testing AI responses</h4><p>I write prompts designed to expose errors in language models and assess responses against guidelines.</p></article>
-        <article><span class="journey-chapter">uHired · Launched April 2026</span><h4>Building and measuring</h4><p>I co-founded a job-search platform that reached 1,025 users with no paid marketing, tracking usage through Google Analytics and Google Sheets.</p></article>
-      </div></div>
-    </section>'''
+    cards, links, stops, toolkit = [], [], [], []
+    for index, milestone in enumerate(ABOUT['milestones']):
+        chapter_id = f'journey-{index+1:02d}'
+        life = '<p class="route-life-static"><span aria-hidden="true">♡</span> 2023 · Got married</p>' if index == 2 else ''
+        cards.append(f'''<li class="route-chapter" id="{chapter_id}" data-route-chapter data-stop="{milestone['position']}">
+          <article class="route-card"><div class="route-card-top"><span class="route-date">{e(milestone['date'])}</span><span class="route-pickup">{toolkit_icon(milestone['item'])}<span>{e(milestone['item_label'])}</span></span></div>
+          <h3>{e(milestone['title'])}</h3>{paragraph(milestone['text'])}<p class="route-takeaway">{e(milestone['note'])}</p></article>{life}</li>''')
+        links.append(f'<a href="#{chapter_id}" data-route-jump="{index}" aria-label="Jump to {e(milestone["date"])}: {e(milestone["tag"])}" title="{e(milestone["date"])} · {e(milestone["tag"])}"><span aria-hidden="true"></span></a>')
+        stops.append(f'<div class="route-stop" data-route-stop style="--stop:{milestone["position"]}"><span class="route-stop-dot"></span><span class="route-tag">{e(milestone["tag"])}</span></div>')
+        toolkit.append(f'<span class="route-tool" data-route-tool>{toolkit_icon(milestone["item"])}<span>{e(milestone["item_label"])}</span></span>')
+    carry = ''.join(f'<g class="walker-item" data-walker-item="{index}" transform="translate({18+(index%2)*15} {38+(index//2)*14})"><use href="#kit-{e(m["item"])}" width="16" height="16"/></g>' for index,m in enumerate(ABOUT['milestones']))
+    walker = f'''<div class="route-walker" data-route-walker data-frame="0" aria-hidden="true"><svg viewBox="0 0 90 116"><g class="walker-facing">
+      <path class="walker-leg walker-leg--back" d="m43 68-3 24-10 16"/><path class="walker-arm walker-arm--back" d="m45 39-14 19-4 14"/>
+      <path class="walker-body" d="M37 34q11-6 20 2l4 33q-11 8-24 0Z"/><path class="walker-backpack" d="M34 38h-9v26h11Z"/>
+      <path class="walker-leg walker-leg--front" d="m52 70 5 21 11 17"/><path class="walker-arm walker-arm--front" d="m54 40 12 14 4 13"/>
+      <circle class="walker-head" cx="49" cy="20" r="12"/><path class="walker-hair" d="M37 21q-3-18 11-18 15 0 14 17l-7-7-17 5Z"/><circle cx="56" cy="20" r="1.3" fill="var(--bg)"/>
+      <g class="walker-carried">{carry}</g></g></svg></div>'''
+    template = Template((ROOT/'site/templates/journey.html').read_text())
+    ending = ABOUT['ending']
+    return template.substitute(
+        symbols=(ROOT/'assets/illustrations/journey-toolkit.svg').read_text(),
+        opening=e(ABOUT['opening']), cards=''.join(cards), chapter_links=''.join(links),
+        year_ticks=''.join(f'<span class="route-year" style="--year:{(year-2016)/10}">{year}</span>' for year in range(2016,2027)),
+        axis_stops=''.join(stops), walker=walker, toolkit=''.join(toolkit),
+        ending_heading=e(ending['heading']), ending_lead=e(ending['lead']),
+        ending_points=''.join(f'<li>{e(point)}</li>' for point in ending['points']),
+    )
 
 
 def home():

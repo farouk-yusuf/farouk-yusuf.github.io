@@ -95,7 +95,8 @@ def main():
                 else:
                     assert tab.locator('[data-tool-slide]:visible').count() == 1
                     assert tab.get_by_role('button',name='Next tool',exact=True).is_visible()
-                assert tab.locator('.journey-card').evaluate_all('(cards) => cards.every(c=>getComputedStyle(c).opacity === "1")')
+                assert tab.locator('[data-route-chapter]').count() == 6
+                assert tab.locator('.route-card').evaluate_all('(cards) => cards.every(c=>getComputedStyle(c).opacity === "1")')
                 assert_viewport(tab,str(settings))
                 context.close()
             browser.close()

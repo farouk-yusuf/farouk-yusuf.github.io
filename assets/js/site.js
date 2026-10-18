@@ -66,28 +66,4 @@
     if (image.complete && image.naturalWidth === 0) hide();
   });
 
-  const journey = document.querySelector('[data-journey]');
-  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (journey && 'IntersectionObserver' in window && !motionPreference.matches) {
-    const steps = [...journey.querySelectorAll('[data-journey-step]')];
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
-    steps.forEach(step => observer.observe(step));
-    journey.classList.add('journey--animated');
-    // Keyboard navigation and fragment links must never leave focused text hidden.
-    journey.addEventListener('focusin', event => {
-      event.target.closest('[data-journey-step]')?.classList.add('is-revealed');
-    });
-    motionPreference.addEventListener('change', event => {
-      if (event.matches) {
-        journey.classList.remove('journey--animated');
-        observer.disconnect();
-      }
-    });
-  }
 })();

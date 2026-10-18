@@ -3,71 +3,77 @@
     "For the past six years, my academic and applied research has focused on gathering, cleaning, analysing, and modelling structured and unstructured data across media, migration, and international development.",
     "I am now transitioning into commercial data analysis, leveraging my experience in defining key questions, validating data integrity, testing hypotheses, and effectively communicating findings. To facilitate this transition, I recently completed a government-funded Data and AI automation bootcamp with The Development Manager and developed the independent projects detailed below, using publicly available data from UK organisations."
   ],
-  "opening": "What I enjoy most is analysing data. My route here has taken me from studying rainfall and rice yields in Nigeria to interviewing newspaper readers, researching migration and learning how AI can support analysis. Along the way, I moved countries, made lasting friendships and got married.",
+  "opening": "I am drawn to the stories behind quantitative data. My journey began in Nigeria, where I studied how rainfall affects rice farms. Since then, I have interviewed newspaper readers, investigated why skilled Nigerians emigrate to the UK, and experimented with artificial intelligence to analyse data more deeply. I'm now looking to apply my experience in a corporate data role.",
   "milestones": [
     {
       "date": "Before 2020",
-      "chapter": "The starting point",
-      "title": "Geography gave my curiosity a method.",
-      "kind": "study",
-      "text": "I graduated as the best student in my geography programme, with first-class honours and As in all my core statistics courses. My undergraduate research examined how rainfall variability affected rice yields in a Nigerian local government area, using statistical analysis and ArcGIS.",
-      "note": "An early connection between analysing data and understanding people’s livelihoods."
+      "position": 0,
+      "tag": "Geographer",
+      "title": "I learned to think like a geographer.",
+      "item": "map",
+      "item_label": "Map",
+      "text": "I graduated top of my geography class with first-class honours and straight As in statistics. For my final project, I mapped rainfall variability and rice yields in a Nigerian local government area, combining quantitative analysis with local context.",
+      "note": "Geography taught me that context is crucial; a seemingly healthy average can mask significant local disparities."
     },
     {
       "date": "2020–2021",
-      "chapter": "A new country",
-      "title": "Chevening brought me to Birmingham.",
-      "kind": "move",
-      "text": "A Chevening scholarship brought me from Nigeria to the UK to study an MSc in Conflict, Statebuilding and Development. I made good friends, graduated with a distinction and scored 82 in my dissertation. My supervisor encouraged me to pursue a PhD.",
-      "note": "My dissertation investigated newspaper framing and how audiences interpreted it."
-    },
-    {
-      "date": "During my MSc",
-      "chapter": "Reading between the headlines",
-      "title": "I studied the message and spoke to its audience.",
-      "kind": "research",
-      "text": "I analysed how northern and southern newspapers framed conflict involving Fulani herders, then interviewed audiences to investigate framing effects. Among the southern audiences I interviewed, frequent newspaper readers expressed perceptions that aligned with the coverage’s negative portrayals.",
-      "note": "These skills transfer to customer research: examining messages and investigating how people interpret them."
+      "position": 0.4,
+      "tag": "Communicator",
+      "title": "I moved countries and followed a message to its readers.",
+      "item": "notebook",
+      "item_label": "Notebook",
+      "text": "Chevening brought me to Birmingham for an MSc in Conflict, Statebuilding and Development. I analysed newspaper portrayals of Fulani herders and interviewed readers. Southern readers often echoed negative coverage. I graduated with distinction and an 82% dissertation; my supervisor encouraged a PhD.",
+      "note": "Following a message to its audience helps explain how people interpret it."
     },
     {
       "date": "2022",
-      "chapter": "Going deeper",
-      "title": "A second master’s, then ESRC-funded research.",
-      "kind": "study",
-      "text": "My MA in Social Research deepened my training in qualitative and quantitative methods, research design and tools. I scored 75% in the quantitative module. Research associate work added practical experience, and ESRC funding supported my move into doctoral research.",
-      "note": "A stronger foundation for designing studies and evaluating evidence."
+      "position": 0.6,
+      "tag": "Researcher",
+      "title": "I learned to design research people can trust.",
+      "item": "clipboard",
+      "item_label": "Clipboard",
+      "text": "ESRC funding supported my MA in Social Research and PhD in International Development. I trained in qualitative and quantitative research design, scored 75% in the quantitative module, and worked as a research associate analysing qualitative data for a German-funded project.",
+      "note": "To find a good answer, first define the evidence you need. Let that decision guide data collection."
     },
     {
-      "date": "2023",
-      "chapter": "Life alongside the work",
-      "title": "I got married.",
-      "kind": "personal",
-      "text": "A personal milestone alongside my research and the life I was building in the UK.",
-      "note": ""
-    },
-    {
-      "date": "During my PhD",
-      "chapter": "Listening in different places",
-      "title": "Online conversations tell part of the story.",
-      "kind": "research",
-      "text": "My PhD examines skilled Nigerians’ aspirations to migrate to the UK. I analyse social media discussions and interview people about their experiences. The sources do not always align: online material offers valuable evidence, while interviews help me explore its context. I taught myself Python during the research.",
-      "note": "Relevant to social listening: understanding the needs, concerns and motivations people express online."
+      "date": "PhD",
+      "position": 0.78,
+      "tag": "Listener",
+      "title": "I listened online and in person.",
+      "item": "microphone",
+      "item_label": "Microphone",
+      "text": "My PhD explored why skilled Nigerians emigrate to the UK. I analysed nearly 29,000 posts on X and conducted interviews. Online sentiment and personal accounts did not always align; I learned Python and used language models to analyse the text.",
+      "note": "Online posts and personal conversations offer different perspectives. Effective social listening needs both, with their context intact."
     },
     {
       "date": "2025",
-      "chapter": "Following a new interest",
-      "title": "Exploring language models at Oxford.",
-      "kind": "study",
-      "text": "At the University of Oxford’s Spring School in Large Language Models, I learned more about machine learning and AI, including fine-tuning. I also tested human and AI coding in my research, investigating disagreements before trusting the headline results.",
-      "note": "A growing toolkit, with the same interest in checking what the results mean."
+      "position": 0.9,
+      "tag": "Evaluator",
+      "title": "I tested AI before trusting it.",
+      "item": "laptop",
+      "item_label": "Laptop",
+      "text": "At Oxford’s Spring School in Large Language Models, I studied LLM architecture and configuration. I compared AI and human text coding in my research, investigated disagreements and checked whether the coding scheme measured the intended concepts.",
+      "note": "AI can accelerate analysis, but human oversight is necessary to identify and correct its errors."
     },
     {
       "date": "2026 · Now",
-      "chapter": "The next chapter",
-      "title": "Bringing my analytical experience into business.",
-      "kind": "work",
-      "text": "I recently completed a government-funded Data and AI automation bootcamp with The Development Manager. I learned SQL for the council payments project and applied my skills to publicly available UK organisational data. The four projects here show how I investigate business questions and communicate recommendations.",
-      "note": "Looking for an analyst role where I can keep learning and put that experience to work."
+      "position": 1,
+      "tag": "Analyst",
+      "title": "I took it into business.",
+      "item": "briefcase",
+      "item_label": "Briefcase",
+      "text": "I completed The Development Manager’s government-funded Data and AI Automation bootcamp. Alongside this transition, I learned SQL for a council payments project and analysed public UK organisational data. These four projects connect business questions with evidence and recommendations.",
+      "note": "The core skills remain the same, but the application is new."
     }
-  ]
+  ],
+  "ending": {
+    "heading": "What this means for you",
+    "lead": "You’d get an analyst who prioritises understanding context and stakeholders over simply focusing on metrics.",
+    "points": [
+      "I’ll disaggregate average figures by region, branch, product or customer group to identify underlying variations before identifying a trend.",
+      "I’ll cross-reference quantitative findings with qualitative feedback from customers.",
+      "I’ll leverage AI and automation for efficiency gains, while maintaining human oversight to mitigate potential errors.",
+      "I’ll present my findings and actionable recommendations in clear, accessible language."
+    ]
+  }
 }

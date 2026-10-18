@@ -47,6 +47,10 @@ def main():
     for tool in skills:
         assert len(tool['items']) == 4, f'Expected four capabilities: {tool["name"]}'
         assert (ROOT/'assets/icons'/tool['icon']).is_file(), f'Missing tool icon: {tool["name"]}'
+    about = json.loads((ROOT/'site/about.json').read_text())
+    assert len(about['milestones']) == 6, 'The journey should have six chapters'
+    for chapter in about['milestones']:
+        assert len(chapter['text'].split()) <= 45, f'Chapter exceeds 45 words: {chapter["date"]}'
     paths = [ROOT/'index.html', *sorted((ROOT/'case-studies').glob('*.html'))]
     pages = {}
     for path in paths:

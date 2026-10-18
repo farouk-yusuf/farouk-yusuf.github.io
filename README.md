@@ -31,11 +31,13 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
 - `site/templates/home.html`: homepage structure; edit this rather than generated HTML.
+- `site/templates/journey.html`: accessible HTML structure for the walking journey and ending panel.
 - `site/resources.json`: the original GitHub write-up and download links.
 - `scripts/build_site.py`: shared HTML components, homepage/research copy and chart definitions. Uses only the Python standard library.
 - `assets/css/site.css`: shared layout, responsive styles, dark mode and print rules.
 - `assets/css/home.css`: compact homepage layout, tool slides and detailed project highlights.
-- `assets/js/site.js`: progressive enhancements for theme choice, the tool carousel, timeline reveals and optional dashboard images.
+- `assets/css/journey.css` and `assets/js/journey.js`: the walking timeline, scroll-driven poses, chapter controls and static reading layouts.
+- `assets/js/site.js`: progressive enhancements for theme choice, the tool carousel and optional dashboard images.
 - `index.html` and `case-studies/*.html`: generated pages committed for GitHub Pages. Update their source and rebuild rather than editing these files directly.
 
 ```sh
@@ -52,11 +54,15 @@ With Playwright and Chromium installed, run `python3 scripts/check_homepage_brow
 
 ### Power BI and organisation logos
 
-The About timeline alternates on desktop and follows a single path on phones. Scroll reveals are optional: all text stays visible without JavaScript, with reduced motion, or when printing. To add the profile photo to the right of the opening introduction, put the user-provided image at `assets/images/headshot-3.jpg` (also supports `.jpeg`, `.png`, `.webp`) and rebuild. A neutral initials tile occupies the profile position until the file is accessible; do not substitute a generated portrait.
+The About journey uses a six-screen scroll section on desktop, with a sticky scene and a native scroll handler. It does not intercept wheel or touch input and needs no external animation library. The walker stays at 35% of the viewport, switches between four poses only while scrolling, reverses with scroll direction and collects six SVG toolkit items. HTML callouts, year ticks, a 2023 marriage pin and the ending panel remain readable in document order. Chapter dots support native links and keyboard activation, including direct URL fragments.
+
+Below 768px, on short viewports, with reduced motion, without JavaScript or when printing, the route becomes a static list. Desktop visitors can also choose **Read as a list**. Chapter body copy is limited to 45 words; takeaway lines are separate. `python3 scripts/check_journey_browser.py` validates movement, reversal, pickups, chapter jumps and reading fallbacks with Playwright.
+
+The user-supplied portrait is at `assets/images/headshot-3.png`, copied unchanged from `assets.zip`; the three supplied organisation logos are in `assets/logos/`. The build also supports a replacement portrait named `headshot-3.jpg`, `.jpeg` or `.webp`. Do not substitute a generated portrait.
 
 The dashboards are planned work. When ready, add `assets/bcc-dashboard.png` and `assets/uhb-dashboard.png`, then rebuild. The original paths are preserved. Missing previews are omitted at build time; if a published image subsequently fails, JavaScript hides its container. No dashboard or deployment is implied by a placeholder.
 
-Logo provenance and the remaining official-logo download limitation are documented in [assets/logos/README.md](assets/logos/README.md). Organisation names and marks identify the subjects of independent analysis and do not imply employment, affiliation or endorsement.
+Logo provenance is documented in [assets/logos/README.md](assets/logos/README.md). Organisation names and marks identify the subjects of independent analysis and do not imply employment, affiliation or endorsement.
 
 ### Before external publication
 

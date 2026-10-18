@@ -1,0 +1,153 @@
+/* The static list is the default. JS opts into the pinned desktop route. */
+.route-section { padding-block:64px 24px; }
+.route-definitions { position:absolute; width:0; height:0; overflow:hidden; }
+.route-intro { margin-bottom:28px; }
+.route-intro h2 { margin-bottom:20px; }
+.route-intro > p { max-width:820px; color:var(--muted); font-size:.96rem; }
+.route-intro > .text-link { display:inline-block; margin-top:20px; }
+.route-intro .route-invitation { margin-top:28px; font-size:.78rem; }
+.route-invitation > span { display:inline-block; margin-right:8px; }
+.route-scene { position:relative; width:min(1180px,calc(100% - 80px)); margin-inline:auto; }
+.route-controls { position:sticky; top:64px; z-index:5; background:var(--bg); display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:24px; padding-block:8px; }
+.route-view-toggle { color:var(--muted); border:1px solid var(--line); background:var(--surface); border-radius:30px; font-size:.73rem; padding:9px 16px; }
+.route-chapters { display:flex; align-items:center; gap:5px; margin-left:auto; }
+.route-chapters a { display:grid; place-items:center; width:32px; height:32px; border-radius:50%; }
+.route-chapters a > span { width:8px; height:8px; border-radius:50%; border:1px solid var(--accent); }
+.route-chapters a[aria-current] > span { background:var(--accent); }
+.route-chapters a:hover { background:var(--accent-soft); }
+.route-cards { list-style:none; position:relative; padding:0 0 0 56px; margin:0; }
+.route-cards::before { content:''; position:absolute; top:10px; left:18px; bottom:24px; border-left:1px solid var(--chart-muted); }
+.route-chapter { position:relative; margin:0 0 24px; scroll-margin-top:95px; }
+.route-chapter::before { content:''; position:absolute; left:-42px; top:24px; width:9px; height:9px; background:var(--bg); border:1px solid var(--accent); border-radius:50%; }
+.route-card { padding:28px; border:1px solid var(--line); border-radius:10px; background:var(--surface); }
+.route-card-top { display:flex; justify-content:space-between; align-items:center; gap:15px; margin-bottom:13px; }
+.route-date { font-family:var(--serif); font-style:italic; color:var(--accent); font-size:1.2rem; }
+.route-pickup { display:flex; align-items:center; gap:7px; color:var(--accent); font-size:.67rem; }
+.route-pickup svg { width:22px; height:22px; }
+.route-card h3 { font-size:1.45rem; line-height:1.25; margin-bottom:15px; }
+.route-card > p { font-size:.92rem; color:var(--muted); line-height:1.7; }
+.route-card .route-takeaway { border-top:1px solid var(--line); margin-top:18px; padding-top:15px; font-family:var(--serif); font-style:italic; font-size:1.02rem; color:var(--accent); line-height:1.45; }
+.route-life-static { color:var(--muted); font-size:.8rem; padding:18px 4px 2px; }
+.route-life-static span { color:var(--warm); margin-right:8px; }
+.route-track,.route-leader { display:none; }
+.route-walker { position:absolute; top:62px; left:0; width:39px; height:50px; color:var(--accent); }
+.route-walker svg { width:100%; height:100%; overflow:visible; }
+.walker-facing { transform:scaleX(var(--facing,1)); transform-origin:47px 58px; }
+.walker-head,.walker-body { fill:var(--accent); }
+.walker-backpack { fill:var(--chart-muted); }
+.walker-hair { fill:var(--ink); }
+.walker-arm,.walker-leg { fill:none; stroke:var(--accent); stroke-width:9; stroke-linecap:round; transform-origin:48px 69px; }
+.walker-arm { stroke-width:7; transform-origin:48px 40px; }
+.walker-leg--back,.walker-arm--back { stroke:var(--chart-muted); }
+.walker-carried { color:var(--accent); }
+.walker-item { opacity:0; }
+.route-toolkit { display:flex; flex-wrap:wrap; gap:14px; margin:25px 0 30px 56px; }
+.route-tool { display:flex; align-items:center; gap:6px; color:var(--accent); font-size:.68rem; }
+.route-tool > svg { width:22px; height:22px; }
+.route-ending { padding:36px; background:var(--hero); border-radius:10px; margin-top:35px; scroll-margin-top:95px; }
+.route-ending h3 { font-size:1.9rem; margin-bottom:18px; }
+.route-ending-lead { font-size:1.08rem; line-height:1.5; margin-bottom:22px; max-width:820px; }
+.route-ending ul { margin:0; padding-left:20px; display:grid; grid-template-columns:1fr 1fr; gap:18px 36px; }
+.route-ending li { color:var(--muted); font-size:.86rem; line-height:1.6; margin:0; }
+.route-contact-button { background:transparent; color:var(--ink); border-color:var(--chart-muted); }
+
+/* Enhanced route. Parent supplies the scroll distance; scene remains sticky. */
+.route-enhanced .route-scroll { height:600vh; height:600svh; }
+.route-enhanced .route-scene { position:sticky; top:64px; width:100%; height:calc(100vh - 64px); height:calc(100svh - 64px); overflow:clip; background:var(--bg); }
+.route-enhanced .route-controls { position:absolute; top:20px; left:32px; right:32px; z-index:5; margin:0; padding:0; background:transparent; }
+.route-enhanced .route-track { display:block; position:absolute; left:35%; bottom:28%; width:var(--route-length,3000px); height:1px; transform:translate3d(var(--route-travel,0px),0,0); will-change:transform; }
+.route-axis { position:absolute; left:0; right:-180px; height:1px; background:var(--chart-muted); }
+.route-year { position:absolute; left:calc(var(--year) * 100%); top:10px; transform:translateX(-50%); color:var(--muted); font-size:.7rem; }
+.route-year::before { content:''; position:absolute; left:50%; top:-14px; height:8px; border-left:1px solid var(--chart-muted); }
+.route-stop { position:absolute; top:0; left:calc(var(--stop) * 100%); color:var(--accent); }
+.route-stop-dot { display:block; position:absolute; top:-4px; left:-4px; width:9px; height:9px; border:1px solid var(--accent); border-radius:50%; background:var(--bg); }
+.route-tag { display:block; position:absolute; bottom:22px; left:0; transform:translateX(-50%) scale(.86); font-size:.7rem; opacity:0; transition:opacity .25s,transform .25s; }
+.route-stop.is-past .route-tag { opacity:1; transform:translateX(-50%) scale(1); }
+.route-stop.is-past .route-stop-dot { background:var(--accent); }
+.route-life { position:absolute; left:70%; top:52px; text-align:center; transform:translateX(-50%); width:180px; }
+.route-life::before { content:''; position:absolute; left:50%; bottom:100%; height:38px; border-left:1px solid var(--line); }
+.route-life-dot { width:12px; height:12px; border-radius:50%; background:var(--warm); display:block; margin-inline:auto; }
+.route-life p { color:var(--muted); font-size:.74rem; margin-top:9px; }
+.route-door { position:absolute; left:calc(100% + 60px); bottom:0; width:60px; height:112px; color:var(--accent); }
+.route-door > svg { display:block; height:100%; }
+.route-door > span { position:absolute; top:calc(100% + 43px); left:30px; transform:translateX(-50%); font-size:.7rem; color:var(--muted); width:150px; text-align:center; }
+.route-enhanced .route-leader { display:block; position:absolute; left:35%; bottom:28%; height:117px; border-left:1px solid var(--chart-muted); transition:opacity .2s; }
+.route-enhanced .route-walker { top:auto; left:calc(35% - 43px); bottom:28%; width:86px; height:111px; z-index:3; }
+.route-enhanced .route-cards { position:static; padding:0; margin:0; }
+.route-enhanced .route-cards::before,.route-enhanced .route-chapter::before { display:none; }
+.route-enhanced .route-life-static { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); padding:0; white-space:nowrap; }
+.route-enhanced .route-chapter { position:absolute; left:max(24px,calc(35% - 110px)); bottom:calc(28% + 118px); width:min(440px,calc(100% - 48px)); margin:0; pointer-events:none; opacity:0; transform:translateY(16px) scale(.97); transition:opacity .28s,transform .28s; }
+.route-enhanced .route-chapter.is-active { opacity:1; transform:none; }
+.route-enhanced .route-card { box-shadow:0 12px 40px rgba(20,45,32,.04); padding:25px; }
+.route-enhanced .route-toolkit { position:absolute; left:32px; right:32px; bottom:25px; justify-content:center; margin:0; gap:22px; }
+.route-enhanced .route-tool { color:var(--muted); }
+.route-enhanced .route-tool > svg { opacity:.35; transition:opacity .2s; }
+.route-enhanced .route-tool.is-collected { color:var(--accent); }
+.route-enhanced .route-tool.is-collected > svg { opacity:1; }
+.route-enhanced .walker-item.is-collected { opacity:1; }
+.route-walker[data-frame='1'] .walker-leg--front { transform:rotate(21deg); }
+.route-walker[data-frame='1'] .walker-leg--back { transform:rotate(-21deg); }
+.route-walker[data-frame='1'] .walker-arm--front { transform:rotate(-17deg); }
+.route-walker[data-frame='1'] .walker-arm--back { transform:rotate(17deg); }
+.route-walker[data-frame='2'] .walker-leg--front { transform:rotate(2deg); }
+.route-walker[data-frame='2'] .walker-leg--back { transform:rotate(-2deg); }
+.route-walker[data-frame='3'] .walker-leg--front { transform:rotate(-21deg); }
+.route-walker[data-frame='3'] .walker-leg--back { transform:rotate(21deg); }
+.route-walker[data-frame='3'] .walker-arm--front { transform:rotate(17deg); }
+.route-walker[data-frame='3'] .walker-arm--back { transform:rotate(-17deg); }
+.route-enhanced .route-ending { position:absolute; left:32px; right:32px; bottom:calc(28% + 118px); max-width:1100px; margin:0 auto; padding:28px 34px; opacity:0; transform:translateY(16px); pointer-events:none; transition:opacity .28s,transform .28s; }
+.route-enhanced.route-at-end .route-ending { opacity:1; transform:none; pointer-events:auto; }
+.route-enhanced.route-at-end .route-chapter { opacity:0; }
+.route-enhanced.route-at-end .route-leader { opacity:0; }
+.route-enhanced.route-at-end .route-track,.route-enhanced.route-at-end .route-walker { bottom:14%; }
+.route-enhanced.route-at-end .route-ending { bottom:calc(14% + 118px); }
+@media (max-height:850px) and (min-width:768px) {
+  .route-enhanced .route-card { padding:20px; }
+  .route-enhanced .route-date { font-size:1.05rem; }
+  .route-enhanced .route-card-top { margin-bottom:10px; }
+  .route-enhanced .route-card h3 { font-size:1.2rem; margin-bottom:12px; }
+  .route-enhanced .route-card > p { font-size:.83rem; line-height:1.6; }
+  .route-enhanced .route-card .route-takeaway { font-size:.9rem; margin-top:12px; padding-top:12px; }
+  .route-enhanced .route-ending { padding:20px 24px; }
+}
+@media (max-width:1000px) {
+  .route-scene { width:calc(100% - 48px); }
+  .route-enhanced .route-card { padding:20px; }
+  .route-enhanced .route-card h3 { font-size:1.3rem; }
+  .route-enhanced .route-card > p { font-size:.85rem; }
+  .route-enhanced .route-card .route-takeaway { font-size:.96rem; }
+  .route-enhanced .route-ending { padding:22px; }
+  .route-enhanced .route-ending h3 { font-size:1.6rem; }
+  .route-ending-lead { font-size:1rem; }
+  .route-enhanced .route-ending ul { gap:12px 24px; }
+  .route-enhanced .route-ending li { font-size:.78rem; }
+}
+@media (max-width:767px) {
+  .route-section { padding-top:46px; }
+  .route-scene { width:calc(100% - 36px); }
+  .route-intro > p { font-size:.9rem; }
+  .route-cards { padding-left:40px; }
+  .route-cards::before { left:10px; }
+  .route-chapter::before { left:-34px; }
+  .route-walker { left:-5px; width:31px; height:40px; }
+  .route-card { padding:19px; }
+  .route-card h3 { font-size:1.24rem; }
+  .route-card > p { font-size:.86rem; }
+  .route-card .route-takeaway { font-size:.96rem; }
+  .route-pickup > span { display:none; }
+  .route-toolkit { margin-left:40px; gap:12px; }
+  .route-tool { font-size:.65rem; }
+  .route-ending { padding:24px; }
+  .route-ending h3 { font-size:1.6rem; }
+  .route-ending ul { grid-template-columns:1fr; gap:14px; }
+  .route-ending .actions { gap:12px; }
+}
+@media (prefers-reduced-motion:reduce) { .route-section * { transition:none !important; } }
+@media print {
+  .route-section .route-scroll { height:auto !important; }
+  .route-section .route-scene { position:static !important; height:auto !important; width:100%; overflow:visible; }
+  .route-section .route-track,.route-section .route-controls,.route-section .route-walker,.route-section .route-leader { display:none; }
+  .route-section .route-chapter,.route-section .route-ending { position:static !important; width:auto; margin:15px 0; opacity:1 !important; transform:none !important; }
+  .route-section .route-toolkit { position:static; }
+  .route-card { break-inside:avoid; }
+}
