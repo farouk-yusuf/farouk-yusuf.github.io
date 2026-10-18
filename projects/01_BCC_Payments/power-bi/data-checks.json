@@ -1,5 +1,20 @@
 {
-  "source_workbook": "projects/01_BCC_Payments/outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx",
+  "model_version": "2-complete-supplier-comparison",
+  "source_csv": {
+    "filename": "payments-to-suppliers-over-gbp500.csv",
+    "sha256": "9170073d721a7e721e0df94870845539d59e4edce45399d96f59227cc28ad655",
+    "rows": 247785,
+    "total_gbp": "3873852012.19",
+    "first_date": "2024-07-01",
+    "last_date": "2026-07-23",
+    "matched_payment_lines": 71181,
+    "matched_supplier_accounts": 3845,
+    "matched_named_supplier_accounts": 3403,
+    "matched_supplier_display_names": 3325,
+    "supplier_grain": "Reporting group and standardised supplier display name; all matched-period accounts included. Private accounts pooled by reporting group.",
+    "privacy": "Original supplier numbers, personal pseudonyms and payment descriptions omitted. Names linked to any redacted account withheld."
+  },
+  "reference_workbook": "projects/01_BCC_Payments/outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx",
   "source_monthly_csv": "projects/01_BCC_Payments/outputs/sql_results/01_monthly_spend_by_directorate.csv",
   "publication_end": "2026-07-23",
   "table_rows": {
@@ -7,16 +22,22 @@
     "DimMonth": 25,
     "FactMatchedSpend": 6,
     "FactMonthlySpend": 150,
-    "FactSupplierDrivers": 18,
+    "FactSupplierDrivers": 3947,
     "FactDuplicatePairs": 281
   },
-  "prior_gbp": "558640000.0",
-  "current_gbp": "677460000.0",
-  "change_gbp": "118820000.0",
-  "change_ratio": 0.21269511671201488,
+  "prior_gbp": "558638892.64",
+  "current_gbp": "677461112.00",
+  "change_gbp": "118822219.36",
+  "change_ratio": 0.21269951112510854,
   "payment_lines": 247785,
   "candidate_pairs": 281,
   "candidate_value_gbp": "4448515.38",
   "same_day_pairs": 73,
-  "validation_scope": "Reconciles committed outputs; does not rerun raw cleaning or execute Power BI/DAX."
+  "supplier_coverage": "All supplier display names/reporting groups present in either matched window; no Top N truncation. Private accounts pooled.",
+  "previous_workbook_rounded_totals_gbp": {
+    "prior": "558640000",
+    "current": "677460000",
+    "change": "118820000"
+  },
+  "validation_scope": "Recomputed exact monthly and matched-period aggregates from all 247,785 source rows. Supplier sums reconcile to each department to the penny. All 281 candidate signatures independently match the source. Does not execute Power BI/DAX."
 }

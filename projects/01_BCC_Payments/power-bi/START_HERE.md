@@ -1,6 +1,6 @@
-# Birmingham Power BI: first working report
+# Birmingham Power BI: spending and payment review
 
-This pack contains prepared **data and build instructions**, not a finished PBIX report. Use Power BI Desktop to build and save the report. Start with page 1; the other two pages follow once its figures and filters work.
+This pack contains the complete prepared data for the scoped report, DAX and build instructions. It is not a PBIX: use Power BI Desktop to assemble and save the report. The supplier comparison now includes **all suppliers paid in either matched period**, replacing the previous 18-row selection. Existing reports can retain their tables, relationships and visuals: follow [UPDATE_EXISTING_REPORT.md](UPDATE_EXISTING_REPORT.md).
 
 ## 1. Import the tables
 
@@ -13,7 +13,7 @@ This pack contains prepared **data and build instructions**, not a finished PBIX
    - `FactMonthlySpend`
    - `FactSupplierDrivers`
    - `FactDuplicatePairs`
-4. Import `bcc-theme.json` through **View → Themes → Browse for themes**.
+4. Import `bcc-theme.json` through **Design → Import theme**, or **View → Themes → Browse for themes** in versions with the older ribbon.
 
 Use the named tables rather than the similarly named worksheet entries. Keep the table names unchanged so the supplied DAX works.
 
@@ -39,33 +39,32 @@ If your version does not offer that command, use **Modeling → New measure** fo
 
 | Check, with all filters cleared | Expected |
 |---|---:|
-| Matched current payments | £677,460,000 |
-| Matched prior payments | £558,640,000 |
-| Matched payment change | £118,820,000 |
+| Matched current payments | £677,461,112.00 |
+| Matched prior payments | £558,638,892.64 |
+| Matched payment change | £118,822,219.36 |
 | Matched payment change % | 21.27% → display as 21.3% |
 | Payment lines | 247,785 |
 | Candidate pairs | 281 |
 | Candidate value | £4,448,515.38 |
 | Same-day candidate pairs | 73 |
 
-Format currency measures as GBP; use **Millions and two decimal places** in spending cards, and full pounds in the exception table. Format `Matched payment change %` as **Percentage, one decimal place**. The query returns the percentage as a ratio; 0.2127 is correct before percentage formatting.
+Format currency measures as GBP; use **Millions and two decimal places** in spending cards, and full pounds in the exception table. In the current Card visual, use **General → Data format → Apply settings to → Format options → Custom**, with `£0.00` while the card automatically abbreviates millions. Do not add scaling commas or a literal `m` to this visual-level code. Earlier versions expose Display units in Callout value settings. Format `Matched payment change %` as **Percentage, one decimal place**. The query returns the percentage as a ratio; approximately 0.2127 is correct before percentage formatting. The old workbook rounded totals to £10,000; the new model retains exact source amounts. The displayed main cards remain £558.64M, £677.46M and £118.82M.
 
 ## 4. Build page 1: Spending overview
 
-Set the page to **16:9**. Add the title **“Net payments rose 21.3% over equivalent dates”** and the subtitle **“1 April–23 July in both years · 2025 versus 2026 · net of credits”**.
+Set the page to **16:9**. Add the title **“Net payments rose £118.82m over equivalent dates”** and the subtitle **“Birmingham City Council · 1 April–23 July 2025 versus 2026 · 21.3% increase · Payments include credits”**.
 
 | Position | Visual | Fields |
 |---|---|---|
-| Top left | Card | Matched current payments |
-| Top middle | Card | Matched prior payments |
-| Top right | Card | Matched payment change % |
+| Top left | Card | Matched prior payments |
+| Top middle | Card | Matched current payments |
+| Top right | Card | Matched payment change |
 | Below cards, left | Line chart | X: DimMonth[MonthStart], use the date field itself; Y: Monthly net payments |
 | Below cards, right | Horizontal bar chart | Y: DimDirectorate[ReportGroup]; X: Matched payment change |
-| Top/right margin | Dropdown slicer | DimDirectorate[ReportGroup] |
 
-For the **line chart only**, set a visual-level filter `DimMonth[IsCompleteMonth] = TRUE`. Title it **“Monthly payments fluctuate; July 2026 is excluded because it is partial”**. The line covers July 2024–June 2026; the cards and variance chart use the fixed matched dates in the subtitle. Do not add a date slicer to page 1: it would filter the line without changing the fixed-period cards.
+For the **line chart only**, set a visual-level filter `DimMonth[IsCompleteMonth] = TRUE`. Title it **“June 2026 recorded the highest monthly payments in this period”**, with the subtitle **“July 2024–June 2026 · Complete months only”**. Use straight line segments rather than smoothing. The cards and variance chart use the fixed matched dates in the subtitle. Do not add a date slicer to page 1: it would filter the line without changing the fixed-period cards.
 
-Use green for the variance of interest and neutral grey for context. Keep negative department movements visible. These are changes in cash payments, not budget overspends or savings. For a filter-aware heading, replace the fixed headline with a wide **Card** using `Spending overview title`, turn its category label off and use a smaller text size. Keep the reporting-period subtitle as a text box. This prevents a whole-council headline remaining above department-filtered results.
+Use green for the variance of interest and neutral grey for context. Title the department chart **“City Operations recorded the largest payment increase”** and label its axis **“Change in net payments (£m)”**. Keep negative department movements visible, with zero between increases and decreases. These are changes in cash payments, not budget overspends or savings. Keep this page as the whole-council summary. Before adding a department slicer, replace the fixed whole-council heading with a wide **Card** using `Spending overview title`, and make chart headings filter-aware too. Alternatively disable visual interactions through **Format → Edit interactions** so selecting a chart does not contradict the fixed narrative. Page 2 provides the department exploration.
 
 Save as `BCC_Spending_and_Payment_Review.pbix`.
 
@@ -73,7 +72,13 @@ Save as `BCC_Spending_and_Payment_Review.pbix`.
 
 Use a single-select `DimDirectorate[ReportGroup]` dropdown and a table containing the supplier-driver fields `ReportGroup`, `Supplier`, `PriorGBP`, `CurrentGBP` and `ReportedMovementGBP`. Sort by the absolute movement, or start with City Operations.
 
-Label the table **“Selected supplier movements · three largest absolute movements per reporting group”**. It is an **18-row selected list**, not all suppliers. Disable the table's total row. The reported movement was rounded separately from its prior/current amounts, so a £0.01m apparent difference can arise. Do not use this table to calculate the total department change; use FactMatchedSpend instead.
+Title the page **“Explore the suppliers behind each department’s change”**. Subtitle: **“1 April–23 July · 2025 versus 2026 · All supplier payments in the matched periods”**. Add a card using `Matched payment change` and label it **“Department’s total payment change”**.
+
+The supplier table includes every supplier display name/reporting group present in either matched window, with private accounts pooled by group. There is **no Top N truncation**. Its exact prior, current and change amounts reconcile to each department to the penny. Zero-net suppliers are retained. Supplier names are standardised using the most frequent public spelling per account across the source, then combined by display name within each reporting group; account IDs are not published.
+
+Rename the columns to **Supplier**, **Payments · 2025**, **Payments · 2026** and **Change in payments**. Format monetary cells as `£#,##0` for whole pounds (or `£#,##0.00` when pennies matter). Use light data bars in the change column with values still visible, readable 12-point text and faint horizontal rules. Totals can now be enabled because the table is complete; a subsequently filtered Top N display would need its subtotal clearly distinguished from the department total. Retain the department card from FactMatchedSpend.
+
+Add a small note: **“All suppliers paid in either comparison period are included. Names are standardised; accounts linked to redacted individuals are pooled by department. Payment changes alone do not explain contract changes, service volumes or invoice timing.”**
 
 ## Page 3: Potential duplicate payments
 
@@ -88,10 +93,11 @@ The review list was produced by the refined Python rule, not the initial 6,553-p
 
 ## Data scope and refresh
 
-- Monthly data comes from the committed SQL output, with corporate directorates combined into the same six reporting groups as the workbook.
-- Matched-period data comes from the workbook's already rounded group totals. It is **not a transaction-level ledger** and cannot support arbitrary new date ranges or counts of matched-period payments.
+- All 247,785 original CSV records contribute to the exact monthly/group totals, independently reconciled to the previous SQL output.
+- All supplier accounts present in either fixed matched window contribute to the supplier comparison and matched-period department totals. Supplier sums reconcile to each group to the penny. These are period aggregates, not a transaction-level ledger, and cannot support arbitrary new date ranges.
+- Redacted accounts, including names elsewhere linked to their IDs, are pooled by reporting group. Original supplier IDs, personal pseudonyms and payment descriptions are omitted. Public supplier names and their aggregated amounts remain available.
 - The duplicate list spans the full publication period, independently of the matched-period comparison. Department filtering works through the shared dimension; date filtering does not apply across these facts.
-- The workbook's `Read me` sheet records table grains and sources. Refreshing this prepared file does not fetch a new council publication. A full refresh needs the upstream analysis and a rebuilt starter file.
+- The workbook's `Read me` sheet records table grains and sources; `data-checks.json` records the source CSV checksum, counts, coverage and exact totals. Refreshing this prepared file does not fetch a new council publication. Rebuild with `python3 scripts/build_bcc_powerbi.py --source-csv /path/to/payments-to-suppliers-over-gbp500.csv` (requires openpyxl). Keep the original CSV outside the public repository. A changed source snapshot requires scope and validation review; the builder stops rather than silently changing the reporting dates or coverage.
 - Public-source context and original analysis: https://farouk-yusuf.github.io/case-studies/birmingham-payments.html
 
 ## Publishing comes after the first report check
