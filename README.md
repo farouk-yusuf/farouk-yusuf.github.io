@@ -69,7 +69,9 @@ Below 768px, on short viewports, with reduced motion, without JavaScript or when
 
 Employment dates come from the supplied CV: University of Birmingham Research Associate (September 2021–January 2022), Charis Care Solutions Support Worker (February–December 2022), and freelance NatCen interviewer (September 2024–January 2025). Outlier is described as freelance but remains undated because it is absent from that CV. The CV itself is not published. Chevening is described without an applicant count or acceptance-rate claim; its official programme background is linked.
 
-The user-supplied portrait is at `assets/images/headshot-3.png`, copied unchanged from `assets.zip`; the three supplied organisation logos are in `assets/logos/`. The build also supports a replacement portrait named `headshot-3.jpg`, `.jpeg` or `.webp`. Do not substitute a generated portrait.
+The existing user-supplied portrait is at `assets/images/headshot-3.png`, copied unchanged from `assets.zip`; the three supplied organisation logos are in `assets/logos/`. The preferred replacement path is `assets/images/headshot.jpeg` (the new square photograph), once the original JPEG is supplied as a file. The inline preview has not provided a downloadable source file in this workspace, so the existing image remains until then. The build also supports the earlier `headshot-3.jpg`, `.jpeg` and `.webp` names. Do not substitute a generated portrait.
+
+The prepared [GitHub profile README](github-profile/README.md) is separate from this repository's development documentation. Its [setup guide](github-profile/SETUP.md) explains the required public `farouk-yusuf/farouk-yusuf` repository and sidebar settings. Publishing this draft in the portfolio repository does not activate the GitHub profile panel.
 
 The dashboards are planned work. When ready, add `assets/bcc-dashboard.png` and `assets/uhb-dashboard.png`, then rebuild. The original paths are preserved. Missing previews are omitted at build time; if a published image subsequently fails, JavaScript hides its container. No dashboard or deployment is implied by a placeholder.
 
