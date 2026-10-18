@@ -31,17 +31,18 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `site/platform.json`: Platform Housing’s tailored brief, requirements framework, data-access assessment and proposed service actions.
 - `scripts/housing_story.py`: Platform Housing story and responsive HTML charts, populated from the committed benchmarking workbook.
 - `site/severn-trent.json` and `scripts/water_story.py`: Severn Trent’s requirements, performance analysis and operational recommendations; figures and examples come from committed CSVs and the Excel pack.
+- `site/uhb.json` and `scripts/nhs_story.py`: UHB’s reporting brief, pathway definitions, stock-flow reconciliation, specialty priorities and forecast validation, built from the existing Excel report.
 - `scripts/story_workbook.py` and `scripts/story_components.py`: shared standard-library workbook reader and evidence markup for the Birmingham and Platform stories.
 - `scripts/birmingham_story.py`: Birmingham page renderer; reads the committed Excel workbook, key-figures CSV, SQL results and department mapping code using the Python standard library.
-- `assets/css/finance.css`: shared evidence-led case-study layout, responsive HTML charts, requirements frameworks and disclosures for Birmingham, Platform Housing and Severn Trent.
-- `scripts/story_charts.py` and `assets/css/story-charts.css`: paired-dot comparisons, time-series and slope plots, count comparisons and a rainfall scatter plot. Labels use HTML at a fixed readable font size; SVG draws the geometry only. Chart selection follows the analytical question rather than a default format.
+- `assets/css/finance.css`: shared evidence-led case-study layout, responsive HTML charts, requirements frameworks and disclosures for the four project pages.
+- `scripts/story_charts.py` and `assets/css/story-charts.css`: paired-dot comparisons, time-series and slope plots, count comparisons, rainfall scatter, stock-flow waterfall and back-test lines. Labels use HTML at a fixed readable font size; SVG draws the geometry only. Chart selection follows the analytical question rather than a default format.
 - `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline, dated employment events and milestone labels. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
 - `site/templates/home.html`: homepage structure; edit this rather than generated HTML.
 - `site/templates/journey.html`: accessible HTML structure for the walking journey and ending panel.
 - `site/resources.json`: the original GitHub write-up and download links.
-- `scripts/build_site.py`: shared HTML components, homepage/research copy and chart definitions. Uses only the Python standard library.
+- `scripts/build_site.py`: shared HTML components, homepage/research copy and a renderer registry for all four case studies. Uses only the Python standard library.
 - `assets/css/site.css`: shared layout, responsive styles, dark mode and print rules.
 - `assets/css/home.css`: compact homepage layout, tool slides and detailed project highlights.
 - `assets/css/journey.css` and `assets/js/journey.js`: the walking timeline, continuous scroll-driven poses, chapter controls and static reading layouts.
@@ -102,4 +103,12 @@ The observed 2025 list has 76 sites with at least 60 recorded spills, 13 reporti
 
 Run `python3 scripts/check_water_browser.py` with Playwright and Chromium to check output reconciliation, model arithmetic, screening rules, downloads, evidence interactions and responsive layouts. It uses committed outputs, not unavailable raw files. The existing site and housing checks also cover the shared workbook reader and presentation helpers.
 
-Run `python3 scripts/check_chart_layouts.py` to compare line, slope, benchmark-dot and scatter positions with the committed evidence. It also checks label size, containment and axis/year-label collisions at desktop, tablet and phone widths across the three completed cases. All visuals remain static and readable without JavaScript, including with reduced motion.
+Run `python3 scripts/check_chart_layouts.py` to compare line, slope, benchmark-dot, scatter, waterfall and back-test positions with the committed evidence. It also checks label size, containment and axis/year-label collisions at desktop, tablet and phone widths across all four cases. All visuals remain static and readable without JavaScript, including with reduced motion.
+
+### UHB elective-performance analysis
+
+The UHB page uses a simulated internal performance brief and the actual committed RTT report. It explains the pathway reporting unit, the weekly-band extraction issue and validation requirements. Six figures show the full 41-month percentage/list trends, a stock-flow waterfall, longest-wait concentration, selected specialty changes and the held-out model comparison. Benchmark, error and scenario tables retain the supporting numbers. The source-specific narrative replaces the old generic page, and all original resource links remain available.
+
+The April–August bridge is 89,544 + 133,091 − 104,806 − 21,526 = 96,303. The residual is unclassified and requires internal records; it is not labelled as confirmed validation removals. Pathways are not unique people, and clock stops are not a capacity measure. Both models underperform the no-change baseline in the six-month test. The rounded March 2027 workbook scenario is 107,190; it is not a validated prediction or capacity plan. Planning references still need confirmation against applicable official guidance. The workbook is preserved unchanged; read [the evidence review](projects/04_UHB_Waiting_Times/outputs/03_Website_Validation_Notes.md) alongside it.
+
+Run `python3 scripts/check_nhs_browser.py` to check pathway/specialty reconciliation, the residual, independently recalculated model outputs, six chart tables, workbook download, keyboard reading and responsive/no-JS/reduced-motion layouts. Original raw extracts are unavailable; these checks verify the committed outputs rather than the source publication.

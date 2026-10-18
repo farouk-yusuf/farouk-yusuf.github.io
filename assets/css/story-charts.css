@@ -57,6 +57,20 @@
 .analysis-process span,.analysis-process small { display:block; font-size:.78rem; color:var(--muted); }
 .process-subset { display:flex; flex-wrap:wrap; gap:12px 25px; padding:16px 0 0; border-top:1px solid var(--line); font-size:.78rem; color:var(--muted); }
 .process-subset strong { color:var(--accent); }
+.comparison-legend { display:flex; flex-wrap:wrap; gap:10px 22px; font-size:.76rem; color:var(--muted); margin:22px 0; }
+.comparison-legend > span { display:flex; align-items:center; gap:8px; }
+.comparison-key { width:25px; border-top:2px solid var(--accent); }
+.comparison-key--model { border-color:var(--finance-neutral); border-top-style:dashed; }
+.comparison-key--baseline { border-color:var(--muted); border-top-style:dotted; }
+.comparison-path { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round; }
+.comparison-path--model { stroke:var(--finance-neutral); stroke-dasharray:7 5; stroke-width:2; }
+.comparison-path--baseline { stroke:var(--muted); stroke-dasharray:2 5; stroke-width:2; }
+.waterfall-bar { position:absolute; width:12%; transform:translateX(-50%); background:var(--finance-neutral); }
+.waterfall-bar--end { background:var(--accent); }
+.waterfall-bar--residual { border:2px dashed var(--muted); background:var(--soft); }
+.waterfall-value { position:absolute; font-size:.75rem; line-height:1.4; font-weight:600; color:var(--ink); background:var(--bg); padding:0 2px; transform:translate(-50%,-8px); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.waterfall-value--inside { transform:translate(-50%,50%); }
+.waterfall-connector { position:absolute; border-top:1px dashed var(--chart-muted); }
 @media (max-width:600px) {
   .plot-grid { grid-template-columns:46px minmax(0,1fr); gap:10px; padding-right:9px; }
   .plot-y-labels,.plot-area { height:200px; }

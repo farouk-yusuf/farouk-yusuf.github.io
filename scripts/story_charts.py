@@ -69,3 +69,35 @@ def rainfall_scatter(rows, *, slope, intercept):
     ticks = [(_position(x,xmin,xmax),str(x),'') for x in (700,800,900,1000)]
     graph = _frame(body,ymin=ymin,ymax=ymax,yticks=(10,15,20,25,30),xticks=ticks,xlabel='Midlands annual rainfall (mm)',ylabel='Average recorded spills per qualifying overflow',kind='scatter')
     return '<p class="plot-fit-key"><span></span>Exploratory line fitted to 2020–2024 · 2025 highlighted</p>'+graph
+
+
+def comparison_lines(labels, series, *, ymin, ymax, yticks, tick_indices, ylabel):
+    """Compare observed data, a tested model and its baseline on the same axes."""
+    positions = [i/(len(labels)-1)*100 for i in range(len(labels))]
+    paths,legend = [],[]
+    for name,values,style in series:
+        if len(values)!=len(labels):
+            raise ValueError('Each comparison series must have one value per label')
+        points = ' '.join(f'{x:.4f},{100-_position(value,ymin,ymax):.4f}' for x,value in zip(positions,values))
+        paths.append(f'<polyline class="comparison-path comparison-path--{e(style)}" data-series="{e(name)}" points="{points}" vector-effect="non-scaling-stroke"/>')
+        legend.append(f'<span><i class="comparison-key comparison-key--{e(style)}"></i>{e(name)}</span>')
+    body = '<svg class="plot-geometry" viewBox="0 0 100 100" preserveAspectRatio="none">'+''.join(paths)+'</svg>'
+    ticks = [(positions[i],labels[i],'plot-tick--first' if i==0 else 'plot-tick--last' if i==len(labels)-1 else '') for i in tick_indices]
+    return '<div class="comparison-legend">'+''.join(legend)+'</div>'+_frame(body,ymin=ymin,ymax=ymax,yticks=yticks,xticks=ticks,xlabel='',ylabel=ylabel,kind='comparison-lines',tick_format=lambda v:f'{v/1000:g}k')
+
+
+def balance_waterfall(rows, *, maximum=260000):
+    """An additive stock/flow bridge; an unclassified residual has a dashed outline."""
+    body,ticks = [],[]
+    for i,(label,start,end,display,style) in enumerate(rows):
+        x = (i+.5)/len(rows)*100
+        low,high = sorted((_position(start,0,maximum),_position(end,0,maximum)))
+        # Flow labels sit within the tall bars; totals and residual sit above.
+        label_y = (low+high)/2 if style=='flow' else high
+        placement = 'waterfall-value--inside' if style=='flow' else ''
+        body.append(f'<span class="waterfall-bar waterfall-bar--{e(style)}" data-start="{float(start):.8f}" data-end="{float(end):.8f}" style="left:{x:.4f}%;bottom:{low:.4f}%;height:{high-low:.4f}%"></span><span class="waterfall-value {placement}" style="left:{x:.4f}%;bottom:{label_y:.4f}%">{e(display)}</span>')
+        if i<len(rows)-1:
+            level = _position(end,0,maximum)
+            body.append(f'<span class="waterfall-connector" style="left:{x+6:.4f}%;bottom:{level:.4f}%;width:{100/len(rows)-12:.4f}%"></span>')
+        ticks.append((x,label,''))
+    return _frame(''.join(body),ymin=0,ymax=maximum,yticks=(0,80000,160000,240000),xticks=ticks,xlabel='',ylabel='Waiting pathways · thousands (k)',kind='waterfall',tick_format=lambda v:f'{v/1000:g}k')

@@ -5,7 +5,6 @@ Run from any directory: python3 scripts/build_site.py
 HTML is committed so serving and deployment never require this script.
 """
 import argparse
-import csv
 import json
 from html import escape
 from pathlib import Path
@@ -14,6 +13,7 @@ from string import Template
 from birmingham_story import render as render_birmingham
 from housing_story import render as render_housing
 from water_story import render as render_water
+from nhs_story import render as render_nhs
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
@@ -34,11 +34,6 @@ def e(value):
 
 def paragraph(text):
     return f'<p>{e(text)}</p>'
-
-
-def list_html(items, ordered=False):
-    tag = 'ol' if ordered else 'ul'
-    return f'<{tag}>' + ''.join(f'<li>{e(item)}</li>' for item in items) + f'</{tag}>'
 
 
 def svg_wrap(body, height=250):
@@ -73,32 +68,6 @@ def bars(labels, values, unit='', maximum=None, reference=None, compact=False):
     return svg_wrap(body, height)
 
 
-def line(labels, values, unit='', low=0, high=None, reference=None):
-    left, right, top, bottom = 52, 555, 28, 205
-    high = high if high is not None else max(values) * 1.15
-    def y(v):
-        return bottom - (v-low)/(high-low)*(bottom-top)
-    def x(i):
-        return left+i*(right-left)/max(1,len(values)-1)
-    body = ''
-    for i in range(4):
-        v = low + (high-low)*i/3
-        yy = y(v)
-        body += f'<line class="axis" x1="{left}" x2="{right}" y1="{yy:.2f}" y2="{yy:.2f}"/><text x="{left-10}" y="{yy+4:.2f}" text-anchor="end">{v:.0f}</text>'
-    if reference:
-        value, label = reference
-        body += f'<line class="threshold" x1="{left}" x2="{right}" y1="{y(value):.2f}" y2="{y(value):.2f}"/><text x="{right}" y="{y(value)-8:.2f}" text-anchor="end">{e(label)}</text>'
-    points = ' '.join(f'{x(i):.2f},{y(v):.2f}' for i,v in enumerate(values))
-    body += f'<polyline class="series" points="{points}"/>'
-    stride = max(1, (len(values)+4)//5)
-    for i,(label,v) in enumerate(zip(labels, values)):
-        body += f'<circle class="point" cx="{x(i):.2f}" cy="{y(v):.2f}" r="3"><title>{e(label)}: {e(v)}{e(unit)}</title></circle>'
-        if i % stride == 0 or i == len(values)-1:
-            body += f'<text x="{x(i):.2f}" y="230" text-anchor="middle">{e(label)}</text>'
-    body += f'<text x="{right+10}" y="{y(values[-1])+4:.2f}">{e(values[-1])}</text>'
-    return svg_wrap(body)
-
-
 def table(headers, rows, title):
     head = ''.join(f'<th scope="col">{e(h)}</th>' for h in headers)
     cells = ''.join('<tr>'+''.join(f'<td>{e(v)}</td>' for v in row)+'</tr>' for row in rows)
@@ -111,23 +80,6 @@ def chart(title, subtitle, drawing, headers, rows, source):
     <p class="chart-subtitle">{e(subtitle)}</p>{drawing}
     <details><summary>View the chart data</summary>{table(headers, rows, title)}</details>
     <p class="chart-source">Source: {e(source)}</p></figure>'''
-
-
-def charts(project):
-    slug = project['slug']
-    source = project['source']
-    labels=['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26']
-    values=[53.6,55.7,59.0,60.6,61.5,61.5,61.2,62.5,68.6,68.4,68.6,68.9,67.3,66.6]
-    a = chart('18-week performance improved, then eased after June.', 'UHB incomplete RTT pathways within 18 weeks, %. The March 2026 milestone is shown for context.',
-      line(labels,values,low=40,high=80,reference=(65,'Mar 2026 milestone: 65%')),
-      ['Month','Within 18 weeks (%)'],list(zip(labels,values)),source)
-    b = chart('Referrals increased while clock stops stayed broadly flat.', 'April–August totals. These flows alone do not fully reconcile the change in the waiting-list stock.',
-      bars(['Starts · 2025','Starts · 2026','Stops · 2025','Stops · 2026'],[115481,133091,103997,104806],maximum=180000),
-      ['Flow','Apr–Aug 2025','Apr–Aug 2026'],[['Clock starts',115481,133091],['Clock stops',103997,104806]],source)
-    c = chart('A no-change baseline beat both forecast models.', 'Back-test mean absolute percentage error, %. Lower is better; the models missed the turning point.',
-      bars(['No-change baseline','Trend model','Demand/capacity'],[2.5,6.07,8.4],unit='%',maximum=11),
-      ['Model','Back-test error (%)'],[['No change',2.5],['Trend',6.07],['Demand and capacity',8.4]],source)
-    return a+b,c
 
 
 def organisation(project, prefix=''):
@@ -276,39 +228,16 @@ def section(id_, title, content):
 
 
 def project_page(project,index):
-    if project['slug'] == 'severn-trent':
-        content = render_water(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
-        copy = json.loads((ROOT/'site/severn-trent.json').read_text())
-        emit('case-studies/severn-trent.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css','story-charts.css')))
-        return
-    if project['slug'] == 'platform-housing':
-        content = render_housing(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
-        copy = json.loads((ROOT/'site/platform.json').read_text())
-        emit('case-studies/platform-housing.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css','story-charts.css')))
-        return
-    if project['slug'] == 'birmingham-payments':
-        content = render_birmingham(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
-        copy = json.loads((ROOT/'site/birmingham.json').read_text())
-        emit('case-studies/birmingham-payments.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css','story-charts.css')))
-        return
-    first_chart,second_chart=charts(project)
-    metrics=''.join(f'<div class="metric"><strong>{e(v)}</strong><span>{e(label)}</span></div>' for v,label in project['metrics'])
-    actions=''.join(f'<h3>{e(owner)}</h3>{paragraph(action)}' for owner,action in project['actions'])
-    dashboard=''
-    if project['dashboard'] and (ROOT/'assets'/project['dashboard']).exists():
-        # Keep the existing image paths and hide-if-missing behaviour. Do not invent dashboards.
-        dashboard=f'<figure class="dashboard-preview" data-image-container><img data-optional-image src="../assets/{e(project["dashboard"])}" alt="{e(project["organisation"])} Power BI dashboard" loading="lazy"><figcaption>Power BI dashboard preview</figcaption></figure>'
-    body=section('brief','The decision this analysis supports.',paragraph(project['brief']))
-    body+=section('findings','What a closer look revealed.',paragraph(project['finding'])+first_chart+f'<div class="callout"><h3>My recommendation</h3>{paragraph(project["decision"])}</div>')
-    body+=section('detail',project['secondary_title'],paragraph(project['secondary'])+second_chart)
-    body+=section('method','How I built and checked it.',list_html(project['methods'],ordered=True))
-    body+=section('actions','What I would ask the team to do next.',actions)
-    body+=section('limitations','Where the evidence stops.',list_html(project['limitations'])+f'<div class="callout"><h3>What I learned</h3>{paragraph(project["reflection"])}</div>')
-    body+=section('files','Explore the work behind the analysis.',paragraph('These are the original write-ups, scripts and workbook. Their links are preserved from the previous site. The analysis is presented as a portfolio exercise; recommendations have not been implemented or evaluated by these organisations.')+resources(project)+f'<h3>Power BI dashboard</h3>{paragraph(project["dashboard_plan"])}'+dashboard)
-    nav=''.join(f'<a href="#{id_}">{title}</a>' for id_,title in [('brief','The brief'),('findings','Key findings'),('detail','A deeper look'),('method','Method and checks'),('actions','Recommendations'),('limitations','Limitations'),('files','Files and dashboard')])
-    next_project=PROJECTS[(index+1)%len(PROJECTS)]
-    content=f'''<main class="container" id="main"><div class="breadcrumb"><a href="../index.html#projects">Selected work</a> / {e(project['sector'])}</div><div class="case-hero">{organisation(project,'../')}<span class="eyebrow">Independent public-data case study</span><h1>{e(project['title'])}</h1><p class="lead">{e(project['summary'])}</p><div class="case-meta"><span><strong>For:</strong> {e(project['audience'])}</span><span>{e(project['period'])}</span><span>{e(' · '.join(project['tools']))}</span></div></div><div class="metric-grid">{metrics}</div><div class="case-layout"><nav class="case-nav" aria-label="On this page"><strong>Inside the analysis</strong>{nav}</nav><div class="case-content">{body}</div></div><div class="next-project"><a class="text-link" href="../index.html#projects">← All projects</a><a class="button" href="{next_project['slug']}.html">Next: {e(next_project['organisation'])} <span aria-hidden="true">→</span></a></div></main>'''
-    emit(f'case-studies/{project["slug"]}.html', document(project['organisation']+' analysis',project['summary'],content,'../'))
+    renderers = {
+        'birmingham-payments': (render_birmingham, 'birmingham.json'),
+        'platform-housing': (render_housing, 'platform.json'),
+        'severn-trent': (render_water, 'severn-trent.json'),
+        'uhb-waiting-times': (render_nhs, 'uhb.json'),
+    }
+    renderer, filename = renderers[project['slug']]
+    copy = json.loads((ROOT/'site'/filename).read_text())
+    content = renderer(project,PROJECTS[(index+1)%len(PROJECTS)],chart=chart,table=table,organisation=organisation,resources=resources)
+    emit(f"case-studies/{project['slug']}.html",document(copy['title'],copy['summary'],content,'../',styles=('finance.css','story-charts.css')))
 
 
 def research():
