@@ -1,0 +1,75 @@
+/* Plot text is HTML: it keeps its font size while the geometry resizes. */
+.story-plot { margin:25px 0 20px; font-size:.76rem; color:var(--muted); }
+.plot-unit { margin-bottom:16px; line-height:1.6; }
+.plot-grid { display:grid; grid-template-columns:52px minmax(0,1fr); gap:14px; padding-right:15px; }
+.plot-y-labels,.plot-area { position:relative; height:225px; }
+.plot-y-labels span { position:absolute; right:0; transform:translateY(50%); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.plot-area { min-width:0; }
+.plot-guides { position:absolute; inset:0; }
+.plot-guides span { position:absolute; left:0; right:0; border-top:1px solid var(--line); }
+.plot-geometry { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.plot-series { stroke:var(--finance-neutral); stroke-width:2; fill:none; stroke-linejoin:round; }
+.plot-fit { stroke:var(--finance-neutral); stroke-width:1.5; stroke-dasharray:5 5; }
+.plot-dot { position:absolute; width:8px; height:8px; border-radius:50%; background:var(--muted); border:1px solid var(--bg); transform:translate(-50%,50%); }
+.plot-dot--focus { background:var(--accent); width:11px; height:11px; }
+.plot-x-labels { position:relative; margin:14px 15px 0 66px; height:24px; }
+.plot-x-labels > span,.pair-ticks > span { position:absolute; transform:translateX(-50%); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.plot-x-labels > .plot-tick--first,.pair-ticks > .plot-tick--first { transform:none; }
+.plot-x-labels > .plot-tick--last,.pair-ticks > .plot-tick--last { transform:translateX(-100%); }
+.plot-x-title { text-align:center; margin-left:66px; line-height:1.6; }
+.plot-reference { position:absolute; left:0; right:0; border-top:1px dashed var(--chart-muted); }
+.plot-reference > span { position:absolute; right:0; bottom:7px; color:var(--muted); font-size:.75rem; background:var(--bg); padding:0 4px; }
+.scatter-label { position:absolute; font-size:.76rem; transform:translate(-50%,calc(100% + 9px)); white-space:nowrap; background:var(--bg); padding:0 2px; }
+.scatter-label--above { transform:translate(-50%,-10px); }
+.scatter-label--right { transform:translate(10px,50%); }
+.scatter-label.plot-dot--focus { background:transparent; width:auto; height:auto; color:var(--accent); font-weight:650; }
+.plot-fit-key { display:flex; align-items:center; gap:9px; font-size:.76rem; line-height:1.6; color:var(--muted); }
+.plot-fit-key > span { width:25px; border-top:1.5px dashed var(--finance-neutral); flex-shrink:0; }
+.paired-plot { margin:24px 0 25px; }
+.plot-legend { display:flex; flex-wrap:wrap; gap:10px 22px; font-size:.76rem; color:var(--muted); margin-bottom:24px; }
+.plot-legend > span { display:flex; align-items:center; gap:8px; }
+.legend-dot { display:inline-block; width:9px; height:9px; background:var(--muted); border-radius:50%; }
+.legend-dot--open { width:12px; height:12px; background:var(--bg); border:2px solid var(--muted); }
+.paired-plot ul { list-style:none; padding:0; margin:0; }
+.pair-row { margin:0 0 21px; }
+.pair-heading { display:flex; justify-content:space-between; align-items:baseline; gap:15px; font-size:.8rem; color:var(--muted); margin-bottom:12px; line-height:1.5; }
+.pair-heading strong { display:flex; gap:14px; font-size:.78rem; font-weight:500; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.pair-heading strong span:first-child { color:var(--muted); }
+.pair-heading strong span:last-child { color:var(--ink); font-weight:650; }
+.pair-row--focus .pair-heading > span { color:var(--accent); font-weight:650; }
+.pair-scale { margin:0 7px; height:14px; position:relative; background:linear-gradient(var(--line),var(--line)) center / 100% 1px no-repeat; }
+.pair-link { display:block; position:absolute; top:6px; height:2px; background:var(--finance-neutral); }
+.pair-dot { display:block; position:absolute; width:8px; height:8px; border-radius:50%; top:7px; transform:translate(-50%,-50%); background:var(--muted); z-index:2; }
+.pair-dot--open { width:14px; height:14px; background:var(--bg); border:2px solid var(--muted); z-index:1; }
+.pair-row--focus .pair-dot:not(.pair-dot--open) { background:var(--accent); }
+.pair-ticks { margin:18px 7px 0; position:relative; height:24px; font-size:.75rem; color:var(--muted); }
+.count-comparison { display:flex; align-items:center; gap:30px; margin:30px 0; }
+.count-comparison > div { flex:1; }
+.count-comparison > div > span { display:block; font-size:.78rem; color:var(--muted); margin-bottom:8px; }
+.count-comparison strong { font-family:var(--heading); font-size:clamp(1.7rem,4vw,2.7rem); letter-spacing:-.04em; font-weight:650; }
+.count-comparison > div:last-child strong { color:var(--accent); }
+.count-arrow { color:var(--chart-muted); font-size:1.5rem; }
+.analysis-process { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:35px; padding:0; margin:25px 0; }
+.analysis-process li { border-top:2px solid var(--line); padding-top:16px; margin:0; position:relative; }
+.analysis-process li + li::before { content:'→'; position:absolute; left:-27px; top:18px; color:var(--chart-muted); }
+.analysis-process strong { display:block; font-family:var(--heading); font-size:2.5rem; font-weight:650; letter-spacing:-.04em; line-height:1.4; }
+.analysis-process li:last-child strong { color:var(--accent); }
+.analysis-process span,.analysis-process small { display:block; font-size:.78rem; color:var(--muted); }
+.process-subset { display:flex; flex-wrap:wrap; gap:12px 25px; padding:16px 0 0; border-top:1px solid var(--line); font-size:.78rem; color:var(--muted); }
+.process-subset strong { color:var(--accent); }
+@media (max-width:600px) {
+  .plot-grid { grid-template-columns:46px minmax(0,1fr); gap:10px; padding-right:9px; }
+  .plot-y-labels,.plot-area { height:200px; }
+  .plot-x-labels { margin-left:56px; margin-right:9px; font-size:.75rem; }
+  .plot-x-labels > .plot-tick--optional { display:none; }
+  .plot-x-title { margin-left:56px; }
+  .pair-heading { font-size:.76rem; gap:10px; }
+  .pair-heading strong { font-size:.75rem; gap:10px; }
+  .pair-heading > span { max-width:62%; }
+  .count-comparison { gap:15px; }
+  .plot-reference > span { font-size:.75rem; }
+  .scatter-label { font-size:.75rem; }
+  .analysis-process { gap:25px; }
+  .analysis-process li + li::before { left:-21px; }
+  .analysis-process strong { font-size:2rem; }
+}

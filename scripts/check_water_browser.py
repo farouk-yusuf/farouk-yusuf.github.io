@@ -91,6 +91,11 @@ def main():
             assert 'service-level agreements (SLAs)' in template.inner_text()
             assert page.locator('#data table').first.locator('th').all_text_contents() == ['Dataset','Data owner','Analytical purpose','Availability']
             assert page.locator('.chart-panel').count() == 6
+            assert page.locator('#annual [data-viz="line"]').count() == 2
+            assert page.locator('#annual [data-viz="line"] .plot-dot').count() == 12
+            assert page.locator('#rainfall [data-viz="scatter"] .plot-dot').count() == 6
+            assert page.locator('#rainfall [data-viz="paired-dot"]').count() == 1
+            assert page.locator('#operations > .table-scroll tbody tr').count() == 3
             for chart in page.locator('.chart-panel').all():
                 assert chart.locator('table').count() == 1
                 chart.locator('summary').focus()

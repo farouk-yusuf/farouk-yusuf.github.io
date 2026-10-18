@@ -8,6 +8,7 @@ from statistics import median
 
 from story_components import e, p, source_link, disclosure, note, metric, requirements_panels, horizontal_bars
 from story_workbook import read_sheet
+from story_charts import paired_dots, line_chart, count_comparison
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT/'projects/02_Platform_Housing'
@@ -49,19 +50,6 @@ def bars(rows, maximum=100, *, percent=True):
     return horizontal_bars(rows,maximum,lambda value:n(value)+'%' if percent else n(value,0))
 
 
-def gap_bars(rows, focus):
-    result = []
-    # Fixed, shared scale of -10 to +3 percentage points; zero is 10/13 across.
-    for row in sorted(rows, key=lambda r:Decimal(r[GAP])):
-        value = Decimal(row[GAP])
-        code, label = row['Measure'].split(' ', 1)
-        left = (10+min(0, value))/13*100
-        width = abs(value)/13*100
-        display = ('+' if value>0 else '−' if value<0 else '')+n(abs(value))+' pts'
-        result.append(f'<li class="finance-bar-row"><div class="finance-bar-label"><span>{e(label.replace("ASB handling", "Anti-social behaviour handling"))}</span><strong>{display}</strong></div><div class="finance-bar-track finance-bar-track--diverging" style="--zero:76.923%" aria-hidden="true"><span class="finance-bar {"finance-bar--focus" if code in focus else ""}" style="left:{float(left):.3f}%;width:{float(width):.3f}%"></span></div></li>')
-    return '<p class="finance-axis-note"><span>Below peer median ←</span><span>→ Above peer median</span></p><ul class="finance-bars">'+''.join(result)+'</ul>'
-
-
 def code_excerpt(filename, start, end=None):
     code = (PROJECT/'scripts'/filename).read_text()
     excerpt = code[code.index(start):]
@@ -90,7 +78,7 @@ def render(project, next_project, *, chart, table, organisation, resources):
 
     overall = data['measures']['TP01']
     benchmark_rows = [['Platform · 2023/24',n(overall[PREVIOUS])],['Platform · 2024/25',n(overall[CURRENT])],['Large-landlord median · 2024/25',n(overall[MEDIAN])]]
-    overall_chart = chart('Overall satisfaction improved, but only reached the peer median','Percentage satisfied. The primary cohort contains 17 housing associations with more than 40,000 homes, including Platform.',bars([(label,Decimal(value),i==1) for i,(label,value) in enumerate(benchmark_rows)])+'<p class="chart-annotation"><strong>64.6% satisfied</strong>, up from 62.6% a year earlier. Improvement does not mean Platform is ahead of similar landlords.</p>',['Landlord / period','Overall satisfaction (%)'],benchmark_rows,'Benchmark worksheet · TP01. Published landlord-level survey measures, not a matched panel of tenants.')
+    overall_chart = chart('Overall satisfaction improved, but only reached the peer median','Percentage satisfied. The primary cohort contains 17 housing associations with more than 40,000 homes, including Platform.',paired_dots([('Overall satisfaction',Decimal(overall[PREVIOUS]),Decimal(overall[CURRENT]),True)],first_label='Platform 2023/24',second_label='Platform 2024/25')+'<p class="chart-annotation"><strong>64.6% satisfied</strong>, up from 62.6% a year earlier. The large-landlord median was also <strong>64.6%</strong>.</p>',['Landlord / period','Overall satisfaction (%)'],benchmark_rows,'Benchmark worksheet · TP01. Published landlord-level survey measures, not a matched panel of tenants.')
     cohort_proof = code_excerpt('02_tsm_benchmark.py','cur = tsm[','# ---- benchmark table')+source_link(SOURCE+'scripts/02_tsm_benchmark.py','Peer-cohort definitions')
     method_rows = [[r['Predominant collection method'],r['Landlords'],n(r['Median overall satisfaction'])] for r in data['methods']]
     method_proof = table(['Predominant survey method','Landlords','Median satisfaction (%)'],method_rows,'Survey-method comparison across the full published dataset')
@@ -98,7 +86,8 @@ def render(project, next_project, *, chart, table, organisation, resources):
 
     focus = [r[0] for r in copy['priorities']]
     gap_rows = [[r['Measure'],n(r[CURRENT]),n(r[MEDIAN]),n(r[GAP]),r['Quartile vs large HAs'],r['Large HAs compared']] for r in sorted(data['satisfaction'],key=lambda r:Decimal(r[GAP]))]
-    gaps = chart('Communication and neighbourhood scores trail the headline result','Gap to the large-landlord median in percentage points. Green highlights the three recommended starting priorities; grey retains the wider service picture.',gap_bars(data['satisfaction'],focus)+'<p class="chart-annotation">For keeping tenants informed, <strong>61.8% were satisfied versus 69.1% at the peer median</strong>: about seven fewer satisfied tenants in every 100. This is a comparison of survey percentages, not a count of individual tenants.</p>',['Measure','Platform satisfied (%)','Peer median (%)','Gap (percentage points)','Quartile','Landlords compared'],gap_rows,'Benchmark worksheet · TP01–TP12. All 12 measures have 17 landlords in this workbook.')
+    benchmark_pairs = [(r['Measure'].split(' ',1)[1].replace('ASB handling','Anti-social behaviour handling'),Decimal(r[MEDIAN]),Decimal(r[CURRENT]),r['Measure'].split(' ')[0] in focus) for r in sorted(data['satisfaction'],key=lambda r:Decimal(r[GAP]))]
+    gaps = chart('Communication and neighbourhood scores trail the headline result','The distance between each pair shows the difference in satisfaction. Green highlights the three recommended starting priorities; all rows use the same 0–100% scale.',paired_dots(benchmark_pairs,first_label='Large-landlord median',second_label='Platform 2024/25')+'<p class="chart-annotation">For keeping tenants informed, <strong>61.8% were satisfied versus 69.1% at the peer median</strong>: about seven fewer satisfied tenants in every 100. This is a comparison of survey percentages, not a count of individual tenants.</p>',['Measure','Platform satisfied (%)','Peer median (%)','Gap (percentage points)','Quartile','Landlords compared'],gap_rows,'Benchmark worksheet · TP01–TP12. All 12 measures have 17 landlords in this workbook.')
     section('gaps','The overall score conceals specific service gaps',p('Six of the twelve tenant-satisfaction measures sit in the bottom quarter of the large-landlord cohort. Communal areas show the largest shortfall: 55.4% satisfied against a 64.5% peer median. Communication, listening and neighbourhood services also warrant attention.')+gaps+p('Performance is mixed. Repairs-service satisfaction is above the peer median, as is satisfaction with home safety. Separately, operational returns record 100% completion for five building-safety checks and 98.2% of emergency repairs within target. Compliance and tenant perceptions answer different questions; neither should substitute for the other.'))
 
     driver_index = {r['Measure'].split(' ')[0]:r for r in data['drivers']}
@@ -110,9 +99,9 @@ def render(project, next_project, *, chart, table, organisation, resources):
 
     repair = data['repair']
     repair_rates = [('2023/24',Decimal(repair[PREVIOUS]),False),('2024/25',Decimal(repair[CURRENT]),True)]
-    rate_chart = chart('Reported repair timeliness fell from 91.7% to 62.3%','Non-emergency repairs completed within target. The recorded target remained 28 days.',bars(repair_rates),['Year','Within target (%)'],[[label,n(value)] for label,value,_ in repair_rates],'Benchmark worksheet · RP02 1; Year-on-year checks worksheet.')
+    rate_chart = chart('Reported repair timeliness fell from 91.7% to 62.3%','Non-emergency repairs completed within target. The slope connects two annual observations; the recorded target remained 28 days.',line_chart([r[0] for r in repair_rates],[r[1] for r in repair_rates],ymax=100,yticks=(0,25,50,75,100),ylabel='Within target (%)',kind='slope')+'<p class="chart-annotation"><strong>91.7% → 62.3%</strong>, a decline of 29.4 percentage points. The population counted also changed sharply.</p>',['Year','Within target (%)'],[[label,n(value)] for label,value,_ in repair_rates],'Benchmark worksheet · RP02 1; Year-on-year checks worksheet.')
     counts = data['repair_counts']
-    count_chart = chart('The number of repairs counted fell by about 85%','Recorded repair counts underlying the year-on-year check. This population change needs reconciliation alongside the rate.',bars([('2023/24',counts[0],False),('2024/25',counts[1],True)],maximum=100000,percent=False)+'<p class="chart-annotation"><strong>Reconcile the population before explaining the rate.</strong> A stable target does not establish consistent inclusion rules.</p>',['Year','Repairs counted'],[['2023/24',counts[0]],['2024/25',counts[1]]],'Year-on-year checks worksheet · underlying counts recorded in the original analysis.')
+    count_chart = chart('The number of repairs counted fell by about 85%','Recorded repair counts underlying the year-on-year check. This population change needs reconciliation alongside the rate.',count_comparison('2023/24',counts[0],'2024/25',counts[1])+'<p class="chart-annotation"><strong>Reconcile the population before explaining the rate.</strong> A stable target does not establish consistent inclusion rules.</p>',['Year','Repairs counted'],[['2023/24',counts[0]],['2024/25',counts[1]]],'Year-on-year checks worksheet · underlying counts recorded in the original analysis.')
     check_rows = [[r['Measure'],r['Platform 2023/24 -> 2024/25'],r['What the underlying counts show']] for r in data['checks']]
     checks_proof = table(['Measure','Published movement (rounded)','Underlying count check'],check_rows,'Year-on-year checks recorded in the workbook')+p('The existing workbook suggests possible recording changes. The evidence does not settle that explanation: genuine service changes remain possible. I would ask owners to reconcile both years before explaining the decline in the board report.')+source_link(SOURCE+'outputs/03_Website_Validation_Notes.md','Validation notes and unresolved checks')
     section('validation','Repair counts need reconciliation before a performance conclusion',p('I checked the underlying counts before interpreting the decline. The rate fell by 29.4 percentage points, while the repairs counted fell from 90,250 to 13,872. This combination raises a comparability question; it does not prove a recording error or rule out a real deterioration.')+rate_chart+count_chart+note('Data validation and escalation','Request job-level totals by year, repair type, completion status and inclusion rule from Repairs. Build a bridge from the earlier population to the later one, confirm the 28-day definition and then quantify any remaining performance change.')+p('The same review identified large increases in recorded anti-social behaviour cases and stage-one complaints. Higher recorded volumes can reflect worsening experience, broader recording or both; the service owners need to establish which explanation fits.')+disclosure('Repair, anti-social behaviour and complaint checks',checks_proof))

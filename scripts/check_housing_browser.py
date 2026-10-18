@@ -72,6 +72,10 @@ def main():
             assert page.locator('#data th').all_text_contents() == ['Dataset','Data owner','Analytical purpose','Availability']
             assert page.locator('#data tbody tr').first.locator('td').all_text_contents()[:2] == ['Tenant survey responses','Customer insight']
             assert page.locator('.chart-panel').count() == 5
+            assert page.locator('#gaps [data-viz="paired-dot"] .pair-row').count() == 12
+            assert page.locator('#validation [data-viz="slope"] .plot-dot').count() == 2
+            assert page.locator('#validation [data-viz="count-comparison"]').count() == 1
+            assert page.locator('.finance-bars').count() == 1
             for chart in page.locator('.chart-panel').all():
                 assert chart.locator('table').count() == 1
                 chart.locator('summary').focus()

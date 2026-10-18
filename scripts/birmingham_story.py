@@ -6,10 +6,12 @@ is separate; this renderer reads its committed outputs, not the unavailable raw 
 import ast
 import csv
 from decimal import Decimal
+from datetime import datetime
 import json
 from pathlib import Path
 from story_workbook import read_sheet
 from story_components import e, p, source_link, disclosure, note, metric
+from story_charts import line_chart, paired_dots
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / 'projects/01_BCC_Payments'
@@ -30,7 +32,8 @@ def evidence_data():
     groups = sorted([(r['report_group'], Decimal(r[years[1]]) - Decimal(r[years[0]])) for r in spend if r['report_group'] != 'Total'], key=lambda item: item[1], reverse=True)
     with (PROJECT/'outputs/sql_results/03_possible_duplicate_payments.csv').open() as stream:
         initial_pairs = sum(1 for _ in csv.DictReader(stream))
-    return {'figures': figures, 'mapping': mapping, 'groups': groups, 'totals': [Decimal(totals[k]) for k in years], 'initial_pairs': initial_pairs}
+    monthly = [row for row in workbook_rows('Monthly spend £m') if row['month'] < '2026-07']
+    return {'figures': figures, 'mapping': mapping, 'groups': groups, 'totals': [Decimal(totals[k]) for k in years], 'initial_pairs': initial_pairs, 'monthly': monthly}
 
 
 def code_excerpt(filename, start, end=None):
@@ -39,14 +42,6 @@ def code_excerpt(filename, start, end=None):
     if end:
         excerpt = excerpt[:excerpt.index(end)]
     return f'<pre tabindex="0" role="region" aria-label="Code excerpt"><code>{e(excerpt.strip())}</code></pre>'
-
-
-def comparison_bars(labels, values, highlights=()):
-    maximum = max(values)
-    rows = []
-    for i, (label, value) in enumerate(zip(labels, values)):
-        rows.append(f'<li class="finance-bar-row"><div class="finance-bar-label"><span>{e(label)}</span><strong>£{value:,.2f}m</strong></div><div class="finance-bar-track" aria-hidden="true"><span class="finance-bar {"finance-bar--focus" if i in highlights else ""}" style="width:{float(value/maximum*100):.3f}%"></span></div></li>')
-    return f'<ul class="finance-bars">{"".join(rows)}</ul>'
 
 
 def movement_bars(groups):
@@ -97,10 +92,14 @@ def render(project, next_project, *, chart, table, organisation, resources):
     proof += source_link('projects/01_BCC_Payments/scripts/01_clean.py','Cleaning and validation script')
     section('comparison', 'Data preparation and validation', p(copy['mapping_intro'])+mapping_table+p(copy['corporate_note'])+note('Data validation',copy['validation_note'])+disclosure('Mapping logic and reconciliation checks',proof))
 
-    spend_chart = chart('Net payments increased by £118.82m over equivalent dates', '1 April–23 July in each year. Credits are included in the net totals.', comparison_bars(['2025','2026'],data['totals'],highlights=(1,))+f'<p class="chart-annotation">2026 was <strong>21.3% higher</strong>. Both periods end on 23 July.</p>', ['Period','Net payments (£m)'],[['1 Apr–23 Jul 2025',f'{data["totals"][0]:.2f}'],['1 Apr–23 Jul 2026',f'{data["totals"][1]:.2f}']], 'Excel finance pack · Spend by directorate · Total row.')
+    spend_chart = chart('Net payments increased by £118.82m over equivalent dates', '1 April–23 July in each year. Credits are included in the net totals.', paired_dots([('Net payments',*data['totals'],True)],first_label='2025',second_label='2026',maximum=800,prefix='£',suffix='m',places=2)+f'<p class="chart-annotation">2026 was <strong>21.3% higher</strong>. Both periods end on 23 July.</p>', ['Period','Net payments (£m)'],[['1 Apr–23 Jul 2025',f'{data["totals"][0]:.2f}'],['1 Apr–23 Jul 2026',f'{data["totals"][1]:.2f}']], 'Excel finance pack · Spend by directorate · Total row.')
+    monthly = data['monthly']
+    month_labels = [datetime.strptime(row['month'],'%Y-%m').strftime('%b %y') for row in monthly]
+    monthly_values = [Decimal(row['Total']) for row in monthly]
+    monthly_chart = chart('Monthly payments fluctuated rather than rising steadily','Published monthly net payments, July 2024–June 2026. The partial July 2026 total is excluded because the extract ends on 23 July.',line_chart(month_labels,monthly_values,ymax=240,yticks=(0,80,160,240),ylabel='Net payments (£m)',tick_indices=(0,6,12,18,len(monthly)-1),optional_ticks=(18,),value_format=lambda v:f'{float(v):g}')+'<p class="chart-annotation"><strong>June 2026: £202.23m.</strong> Payment timing can shift a monthly total; this line does not measure the cost of services delivered in that month.</p>',['Month','Net payments (£m)'],[[row['month'],f'{Decimal(row["Total"]):.2f}'] for row in monthly],'Excel finance pack · Monthly spend £m · Total column. Rounded published-payment aggregates.')
     movement_chart = chart('City Operations and adult social care drove the largest increases', 'Each bar shows a reporting group’s contribution to the £118.82m net increase. Decreases offset part of the growth.', movement_bars(data['groups'])+'<p class="chart-annotation"><strong>City Operations: +£75.62m.</strong> Higher net payments to Birmingham Highways contributed £66.95m within this group.</p>', ['Reporting group','Year-on-year change (£m)'], [[label,f'{value:.2f}'] for label,value in data['groups']], 'Excel finance pack · Spend by directorate and YTD variance drivers. Values rounded to £0.01m.')
     period_proof = code_excerpt('scripts/03_finance_pack.py', 'last =', 'K_period =')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Matched-period calculations')
-    section('spending', 'Spending rose 21.3%', p(copy['spending_intro'])+spend_chart+p(copy['spending_interpretation'])+movement_chart+note('Management interpretation',copy['highways_note'])+disclosure('Reporting-period calculation',period_proof))
+    section('spending', 'Spending rose 21.3%', p(copy['spending_intro'])+spend_chart+monthly_chart+p(copy['spending_interpretation'])+movement_chart+note('Management interpretation',copy['highways_note'])+disclosure('Reporting-period calculation',period_proof))
 
     concentration = f'<div class="supplier-facts">{metric(figures["top10_share_pct"]+"%", "of FY2025/26 payment value went to the top ten suppliers")}{metric("+"+figures["agency_ytd_change_pct"]+"%", "agency-staff payments over the matched year-to-date period")}</div>'
     extra_proof = '<p>These figures are recorded in the finance pack’s Top suppliers FY25-26 and Agency staff monthly sheets. The year-to-date agency comparison uses the same reporting dates as the expenditure analysis.</p>'+source_link('projects/01_BCC_Payments/sql/02_top_suppliers_fy2025_26.sql','Supplier reporting query')+source_link('projects/01_BCC_Payments/sql/05_agency_staff_monthly.sql','Agency-staff reporting query')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Concentration and agency calculations')
@@ -111,7 +110,7 @@ def render(project, next_project, *, chart, table, organisation, resources):
     final = int(figures['dup_pairs'])
     same_day = int(figures['dup_same_day'])
     remaining = final-same_day
-    duplicate_visual = f'<div class="review-route"><div><span>Initial SQL screening</span><strong>{initial:,}</strong><small>candidate payment pairs</small></div><span class="review-arrow" aria-hidden="true">→</span><div class="review-refined"><span>Refined in Python</span><strong>{final:,}</strong><small>candidate pairs · £{e(figures["dup_value_m"])}m</small></div></div><p class="chart-annotation">Of the final <strong>{final} pairs</strong>, begin with the <strong>{same_day} same-day pairs</strong>.</p><div class="review-subset" aria-hidden="true"><span style="width:{same_day/final*100:.3f}%"></span></div><div class="review-subset-labels"><strong>{same_day} same-day pairs</strong><span>{remaining} other pairs · one to three days apart</span></div>'
+    duplicate_visual = f'<div data-viz="process"><ol class="analysis-process"><li><span>Initial SQL screening</span><strong>{initial:,}</strong><small>candidate payment pairs</small></li><li><span>Refined in Python</span><strong>{final:,}</strong><small>candidate pairs · £{e(figures["dup_value_m"])}m</small></li></ol><div class="process-subset"><strong>Within the {final} candidates</strong><span>{same_day} same-day pairs · review first</span><span>{remaining} pairs one to three days apart</span></div></div>'
     duplicate_chart = chart('A more selective rule produced a focused AP review list', 'These are screening stages, not confirmed duplicate payments. The 73 same-day pairs are included within the 281 candidates.', duplicate_visual, ['Screening stage','Payment pairs'],[['Initial SQL rule',initial],['Refined Python rule',final],['Same-day subset of refined pairs',same_day]], 'Initial SQL results CSV; finance pack · Possible duplicates; key_figures.csv.')
     duplicate_proof = '<h3>Stage 1 · SQL candidate generation</h3><p>The SQL self-join compares payment lines for the same supplier and amount within three days. It produces the initial 6,553-pair list.</p>'+source_link('projects/01_BCC_Payments/sql/03_possible_duplicate_payments.sql','Initial SQL matching query')
     duplicate_proof += '<h3>Stage 2 · Python refinement</h3><p>The additional supplier–amount frequency condition is implemented below. It retains combinations appearing exactly twice across the dataset, then checks the gap between those two dates.</p>'+code_excerpt('scripts/03_finance_pack.py','x = df[~df.is_personal_data', 'credits =')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Refined Python screening')

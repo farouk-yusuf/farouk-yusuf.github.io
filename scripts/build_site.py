@@ -279,17 +279,17 @@ def project_page(project,index):
     if project['slug'] == 'severn-trent':
         content = render_water(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
         copy = json.loads((ROOT/'site/severn-trent.json').read_text())
-        emit('case-studies/severn-trent.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css',)))
+        emit('case-studies/severn-trent.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css','story-charts.css')))
         return
     if project['slug'] == 'platform-housing':
         content = render_housing(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
         copy = json.loads((ROOT/'site/platform.json').read_text())
-        emit('case-studies/platform-housing.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css',)))
+        emit('case-studies/platform-housing.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css','story-charts.css')))
         return
     if project['slug'] == 'birmingham-payments':
         content = render_birmingham(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
         copy = json.loads((ROOT/'site/birmingham.json').read_text())
-        emit('case-studies/birmingham-payments.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css',)))
+        emit('case-studies/birmingham-payments.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css','story-charts.css')))
         return
     first_chart,second_chart=charts(project)
     metrics=''.join(f'<div class="metric"><strong>{e(v)}</strong><span>{e(label)}</span></div>' for v,label in project['metrics'])

@@ -35,6 +35,9 @@ def check_evidence():
     assert len(data['mapping']) == 18 and len(set(data['mapping'].values())) == 9
     assert data['mapping']['Adults Social Care Directorate'] == data['mapping']['Adult Social Care & Health Directorate'] == 'Adult Social Care & Health'
     assert data['mapping']['Council Managament'] == 'Council Management'
+    assert len(data['monthly']) == 24
+    assert data['monthly'][0]['month'] == '2024-07' and data['monthly'][-1]['month'] == '2026-06'
+    assert Decimal(data['monthly'][-1]['Total']) == Decimal('202.23')
 
 
 def main():
@@ -80,7 +83,10 @@ def main():
                 'Publication risk assessment', 'Scope and limitations',
             ]
             assert page.locator('.etl-flow strong').all_text_contents() == ['Extract','Transform','Load','Report']
-            assert page.locator('.chart-panel').count() == 3
+            assert page.locator('.chart-panel').count() == 4
+            assert page.locator('#spending [data-viz="line"] .plot-dot').count() == 24
+            assert page.locator('#spending [data-viz="paired-dot"]').count() == 1
+            assert page.locator('#duplicates [data-viz="process"] li').count() == 2
             for chart in page.locator('.chart-panel').all():
                 assert chart.locator('table').count() == 1
                 summary = chart.locator('summary')
