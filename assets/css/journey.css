@@ -98,7 +98,7 @@
 .route-enhanced .route-cards::before,.route-enhanced .route-chapter::before { display:none; }
 .route-enhanced .route-life-static { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); padding:0; white-space:nowrap; }
 .route-enhanced .route-chapter { position:absolute; left:clamp(24px,calc(35% - 160px),calc(100% - 664px)); bottom:calc(28% + 118px); width:min(640px,calc(100% - 48px)); margin:0; pointer-events:none; opacity:0; transform:translateY(16px) scale(.97); transition:opacity .28s,transform .28s; }
-.route-enhanced .route-chapter.is-active { opacity:1; transform:none; }
+.route-enhanced .route-chapter.is-active { opacity:1; transform:none; pointer-events:auto; }
 .route-enhanced .route-card h3 { font-size:1.32rem; }
 .route-enhanced .route-card { box-shadow:0 12px 40px rgba(20,45,32,.04); padding:25px; }
 .route-enhanced .route-toolkit { position:absolute; left:32px; right:32px; bottom:25px; justify-content:center; margin:0; gap:18px; }

@@ -88,6 +88,32 @@ def main():
             assert page.get_by_text('Illustrative sector image', exact=True).count() == 0
             assert 'Congratulations' not in page.locator('.route-section').inner_text()
 
+            # The research teaser is removed; Chevening links work by mouse and keyboard.
+            assert page.locator('.home-research, #research').count() == 0
+            assert page.get_by_role('link', name='Explore the research').count() == 0
+            assert page.get_by_role('link', name='About the Chevening programme').count() == 0
+            page.context.route('https://www.chevening.org/**', lambda route: route.fulfill(status=200, content_type='text/html', body='<title>Chevening link check</title>'))
+            page.locator('[data-route-jump="1"]').click()
+            settle(page)
+            scholarship_links = page.locator('#journey-02 .route-card a')
+            assert scholarship_links.count() == 2
+            for index, link in enumerate(scholarship_links.all()):
+                assert link.get_attribute('href') == about['chevening_source']
+                assert link.evaluate('(el)=>el.tabIndex') == 0
+                with page.expect_popup() as popup:
+                    if index == 0:
+                        link.click()
+                    else:
+                        link.focus()
+                        page.keyboard.press('Enter')
+                target = popup.value
+                target.wait_for_load_state()
+                assert target.url == about['chevening_source']
+                target.close()
+            page.locator('[data-route-jump="0"]').click()
+            settle(page)
+            assert scholarship_links.evaluate_all('(links)=>links.every(a=>a.tabIndex===-1)')
+
             # Dated employment entries stay in HTML reading order alongside study.
             entries = page.locator('.route-life-entry').all_text_contents()
             for date, role, organisation in (
@@ -202,6 +228,7 @@ def main():
                 assert tab.locator('.route-enhanced').count() == 0, settings
                 assert tab.locator('[data-route-chapter]').count() == 6
                 assert tab.locator('.route-life-entry').count() == 7
+                assert tab.locator('#journey-02 .route-card a').evaluate_all('(links)=>links.every(a=>a.tabIndex===0)')
                 assert not tab.locator('.route-celebration').is_visible()
                 assert not tab.locator('.route-partner').is_visible()
                 assert tab.locator('.route-chapter').evaluate_all('(cards)=>cards.every(c=>getComputedStyle(c).opacity==="1")')

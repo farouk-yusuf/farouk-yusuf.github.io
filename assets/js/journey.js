@@ -99,7 +99,11 @@
     route.dataset.routeProgress = progress.toFixed(3);
     route.classList.toggle('route-at-end', finished);
     ending.querySelectorAll('a').forEach(link => { link.tabIndex = finished ? 0 : -1; });
-    chapters.forEach((chapter, index) => chapter.classList.toggle('is-active', index === active && !finished));
+    chapters.forEach((chapter, index) => {
+      const selected = index === active && !finished;
+      chapter.classList.toggle('is-active', selected);
+      chapter.querySelectorAll('a').forEach(link => { link.tabIndex = selected ? 0 : -1; });
+    });
     stops.forEach((stop, index) => stop.classList.toggle('is-past', index < active));
     tools.forEach((tool, index) => tool.classList.toggle('is-collected', index <= active));
     carried.forEach((item, index) => item.classList.toggle('is-collected', index <= active));
@@ -148,6 +152,7 @@
     else {
       route.classList.remove('route-at-end');
       ending.querySelectorAll('a').forEach(link => link.removeAttribute('tabindex'));
+      chapters.forEach(chapter => chapter.querySelectorAll('a').forEach(link => link.removeAttribute('tabindex')));
       clearTimeout(stopTimer);
       stopWalking();
       stopCelebrating();

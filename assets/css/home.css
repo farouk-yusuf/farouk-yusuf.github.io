@@ -65,11 +65,6 @@
 .star-step--results dd { color:var(--ink); }
 .project-detail-link { display:inline-flex; align-items:center; gap:12px; font-size:.79rem; font-weight:650; margin-top:18px; min-height:30px; }
 .home-project-note { color:var(--muted); font-size:.7rem; margin-top:20px; }
-.home-research { display:flex; align-items:center; justify-content:space-between; gap:35px; border-block:1px solid var(--line); padding-block:26px; margin-top:48px; }
-.home-research .eyebrow { margin-bottom:8px; }
-.home-research h2 { font-size:1.3rem; margin-bottom:9px; }
-.home-research p { max-width:770px; color:var(--muted); font-size:.86rem; }
-.home-research > a { flex-shrink:0; }
 .home-contact { display:flex; justify-content:space-between; gap:45px; border-top:1px solid var(--line); padding-block:38px; }
 .home-contact .eyebrow { margin-bottom:8px; }
 .home-contact h2 { font-size:1.8rem; margin-bottom:15px; }
@@ -126,8 +121,7 @@
   .star-step { grid-template-columns:1fr; gap:4px; padding-block:12px; }
   .star-step dt { font-size:.69rem; }
   .star-step dd { font-size:.85rem; }
-  .home-research,.home-contact { flex-direction:column; align-items:start; gap:20px; }
-  .home-research { margin-top:34px; }
+  .home-contact { flex-direction:column; align-items:start; gap:20px; }
 }
 @media print {
   .tool-controls,.tool-choices { display:none !important; }
