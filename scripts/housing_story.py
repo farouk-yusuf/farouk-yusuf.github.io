@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 from statistics import median
 
-from story_components import e, p, source_link, disclosure, note, metric
+from story_components import e, p, source_link, disclosure, note, metric, requirements_panels, horizontal_bars
 from story_workbook import read_sheet
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,11 +46,7 @@ def n(value, places=1):
 
 def bars(rows, maximum=100, *, percent=True):
     """Readable HTML bars with a common zero baseline and explicit units."""
-    result = []
-    for label, value, focus in rows:
-        display = n(value)+'%' if percent else n(value, 0)
-        result.append(f'<li class="finance-bar-row"><div class="finance-bar-label"><span>{e(label)}</span><strong>{display}</strong></div><div class="finance-bar-track" aria-hidden="true"><span class="finance-bar {"finance-bar--focus" if focus else ""}" style="width:{float(value)/maximum*100:.3f}%"></span></div></li>')
-    return '<ul class="finance-bars">'+''.join(result)+'</ul>'
+    return horizontal_bars(rows,maximum,lambda value:n(value)+'%' if percent else n(value,0))
 
 
 def gap_bars(rows, focus):
@@ -83,11 +79,7 @@ def render(project, next_project, *, chart, table, organisation, resources):
         headings.append((identifier,title))
         sections.append(f'<section class="finance-section" id="{identifier}" aria-labelledby="{identifier}-heading"><div class="finance-section-heading"><span class="finance-step" aria-hidden="true">{len(headings):02d}</span><h2 id="{identifier}-heading">{e(title)}</h2></div>{body}</section>')
 
-    summary = '<aside class="requirements-card" aria-label="Requirements summary"><span class="practice-label">Requirements summary</span><dl>'+''.join(f'<div><dt>{e(label)}</dt><dd>{e(text)}</dd></div>' for label,text in copy['requirements_summary'])+'</dl></aside>'
-    framework = copy['requirements_template']
-    items = ''.join(f'<li><div class="framework-item-heading"><h3>{e(item["element"])}</h3><span class="framework-status framework-status--{e(item["state"])}">{e(item["status"])}</span></div><dl><div><dt>Framework prompt</dt><dd>{e(item["prompt"])}</dd></div><div><dt>Project application</dt><dd>{e(item["application"])}</dd></div></dl></li>' for item in framework['items'])
-    template = disclosure('See my requirements elicitation template',p(framework['intro'])+'<ol class="framework-items">'+items+'</ol>',css_class='requirements-template')
-    section('brief','Requirements and scope','<span class="scenario-label">Simulated workplace brief</span>'+p(copy['brief'])+p(copy['requirements_intro'])+summary+template)
+    section('brief','Requirements and scope','<span class="scenario-label">Simulated workplace brief</span>'+p(copy['brief'])+p(copy['requirements_intro'])+requirements_panels(copy))
 
     access = table(['Dataset','Data owner','Analytical purpose','Availability'],copy['data_requests'],'Data access assessment')
     flow = '<ol class="etl-flow" aria-label="ETL and reporting workflow">'+''.join(f'<li><strong>{e(label)}</strong><span>{e(text)}</span></li>' for label,text in [('Extract','Regulatory spreadsheets and Ombudsman PDFs'),('Transform','Standard fields, numeric values and landlord identifiers'),('Validate','Compare measures, counts and category totals'),('Report','Peer benchmarks and an Excel board pack')])+'</ol>'
@@ -122,7 +114,7 @@ def render(project, next_project, *, chart, table, organisation, resources):
     counts = data['repair_counts']
     count_chart = chart('The number of repairs counted fell by about 85%','Recorded repair counts underlying the year-on-year check. This population change needs reconciliation alongside the rate.',bars([('2023/24',counts[0],False),('2024/25',counts[1],True)],maximum=100000,percent=False)+'<p class="chart-annotation"><strong>Reconcile the population before explaining the rate.</strong> A stable target does not establish consistent inclusion rules.</p>',['Year','Repairs counted'],[['2023/24',counts[0]],['2024/25',counts[1]]],'Year-on-year checks worksheet · underlying counts recorded in the original analysis.')
     check_rows = [[r['Measure'],r['Platform 2023/24 -> 2024/25'],r['What the underlying counts show']] for r in data['checks']]
-    checks_proof = table(['Measure','Published movement (rounded)','Underlying count check'],check_rows,'Year-on-year checks recorded in the workbook')+p('The existing workbook suggests possible recording changes. The evidence does not settle that explanation: genuine service changes remain possible. I would ask owners to reconcile both years rather than remove the decline from the board narrative.')+source_link(SOURCE+'outputs/03_Website_Validation_Notes.md','Validation notes and unresolved checks')
+    checks_proof = table(['Measure','Published movement (rounded)','Underlying count check'],check_rows,'Year-on-year checks recorded in the workbook')+p('The existing workbook suggests possible recording changes. The evidence does not settle that explanation: genuine service changes remain possible. I would ask owners to reconcile both years before explaining the decline in the board report.')+source_link(SOURCE+'outputs/03_Website_Validation_Notes.md','Validation notes and unresolved checks')
     section('validation','Repair counts need reconciliation before a performance conclusion',p('I checked the underlying counts before interpreting the decline. The rate fell by 29.4 percentage points, while the repairs counted fell from 90,250 to 13,872. This combination raises a comparability question; it does not prove a recording error or rule out a real deterioration.')+rate_chart+count_chart+note('Data validation and escalation','Request job-level totals by year, repair type, completion status and inclusion rule from Repairs. Build a bridge from the earlier population to the later one, confirm the 28-day definition and then quantify any remaining performance change.')+p('The same review identified large increases in recorded anti-social behaviour cases and stage-one complaints. Higher recorded volumes can reflect worsening experience, broader recording or both; the service owners need to establish which explanation fits.')+disclosure('Repair, anti-social behaviour and complaint checks',checks_proof))
 
     categories = sorted(data['categories'],key=lambda r:Decimal(r['Platform upheld']),reverse=True)

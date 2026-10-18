@@ -13,6 +13,7 @@ from string import Template
 
 from birmingham_story import render as render_birmingham
 from housing_story import render as render_housing
+from water_story import render as render_water
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
@@ -115,19 +116,6 @@ def chart(title, subtitle, drawing, headers, rows, source):
 def charts(project):
     slug = project['slug']
     source = project['source']
-    if slug == 'severn-trent':
-        rows = list(csv.DictReader((ROOT/'projects/03_Severn_Trent/outputs/st_yearly_summary.csv').open()))
-        years = [r['year'] for r in rows]
-        spills = [round(float(r['total_spills'])/1000,1) for r in rows]
-        rainfall = [round(float(r['midlands_rain_mm']),1) for r in rows]
-        a = chart('Spills fell in 2025; rainfall fell too.', 'Total reported spills, thousands. The separate rainfall chart supplies context without a dual axis.',
-          line(years,spills,low=0,high=75),['Year','Reported spills (thousands)'],list(zip(years,spills)),source)
-        b = chart('2022 and 2025 had similar annual rainfall.', 'Midlands rainfall, mm. Similar annual totals do not guarantee comparable storm intensity or local conditions.',
-          line(years,rainfall,low=0,high=1200),['Year','Rainfall (mm)','Average spills per reliable overflow'],
-          [[r['year'],round(float(r['midlands_rain_mm']),1),round(float(r['avg_spills_reliable']),2)] for r in rows],source)
-        c = chart('The reliable-monitor comparison also shows improvement.', 'Average spills per overflow with at least 90% monitor operation. The two groups can differ in composition.',
-          bars(['2022','2025'],[19.42,15.01],maximum=25),['Year','Average spills per reliable overflow'],[[2022,19.42],[2025,15.01]],source)
-        return a+b,c
     labels=['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26']
     values=[53.6,55.7,59.0,60.6,61.5,61.5,61.2,62.5,68.6,68.4,68.6,68.9,67.3,66.6]
     a = chart('18-week performance improved, then eased after June.', 'UHB incomplete RTT pathways within 18 weeks, %. The March 2026 milestone is shown for context.',
@@ -288,6 +276,11 @@ def section(id_, title, content):
 
 
 def project_page(project,index):
+    if project['slug'] == 'severn-trent':
+        content = render_water(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
+        copy = json.loads((ROOT/'site/severn-trent.json').read_text())
+        emit('case-studies/severn-trent.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css',)))
+        return
     if project['slug'] == 'platform-housing':
         content = render_housing(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
         copy = json.loads((ROOT/'site/platform.json').read_text())
@@ -311,7 +304,7 @@ def project_page(project,index):
     body+=section('method','How I built and checked it.',list_html(project['methods'],ordered=True))
     body+=section('actions','What I would ask the team to do next.',actions)
     body+=section('limitations','Where the evidence stops.',list_html(project['limitations'])+f'<div class="callout"><h3>What I learned</h3>{paragraph(project["reflection"])}</div>')
-    body+=section('files','Explore the work behind the story.',paragraph('These are the original write-ups, scripts and workbook. Their links are preserved from the previous site. The analysis is presented as a portfolio exercise; recommendations have not been implemented or evaluated by these organisations.')+resources(project)+f'<h3>Power BI dashboard</h3>{paragraph(project["dashboard_plan"])}'+dashboard)
+    body+=section('files','Explore the work behind the analysis.',paragraph('These are the original write-ups, scripts and workbook. Their links are preserved from the previous site. The analysis is presented as a portfolio exercise; recommendations have not been implemented or evaluated by these organisations.')+resources(project)+f'<h3>Power BI dashboard</h3>{paragraph(project["dashboard_plan"])}'+dashboard)
     nav=''.join(f'<a href="#{id_}">{title}</a>' for id_,title in [('brief','The brief'),('findings','Key findings'),('detail','A deeper look'),('method','Method and checks'),('actions','Recommendations'),('limitations','Limitations'),('files','Files and dashboard')])
     next_project=PROJECTS[(index+1)%len(PROJECTS)]
     content=f'''<main class="container" id="main"><div class="breadcrumb"><a href="../index.html#projects">Selected work</a> / {e(project['sector'])}</div><div class="case-hero">{organisation(project,'../')}<span class="eyebrow">Independent public-data case study</span><h1>{e(project['title'])}</h1><p class="lead">{e(project['summary'])}</p><div class="case-meta"><span><strong>For:</strong> {e(project['audience'])}</span><span>{e(project['period'])}</span><span>{e(' · '.join(project['tools']))}</span></div></div><div class="metric-grid">{metrics}</div><div class="case-layout"><nav class="case-nav" aria-label="On this page"><strong>Inside the analysis</strong>{nav}</nav><div class="case-content">{body}</div></div><div class="next-project"><a class="text-link" href="../index.html#projects">← All projects</a><a class="button" href="{next_project['slug']}.html">Next: {e(next_project['organisation'])} <span aria-hidden="true">→</span></a></div></main>'''

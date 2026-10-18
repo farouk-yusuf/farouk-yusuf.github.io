@@ -8,8 +8,10 @@
 | 4 | 2021: 25 overflows have Excel `#N/A` errors for spills and duration; 246 listed without spill data, many with permit "TBC" | Missing spill counts | Treated as missing, flagged `dq_no_spill_data`; excluded from averages |
 | 5 | 2021 totals differ from the EA summary by 8 spills and 7 hours (0.01%) | Negligible | Logged; overflow-level file used as-is |
 | 6 | Overflow IDs changed in 2024 (SVE to SVT format) | Overflows couldn't be tracked across years | Linked via the "old format Unique ID" column: 2,382 of 2,452 2025 overflows linked to 2023 |
-| 7 | Monitors working less than 90% of the year: 30% of overflows in 2022, 4% in 2025 | Earlier years under-record spills | Averages calculated on reliably monitored overflows only; issue reported as a finding |
+| 7 | The original low-operation share falls from about 30% in 2022 to 4% in 2025; its numerator and denominator have different inclusion rules | Monitoring gaps may miss events; the net bias in the trend is not quantified | Compare qualifying-monitor averages with explicit populations; do not infer a causal improvement from coverage alone |
 | 8 | Character encoding error in source text (e.g. "PAUPER¿S DRAIN") | Cosmetic | Replaced with apostrophe |
 | 9 | 2025 file re-issued by EA in August 2026 (Anglian Water resubmission) | None for Severn Trent | Used the latest version; noted |
 
 All other 2020-2025 Severn Trent totals reconcile exactly with the EA's published summary tables.
+
+These are the original pipeline's recorded source checks, not a new independent verification of raw files. The website reads committed outputs only. For the maintenance filter (90 flagged versus 87 exported), review statuses, model assumptions and denominator corrections, see [the website validation notes](05_Website_Validation_Notes.md).

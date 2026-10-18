@@ -8,7 +8,7 @@ NS = {'m': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
 REL_NS = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 
 
-def read_sheet(filename, name):
+def read_sheet(filename, name, *, index_header=None):
     """Return header-keyed rows; preserve sparse, blank and rich-text cells."""
     def text(node):
         return ''.join(t.text or '' for t in node.findall('.//m:t', NS)) if node is not None else ''
@@ -36,4 +36,6 @@ def read_sheet(filename, name):
                 cells[column] = value
             rows.append(cells)
         headers = rows[0]
+        if index_header is not None:
+            headers['A'] = index_header
         return [{title: row.get(column, '') for column, title in headers.items()} for row in rows[1:] if any(row.values())]

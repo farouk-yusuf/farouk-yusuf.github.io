@@ -30,9 +30,10 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `site/birmingham.json`: Birmingham’s agreed finance narrative, simulated brief, data request and recommendations.
 - `site/platform.json`: Platform Housing’s tailored brief, requirements framework, data-access assessment and proposed service actions.
 - `scripts/housing_story.py`: Platform Housing story and responsive HTML charts, populated from the committed benchmarking workbook.
+- `site/severn-trent.json` and `scripts/water_story.py`: Severn Trent’s requirements, performance analysis and operational recommendations; figures and examples come from committed CSVs and the Excel pack.
 - `scripts/story_workbook.py` and `scripts/story_components.py`: shared standard-library workbook reader and evidence markup for the Birmingham and Platform stories.
 - `scripts/birmingham_story.py`: Birmingham page renderer; reads the committed Excel workbook, key-figures CSV, SQL results and department mapping code using the Python standard library.
-- `assets/css/finance.css`: shared evidence-led case-study layout, responsive HTML charts, requirements frameworks and disclosures for Birmingham and Platform Housing.
+- `assets/css/finance.css`: shared evidence-led case-study layout, responsive HTML charts, requirements frameworks and disclosures for Birmingham, Platform Housing and Severn Trent.
 - `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline, dated employment events and milestone labels. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
@@ -74,7 +75,7 @@ Logo provenance is documented in [assets/logos/README.md](assets/logos/README.md
 
 ### Before external publication
 
-The research page retains the existing unpublished thesis figures and the supervisor-sign-off caveat. Confirm clearance for exact results. The Severn Trent case study explicitly flags an unreconciled low-uptime monitor count (87 in the narrative versus 90 in the yearly CSV). Resolve the denominator before reporting one total. The UHB scenario remains labelled as a scenario because the baseline outperformed both forecast models.
+The research page retains the existing unpublished thesis figures and the supervisor-sign-off caveat. Confirm clearance for exact results. The Severn Trent page distinguishes 90 low-operation flags from 87 maintenance exceptions after excluding records labelled “No longer operational”; its model-dependent screening and remaining reporting checks are explained alongside the findings. The UHB scenario remains labelled as a scenario because the baseline outperformed both forecast models.
 
 ### Birmingham finance story
 
@@ -91,3 +92,11 @@ The Platform page separates its simulated board brief from the actual published-
 Read [the evidence review](projects/02_Platform_Housing/outputs/03_Website_Validation_Notes.md) alongside the preserved workbook. It qualifies survey comparability, treats possible recording changes as hypotheses, and flags the unresolved Ombudsman rate/count discrepancy: 51/137 gives 37.2%, while the extraction records 38%. The repairs category contains 43 findings, of which 23 are adverse. The website holds the rate/ranking from a formal conclusion pending source verification.
 
 Run `python3 scripts/check_housing_browser.py` with Playwright and Chromium to verify workbook arithmetic, cohort definitions, evidence disclosures, downloads, navigation and responsive reading. These checks use committed outputs; they do not rerun the original pipeline without its raw files.
+
+### Severn Trent performance analysis
+
+The Severn Trent page separates a simulated internal brief from the actual public-data analysis. Six HTML charts explain the annual spill/rainfall changes, the dry-year comparison, maintenance reasons, basin workloads and a longer-term model-adjusted screen. Each chart has a data table; evidence disclosures link source code and actual asset examples. The requirements framework distinguishes analytical thresholds from operational SLAs and investment approval.
+
+The observed 2025 list has 76 sites with at least 60 recorded spills, 13 reporting no improvement action. The separate model-adjusted three-year list has 74 sites, 17 reporting no action; the lists overlap. Persistent sites account for 13.4% of all recorded 2025 spills, or 18.9% within the linked panel. Rainfall comparisons do not establish causation. The original summaries now carry those qualifications; the workbook is preserved unchanged. Read [the evidence review](projects/03_Severn_Trent/outputs/05_Website_Validation_Notes.md) alongside it.
+
+Run `python3 scripts/check_water_browser.py` with Playwright and Chromium to check output reconciliation, model arithmetic, screening rules, downloads, evidence interactions and responsive layouts. It uses committed outputs, not unavailable raw files. The existing site and housing checks also cover the shared workbook reader and presentation helpers.
