@@ -1,0 +1,52 @@
+// Paste this entire query into Power BI Desktop's DAX Query view.
+// Run to verify the figures, then use Update model with changes.
+DEFINE
+    MEASURE FactMatchedSpend[Matched current payments] =
+        SUM ( FactMatchedSpend[CurrentGBP] )
+
+    MEASURE FactMatchedSpend[Matched prior payments] =
+        SUM ( FactMatchedSpend[PriorGBP] )
+
+    MEASURE FactMatchedSpend[Matched payment change] =
+        [Matched current payments] - [Matched prior payments]
+
+    MEASURE FactMatchedSpend[Matched payment change %] =
+        DIVIDE ( [Matched payment change], [Matched prior payments] )
+
+    MEASURE FactMatchedSpend[Spending overview title] =
+        VAR GroupLabel =
+            SELECTEDVALUE ( DimDirectorate[ReportGroup], "All selected reporting groups" )
+        RETURN
+            GroupLabel & " | net payments " &
+            FORMAT ( [Matched payment change %], "+0.0%;-0.0%;0.0%" ) &
+            " versus the same dates in 2025"
+
+    MEASURE FactMonthlySpend[Monthly net payments] =
+        SUM ( FactMonthlySpend[NetPaymentsGBP] )
+
+    MEASURE FactMonthlySpend[Payment lines] =
+        SUM ( FactMonthlySpend[PaymentLines] )
+
+    MEASURE FactDuplicatePairs[Candidate pairs] =
+        COALESCE ( COUNTROWS ( FactDuplicatePairs ), 0 )
+
+    MEASURE FactDuplicatePairs[Candidate value] =
+        SUM ( FactDuplicatePairs[AmountGBP] )
+
+    MEASURE FactDuplicatePairs[Same-day candidate pairs] =
+        CALCULATE (
+            [Candidate pairs],
+            KEEPFILTERS ( FactDuplicatePairs[DaysApart] = 0 )
+        )
+
+EVALUATE
+    ROW (
+        "Matched current GBP", [Matched current payments],
+        "Matched prior GBP", [Matched prior payments],
+        "Matched change GBP", [Matched payment change],
+        "Matched change ratio", [Matched payment change %],
+        "Payment lines", [Payment lines],
+        "Candidate pairs", [Candidate pairs],
+        "Candidate value GBP", [Candidate value],
+        "Same-day pairs", [Same-day candidate pairs]
+    )

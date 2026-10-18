@@ -1,0 +1,22 @@
+{
+  "source_workbook": "projects/01_BCC_Payments/outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx",
+  "source_monthly_csv": "projects/01_BCC_Payments/outputs/sql_results/01_monthly_spend_by_directorate.csv",
+  "publication_end": "2026-07-23",
+  "table_rows": {
+    "DimDirectorate": 6,
+    "DimMonth": 25,
+    "FactMatchedSpend": 6,
+    "FactMonthlySpend": 150,
+    "FactSupplierDrivers": 18,
+    "FactDuplicatePairs": 281
+  },
+  "prior_gbp": "558640000.0",
+  "current_gbp": "677460000.0",
+  "change_gbp": "118820000.0",
+  "change_ratio": 0.21269511671201488,
+  "payment_lines": 247785,
+  "candidate_pairs": 281,
+  "candidate_value_gbp": "4448515.38",
+  "same_day_pairs": 73,
+  "validation_scope": "Reconciles committed outputs; does not rerun raw cleaning or execute Power BI/DAX."
+}

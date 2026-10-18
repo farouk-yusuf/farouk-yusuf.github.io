@@ -13,3 +13,5 @@ Data: Birmingham City Council "Payments to Suppliers over £500", City Observato
 - `outputs/` summary, workbook, brief, decisions note, SQL results, charts
 
 Run: `python3 scripts/01_clean.py && python3 scripts/02_build_database.py && python3 scripts/03_finance_pack.py`
+
+For the Power BI build, use [the prepared starter pack](power-bi/BCC_PowerBI_Starter.zip) and [Desktop instructions](power-bi/START_HERE.md). It contains six named Excel tables, DAX definitions and a theme, not a finished PBIX. The matched-period, monthly, selected-supplier and candidate-pair tables have distinct scopes; follow the supplied relationships and filtering guidance. Rebuild the pack from the repository root with `python3 scripts/build_bcc_powerbi.py` (requires openpyxl). This reads committed outputs and does not rerun the original raw-data analysis.
