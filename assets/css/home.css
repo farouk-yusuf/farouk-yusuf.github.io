@@ -22,6 +22,9 @@
 .tool-slide { display:grid; grid-template-columns:180px minmax(0,1fr); gap:24px; align-items:start; min-height:68px; }
 .tool-slide + .tool-slide { border-top:1px solid var(--line); padding-top:16px; margin-top:16px; }
 .tool-carousel--ready .tool-slide { border:0; padding:0; margin:0; }
+[data-tool-track] { position:relative; }
+.tool-transition { position:absolute; inset:0; pointer-events:none; }
+.tool-carousel--measuring [data-tool-slide] { display:grid !important; position:absolute; left:0; right:0; visibility:hidden; }
 .tool-identity { display:flex; align-items:center; gap:12px; }
 .tool-identity img { width:36px; height:36px; object-fit:contain; }
 .tool-identity h3 { font-size:.94rem; letter-spacing:-.02em; }

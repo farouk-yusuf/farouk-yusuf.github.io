@@ -73,6 +73,17 @@ def main():
             ]
             for chapter, approved in zip(page.locator('.route-card > p:first-of-type').all(), about['milestones']):
                 assert chapter.inner_text() == approved['text']
+            for card in page.locator('.route-card').all():
+                note = card.locator('.route-note')
+                assert note.count() == 1
+                assert card.evaluate("""card => {
+                    const body = getComputedStyle(card.querySelector('p'));
+                    const note = getComputedStyle(card.querySelector('.route-note'));
+                    return ['fontFamily','fontSize','fontWeight','fontStyle','lineHeight'].every(key=>body[key]===note[key]);
+                }""")
+            assert 'structured spreadsheets and databases' in page.locator('#journey-03 .route-note').inner_text()
+            first_natcen = page.locator('.route-life-entry').filter(has_text='Sep 2024')
+            assert 'National Centre for Social Research (NatCen)' in first_natcen.inner_text()
             assert page.get_by_role('link', name='Connect on LinkedIn').count() == 1
             assert page.get_by_text('Illustrative sector image', exact=True).count() == 0
             assert 'Congratulations' not in page.locator('.route-section').inner_text()

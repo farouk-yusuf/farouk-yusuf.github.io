@@ -48,7 +48,7 @@ node --check assets/js/site.js
 
 `build_site.py --check` checks freshness without changing files. `check_site.py` also checks local assets and fragment links, unique IDs, one main heading per page, data tables for charts and preservation of the 20 original project resource links. The original analytical scripts under `projects/` are separate and are not run by the website build.
 
-For browser review, check all pages at desktop and narrow phone widths, keyboard navigation, tool selection, theme persistence and the chart data disclosures. The tool carousel is manual: visitors use the circular arrow controls, left/right keyboard arrows or tool icons. It never advances automatically and needs no Play/Pause control. Without JavaScript all tools remain visible. Do not treat build/link checks as validation of the original analytical calculations.
+For browser review, check all pages at desktop and narrow phone widths, keyboard navigation, tool selection, theme persistence and the chart data disclosures. The tool carousel advances every six seconds with a smooth crossfade. Visitors can also use the circular arrow controls, left/right keyboard arrows or tool icons. Autoplay stops while hovered or focused, while off-screen or in a hidden tab, and when reduced motion is requested. There are no playback buttons. Without JavaScript all tools remain visible. Do not treat build/link checks as validation of the original analytical calculations.
 
 With Playwright and Chromium installed, run `python3 scripts/check_homepage_browser.py` for automated homepage interaction checks. It starts a temporary local server and does not require a manually started development server.
 

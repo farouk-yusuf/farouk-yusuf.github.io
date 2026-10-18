@@ -13,9 +13,7 @@
       "item": "graduation",
       "item_label": "Geography",
       "text": "I graduated top of my geography class, achieving first-class honours and straight As in statistics. My final project involved mapping how changes in rainfall affected rice harvests in a specific local government area, combining quantitative analysis with an understanding of real-world consequences.",
-      "note": "A strong foundation in geography, statistics, and ArcGIS means I can analyse spatial data to solve real-world challenges.",
-      "note_label": "Takeaway",
-      "emphasise_body": false
+      "note": "A strong foundation in geography, statistics, and ArcGIS means I can analyse spatial data to solve real-world challenges."
     },
     {
       "date": "2020–2021",
@@ -25,9 +23,7 @@
       "item": "scholarship",
       "item_label": "Chevening",
       "text": "A Chevening scholarship enabled me to pursue an MSc in Conflict, Statebuilding and Development at the University of Birmingham. My research analysed newspaper coverage and included interviews with readers to examine media framing effects. The findings indicated that biased media coverage influenced readers’ perceptions of conflict actors. I graduated with distinction, achieving 82% for my dissertation, which led my supervisor to recommend that I consider pursuing a PhD.",
-      "note": "The Chevening Scholarship is the UK’s highly competitive and prestigious scholarship programme for future global leaders.",
-      "note_label": "",
-      "emphasise_body": false
+      "note": "The Chevening Scholarship is the UK’s highly competitive and prestigious scholarship programme for future global leaders."
     },
     {
       "date": "2022",
@@ -37,9 +33,7 @@
       "item": "research",
       "item_label": "Research design",
       "text": "My MA in Social Research at the University of Birmingham, supported by ESRC funding, provided training in qualitative and quantitative research design and analysis. This included regression modelling, interviews, and qualitative coding, and I scored 75% in the quantitative module.",
-      "note": "",
-      "note_label": "",
-      "emphasise_body": true
+      "note": "I’m comfortable analysing qualitative evidence from interviews, customer feedback and social media, alongside quantitative survey and financial data. I work with structured spreadsheets and databases as well as unstructured text."
     },
     {
       "date": "September 2022 · PhD",
@@ -49,9 +43,7 @@
       "item": "doctorate",
       "item_label": "PhD research",
       "text": "My doctoral research investigated the emigration of skilled professionals to the UK, combining large-scale computational analysis with qualitative fieldwork. By analysing nearly 29,000 posts from X (formerly Twitter) alongside in-person qualitative interviews, I identified significant discrepancies between public digital sentiment and the underlying motivations expressed in personal narratives. I used Python and Large Language Models (LLMs) to scale text analysis across large unstructured datasets.",
-      "note": "I can build Python workflows, use LLMs to analyse large-scale text data, and validate digital sentiment against real-world evidence.",
-      "note_label": "Takeaway",
-      "emphasise_body": false
+      "note": "I can build Python workflows, use LLMs to analyse large-scale text data, and validate digital sentiment against real-world evidence."
     },
     {
       "date": "2025",
@@ -61,9 +53,7 @@
       "item": "ai",
       "item_label": "AI evaluation",
       "text": "At Oxford’s Spring School in Large Language Models, I studied LLM architecture and configuration. I then evaluated their performance by comparing AI- and human-written code in my research, focusing on discrepancies rather than overlooking them.",
-      "note": "I use a human-in-the-loop approach to accelerate analysis with AI while ensuring human oversight identifies and corrects errors. I can easily transfer this skill to an AI-optimistic business.",
-      "note_label": "",
-      "emphasise_body": false
+      "note": "I use a human-in-the-loop approach to accelerate analysis with AI while ensuring human oversight identifies and corrects errors. I can easily transfer this skill to an AI-optimistic business."
     },
     {
       "date": "2026 · Now",
@@ -73,9 +63,7 @@
       "item": "analytics",
       "item_label": "Business analysis",
       "text": "I completed a competitive, government-funded Data and AI Automation bootcamp and gained core technical skills in analytics and process automation. I then applied these skills to complex public-sector datasets, including council payment reconciliations, to derive actionable operational intelligence. The four projects in this portfolio show my ability to turn vague operational questions into strategic, data-informed recommendations.",
-      "note": "I’ve proactively built expertise in modern data tools to strengthen my analytical skills. Beyond writing code, I bring a commercial mindset and a track record of turning analysis into practical business value from day one.",
-      "note_label": "Takeaway",
-      "emphasise_body": false
+      "note": "I’ve proactively built expertise in modern data tools to strengthen my analytical skills. Beyond writing code, I bring a commercial mindset and a track record of turning analysis into practical business value from day one."
     }
   ],
   "ending": {
@@ -140,8 +128,9 @@
       "kind": "work",
       "lane": 0,
       "label": "Started · Freelance Interviewer",
-      "organisation": "NatCen",
-      "after": 3
+      "organisation": "National Centre for Social Research (NatCen)",
+      "after": 3,
+      "label_width": 240
     },
     {
       "date": "Jan 2025",

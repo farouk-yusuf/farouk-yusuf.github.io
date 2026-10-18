@@ -70,7 +70,7 @@ def main():
             page.keyboard.press('Enter')
             assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'R'
             page.wait_for_timeout(7000)
-            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'R', 'Manual carousel changed without input'
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'R', 'Focus did not hold the selected slide'
 
             # The existing project pages remain reachable and retain their charts.
             for link in page.locator('.project-detail-link').all():
@@ -99,12 +99,62 @@ def main():
                 assert tab.locator('.route-card').evaluate_all('(cards) => cards.every(c=>getComputedStyle(c).opacity === "1")')
                 assert_viewport(tab,str(settings))
                 context.close()
+            # Advance the browser clock to exercise real rotation and transition logic.
+            rotation = browser.new_context(viewport={'width':1440,'height':900})
+            auto = rotation.new_page()
+            auto.clock.install()
+            auto.goto(base, wait_until='networkidle')
+            auto.locator('[data-tool-carousel]').scroll_into_view_if_needed()
+            auto.mouse.move(0,0)
+            auto.wait_for_timeout(100)
+            active_name = lambda: auto.locator('[data-tool-slide]:visible h3').inner_text()
+            height = auto.locator('[data-tool-track]').bounding_box()['height']
+            auto.clock.run_for(6500)
+            assert active_name() == 'SQL', active_name()
+            assert auto.locator('[data-tool-announcement]').inner_text() == ''
+            assert auto.locator('[data-tool-track]').bounding_box()['height'] == height
+            auto.locator('[data-tool-carousel]').hover()
+            auto.clock.run_for(7000)
+            assert active_name() == 'SQL', 'Hover did not hold the selected slide'
+            auto.mouse.move(0,0)
+            auto.clock.run_for(6500)
+            assert active_name() == 'Python', active_name()
+            auto.get_by_role('button',name='Show R',exact=True).focus()
+            auto.keyboard.press('Enter')
+            assert auto.locator('.tool-transition').get_attribute('aria-hidden') == 'true'
+            assert auto.locator('.tool-transition').evaluate('(el)=>el.inert')
+            assert auto.locator('[data-tool-slide]:visible').evaluate('(el)=>el.getAnimations().some(a=>a.effect.getTiming().duration===420)')
+            auto.clock.run_for(7000)
+            assert active_name() == 'R', 'Focus did not hold the selected slide'
+            # Browser-clock jumps do not advance the native Web Animations timeline.
+            auto.locator('.tool-transition').wait_for(state='detached', timeout=2000)
+            auto.evaluate('document.activeElement.blur()')
+            auto.clock.run_for(6500)
+            assert active_name() == 'Statistics', active_name()
+            auto.locator('#contact').scroll_into_view_if_needed()
+            auto.locator('[data-tool-carousel][data-rotation="paused"]').wait_for()
+            selected = active_name()
+            auto.clock.run_for(6500)
+            assert active_name() == selected, 'Off-screen carousel continued rotating'
+            auto.locator('[data-tool-carousel]').scroll_into_view_if_needed()
+            auto.locator('[data-tool-carousel][data-rotation="playing"]').wait_for()
+            auto.clock.run_for(6500)
+            assert active_name() != selected, 'Visible carousel did not resume'
+            auto.emulate_media(reduced_motion='reduce')
+            auto.locator('[data-tool-carousel][data-rotation="paused"]').wait_for()
+            selected = active_name()
+            auto.clock.run_for(6500)
+            assert active_name() == selected, 'Reduced motion did not stop rotation'
+            auto.get_by_role('button',name='Next tool',exact=True).click()
+            assert active_name() != selected
+            assert auto.locator('.tool-transition').count() == 0
+            rotation.close()
             browser.close()
             assert not errors, errors
     finally:
         server.shutdown()
         server.server_close()
-    print(f'Passed: exact introduction; 4 STAR summaries; {len(skills)} slides with four capabilities at 4 widths; manual arrows and keyboard selection; project links; dark mode; no-JS/reduced-motion support; no overflow or request/script errors.')
+    print(f'Passed: exact introduction; 4 STAR summaries; {len(skills)} slides with four capabilities at 4 widths; smooth autoplay; hover/focus/off-screen/reduced-motion holds; manual arrows and keyboard selection; stable slide height; project links; dark mode; no-JS/reduced-motion support; no overflow or request/script errors.')
 
 
 if __name__ == '__main__':

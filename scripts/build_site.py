@@ -236,14 +236,13 @@ def toolkit_icon(name, css_class=''):
 def about_section():
     cards, links, stops, toolkit, events = [], [], [], [], []
     for event in ABOUT['events']:
-        events.append(f'<div class="route-event route-event--{e(event["kind"])}" data-route-event="{e(event["kind"])}" data-position="{event["position"]}" style="--event:{event["position"]};--lane:{event["lane"]}"><span class="route-event-dot">{"♡" if event["kind"] == "wedding" else ""}</span><p><span>{e(event["date"])}</span><strong>{e(event["label"])}</strong>{e(event["organisation"])}</p></div>')
+        events.append(f'<div class="route-event route-event--{e(event["kind"])}" data-route-event="{e(event["kind"])}" data-position="{event["position"]}" style="--event:{event["position"]};--lane:{event["lane"]};--event-width:{event.get("label_width",164)}px"><span class="route-event-dot">{"♡" if event["kind"] == "wedding" else ""}</span><p><span>{e(event["date"])}</span><strong>{e(event["label"])}</strong>{e(event["organisation"])}</p></div>')
     for index, milestone in enumerate(ABOUT['milestones']):
         chapter_id = f'journey-{index+1:02d}'
         related_events = [event for event in ABOUT['events'] if event['after'] == index]
         life = '<ul class="route-life-static" aria-label="Along the way">' + ''.join(f'<li class="route-life-entry route-life-entry--{e(event["kind"])}"><span class="route-event-symbol" aria-hidden="true">{"♡" if event["kind"] == "wedding" else "·"}</span><div><span>{e(event["date"])}</span><strong>{e(event["label"])}</strong><span>{e(event["organisation"])}</span></div></li>' for event in related_events) + '</ul>' if related_events else ''
-        body = f'<p><strong>{e(milestone["text"])}</strong></p>' if milestone.get('emphasise_body') else paragraph(milestone['text'])
-        note_label = f'<span class="route-takeaway-label">{e(milestone["note_label"])}: </span>' if milestone.get('note_label') else ''
-        note = f'<p class="route-takeaway">{note_label}{e(milestone["note"])}</p>' if milestone['note'] else ''
+        body = paragraph(milestone['text'])
+        note = f'<p class="route-note">{e(milestone["note"])}</p>' if milestone['note'] else ''
         cards.append(f'''<li class="route-chapter" id="{chapter_id}" data-route-chapter data-stop="{milestone['position']}">
           <article class="route-card"><div class="route-card-top"><span class="route-date">{e(milestone['date'])}</span><span class="route-pickup">{toolkit_icon(milestone['item'])}<span>{e(milestone['item_label'])}</span></span></div>
           <h3>{e(milestone['title'])}</h3>{body}{note}</article>{life}</li>''')
