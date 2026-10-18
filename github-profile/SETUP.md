@@ -24,18 +24,18 @@ GitHub controls the sidebar independently of the README. In [profile settings](h
 | Website | https://farouk-yusuf.github.io/ |
 | LinkedIn | https://www.linkedin.com/in/farouk-yusuf-fy |
 
-Use the supplied `headshot.jpeg` for the sidebar photograph if desired. The original JPEG must be supplied as a downloadable attachment before it can be copied into the portfolio. The inline chat preview is not available as a source file in this workspace.
+The supplied [headshot.jpeg](../assets/images/headshot.jpeg) is now available for the sidebar photograph if desired. Upload that original file through GitHub’s profile-photo setting; updating a README does not change the account avatar.
 
 ## Portfolio photograph
 
-The site now prefers `assets/images/headshot.jpeg` when it exists. Copy the original JPEG there unchanged and run:
+The site uses `assets/images/headshot.jpeg`, copied unchanged from the supplied `Headshot - Copy.zip`. After replacing that file, rebuild with:
 
 ```sh
 python3 scripts/build_site.py
 python3 scripts/check_site.py
 ```
 
-Until that source file is available, the site continues to use the existing portrait. Adding the JPEG and rebuilding switches the homepage without changing the biography or layout.
+The square JPEG is active on the homepage. The earlier portrait remains as a fallback; the biography and layout are unchanged.
 
 ## Publication status for this handoff
 
