@@ -83,8 +83,9 @@ def code_excerpt(filename, start, end=None):
     return f'<pre tabindex="0" role="region" aria-label="Code excerpt"><code>{e(excerpt.strip())}</code></pre>'
 
 
-def disclosure(title, body):
-    return f'<details class="evidence"><summary>{e(title)}</summary><div class="evidence-body">{body}</div></details>'
+def disclosure(title, body, *, css_class=''):
+    classes = 'evidence' + (f' {css_class}' if css_class else '')
+    return f'<details class="{e(classes)}"><summary>{e(title)}</summary><div class="evidence-body">{body}</div></details>'
 
 
 def note(label, text):
@@ -127,33 +128,38 @@ def render(project, next_project, *, chart, table, organisation, resources):
         number = len(headings)
         sections.append(f'<section class="finance-section" id="{identifier}" aria-labelledby="{identifier}-heading"><div class="finance-section-heading"><span class="finance-step" aria-hidden="true">{number:02d}</span><h2 id="{identifier}-heading">{e(title)}</h2></div>{body}</section>')
 
-    question_card = '<aside class="question-card" aria-label="How I clarified the brief"><span class="practice-label">Requirements elicitation · clarifying the brief</span><dl>'+''.join(f'<div><dt>{e(label)}</dt><dd>{e(text)}</dd></div>' for label,text in copy['questions'])+'</dl></aside>'
-    section('brief', 'The finance brief', '<span class="scenario-label">Simulated workplace brief</span>'+p(copy['brief'])+question_card)
+    requirements_summary = '<aside class="requirements-card" aria-label="Requirements summary"><span class="practice-label">Requirements summary</span><dl>'+''.join(f'<div><dt>{e(label)}</dt><dd>{e(text)}</dd></div>' for label,text in copy['requirements_summary'])+'</dl></aside>'
+    framework = copy['requirements_template']
+    framework_items = []
+    for item in framework['items']:
+        framework_items.append(f'''<li><div class="framework-item-heading"><h3>{e(item['element'])}</h3><span class="framework-status framework-status--{e(item['state'])}">{e(item['status'])}</span></div><dl><div><dt>Framework prompt</dt><dd>{e(item['prompt'])}</dd></div><div><dt>Project application</dt><dd>{e(item['application'])}</dd></div></dl></li>''')
+    framework_detail = disclosure('See my requirements elicitation template', p(framework['intro'])+'<ol class="framework-items">'+''.join(framework_items)+'</ol>', css_class='requirements-template')
+    section('brief', 'Requirements and scope', '<span class="scenario-label">Simulated workplace brief</span>'+p(copy['brief'])+p(copy['requirements_intro'])+requirements_summary+framework_detail)
 
-    requests = table(['What I would request', 'Why I would need it', 'What was available here'], copy['data_requests'], 'The data request and the project’s actual scope')
+    requests = table(['Dataset', 'Data owner', 'Analytical purpose', 'Availability'], copy['data_requests'], 'Data access assessment')
     source = '<p class="inline-source">Actual source: <a href="https://www.cityobservatory.birmingham.gov.uk/explore/dataset/payments-to-suppliers-over-gbp500/" target="_blank" rel="noopener">Birmingham City Observatory · Payments to Suppliers over £500 ↗</a></p>'
     steps = [('Extract','Published payments CSV'),('Transform','Standard names, dates and reporting fields'),('Load','SQLite payment model'),('Report','Excel finance and controls pack')]
     flow = '<ol class="etl-flow" aria-label="ETL and reporting workflow">'+''.join(f'<li><strong>{e(label)}</strong><span>{e(text)}</span></li>' for label,text in steps)+'</ol>'
     schema = '<div class="model-diagram" aria-label="SQL reporting model"><div class="model-fact"><strong>fact_payment</strong><span>One row per published payment line</span></div><ul>'+''.join(f'<li>{label}</li>' for label in ['dim_supplier','dim_directorate','dim_category','dim_date'])+'</ul></div>'
-    schema += source_link('projects/01_BCC_Payments/sql/00_schema.sql', 'Inspect the SQL schema')+source_link('projects/01_BCC_Payments/scripts/02_build_database.py','Inspect the database-loading script')
-    section('data', 'The data request', p(copy['data_intro'])+requests+source+p(copy['etl_intro'])+flow+disclosure('Show the evidence · SQL reporting model', schema))
+    schema += source_link('projects/01_BCC_Payments/sql/00_schema.sql', 'SQL table definitions')+source_link('projects/01_BCC_Payments/scripts/02_build_database.py','Database build script')
+    section('data', 'Data requirements and availability', p(copy['data_intro'])+requests+source+p(copy['etl_intro'])+flow+disclosure('SQL schema and relationships', schema))
 
     sample = ['Adults Social Care Directorate','Adult Social Care & Health Directorate','Council Managament','Finance Control- Monitoring','Places, Prosperity & Sustainability Directorate']
     rows = [[name,data['mapping'][name]] for name in sample]
-    mapping_table = table(['Before · source department', 'After · reporting directorate'], rows, 'A sample of the department names I standardised')
+    mapping_table = table(['Source department', 'Standardised directorate'], rows, 'Department standardisation sample')
     proof = code_excerpt('scripts/01_clean.py', 'unmapped =', '# 2. Personal data')
     proof += code_excerpt('scripts/01_clean.py', 'assert len(df) ==', 'df.drop(')
-    proof += source_link('projects/01_BCC_Payments/scripts/01_clean.py','Inspect the cleaning and validation code')
-    section('comparison', 'Building a reliable comparison', p(copy['mapping_intro'])+mapping_table+p(copy['corporate_note'])+note('Data validation',copy['validation_note'])+disclosure('Show the evidence · mapping and reconciliation checks',proof))
+    proof += source_link('projects/01_BCC_Payments/scripts/01_clean.py','Cleaning and validation script')
+    section('comparison', 'Data preparation and validation', p(copy['mapping_intro'])+mapping_table+p(copy['corporate_note'])+note('Data validation',copy['validation_note'])+disclosure('Mapping logic and reconciliation checks',proof))
 
     spend_chart = chart('Net payments increased by £118.82m over equivalent dates', '1 April–23 July in each year. Credits are included in the net totals.', comparison_bars(['2025','2026'],data['totals'],highlights=(1,))+f'<p class="chart-annotation">2026 was <strong>21.3% higher</strong>. Both periods end on 23 July.</p>', ['Period','Net payments (£m)'],[['1 Apr–23 Jul 2025',f'{data["totals"][0]:.2f}'],['1 Apr–23 Jul 2026',f'{data["totals"][1]:.2f}']], 'Excel finance pack · Spend by directorate · Total row.')
     movement_chart = chart('City Operations and adult social care drove the largest increases', 'Each bar shows a reporting group’s contribution to the £118.82m net increase. Decreases offset part of the growth.', movement_bars(data['groups'])+'<p class="chart-annotation"><strong>City Operations: +£75.62m.</strong> Higher net payments to Birmingham Highways contributed £66.95m within this group.</p>', ['Reporting group','Year-on-year change (£m)'], [[label,f'{value:.2f}'] for label,value in data['groups']], 'Excel finance pack · Spend by directorate and YTD variance drivers. Values rounded to £0.01m.')
-    period_proof = code_excerpt('scripts/03_finance_pack.py', 'last =', 'K_period =')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Inspect the matched-period calculation')
-    section('spending', 'Spending rose 21.3%', p(copy['spending_intro'])+spend_chart+p(copy['spending_interpretation'])+movement_chart+note('Before briefing management',copy['highways_note'])+disclosure('Show the evidence · matching the reporting periods',period_proof))
+    period_proof = code_excerpt('scripts/03_finance_pack.py', 'last =', 'K_period =')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Matched-period calculations')
+    section('spending', 'Spending rose 21.3%', p(copy['spending_intro'])+spend_chart+p(copy['spending_interpretation'])+movement_chart+note('Management interpretation',copy['highways_note'])+disclosure('Reporting-period calculation',period_proof))
 
     concentration = f'<div class="supplier-facts">{metric(figures["top10_share_pct"]+"%", "of FY2025/26 payment value went to the top ten suppliers")}{metric("+"+figures["agency_ytd_change_pct"]+"%", "agency-staff payments over the matched year-to-date period")}</div>'
-    extra_proof = '<p>These figures are recorded in the finance pack’s Top suppliers FY25-26 and Agency staff monthly sheets. The year-to-date agency comparison uses the same reporting dates as the expenditure analysis.</p>'+source_link('projects/01_BCC_Payments/sql/02_top_suppliers_fy2025_26.sql','Inspect supplier reporting SQL')+source_link('projects/01_BCC_Payments/sql/05_agency_staff_monthly.sql','Inspect agency-staff reporting SQL')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Inspect concentration and agency calculations')
-    section('suppliers', 'Supplier and agency-staff expenditure', p(copy['suppliers_intro'])+concentration+p(copy['supplier_note'])+disclosure('Show the evidence · supplier and agency calculations',extra_proof))
+    extra_proof = '<p>These figures are recorded in the finance pack’s Top suppliers FY25-26 and Agency staff monthly sheets. The year-to-date agency comparison uses the same reporting dates as the expenditure analysis.</p>'+source_link('projects/01_BCC_Payments/sql/02_top_suppliers_fy2025_26.sql','Supplier reporting query')+source_link('projects/01_BCC_Payments/sql/05_agency_staff_monthly.sql','Agency-staff reporting query')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Concentration and agency calculations')
+    section('suppliers', 'Supplier and agency-staff expenditure', p(copy['suppliers_intro'])+concentration+p(copy['supplier_note'])+disclosure('Supplier concentration and agency calculations',extra_proof))
 
     rule_list = '<ol class="rule-list">'+''.join(f'<li><strong>{e(title)}</strong><span>{e(text)}</span></li>' for title,text in copy['duplicate_rules'])+'</ol>'
     initial = data['initial_pairs']
@@ -162,20 +168,20 @@ def render(project, next_project, *, chart, table, organisation, resources):
     remaining = final-same_day
     duplicate_visual = f'<div class="review-route"><div><span>Initial SQL screening</span><strong>{initial:,}</strong><small>candidate payment pairs</small></div><span class="review-arrow" aria-hidden="true">→</span><div class="review-refined"><span>Refined in Python</span><strong>{final:,}</strong><small>candidate pairs · £{e(figures["dup_value_m"])}m</small></div></div><p class="chart-annotation">Of the final <strong>{final} pairs</strong>, begin with the <strong>{same_day} same-day pairs</strong>.</p><div class="review-subset" aria-hidden="true"><span style="width:{same_day/final*100:.3f}%"></span></div><div class="review-subset-labels"><strong>{same_day} same-day pairs</strong><span>{remaining} other pairs · one to three days apart</span></div>'
     duplicate_chart = chart('A more selective rule produced a focused AP review list', 'These are screening stages, not confirmed duplicate payments. The 73 same-day pairs are included within the 281 candidates.', duplicate_visual, ['Screening stage','Payment pairs'],[['Initial SQL rule',initial],['Refined Python rule',final],['Same-day subset of refined pairs',same_day]], 'Initial SQL results CSV; finance pack · Possible duplicates; key_figures.csv.')
-    duplicate_proof = '<h3>Stage 1 · SQL candidate generation</h3><p>The SQL self-join compares payment lines for the same supplier and amount within three days. It produces the initial 6,553-pair list.</p>'+source_link('projects/01_BCC_Payments/sql/03_possible_duplicate_payments.sql','Inspect the initial SQL rule')
-    duplicate_proof += '<h3>Stage 2 · Python refinement</h3><p>The additional supplier–amount frequency condition is implemented below. It retains combinations appearing exactly twice across the dataset, then checks the gap between those two dates.</p>'+code_excerpt('scripts/03_finance_pack.py','x = df[~df.is_personal_data', 'credits =')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Inspect the refined Python rule')
-    section('duplicates', 'Refining the duplicate-payment check', p(copy['duplicates_intro'])+rule_list+duplicate_chart+p(copy['duplicates_result'])+note('What this screening rule can miss',copy['duplicates_limit'])+disclosure('Show the evidence · initial SQL and refined Python rules',duplicate_proof))
+    duplicate_proof = '<h3>Stage 1 · SQL candidate generation</h3><p>The SQL self-join compares payment lines for the same supplier and amount within three days. It produces the initial 6,553-pair list.</p>'+source_link('projects/01_BCC_Payments/sql/03_possible_duplicate_payments.sql','Initial SQL matching query')
+    duplicate_proof += '<h3>Stage 2 · Python refinement</h3><p>The additional supplier–amount frequency condition is implemented below. It retains combinations appearing exactly twice across the dataset, then checks the gap between those two dates.</p>'+code_excerpt('scripts/03_finance_pack.py','x = df[~df.is_personal_data', 'credits =')+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Refined Python screening')
+    section('duplicates', 'Duplicate-payment screening', p(copy['duplicates_intro'])+rule_list+duplicate_chart+p(copy['duplicates_result'])+note('Screening coverage and limitations',copy['duplicates_limit'])+disclosure('Duplicate-screening logic: SQL and Python',duplicate_proof))
 
-    privacy_evidence = '<p>The workbook’s Personal data check sheet records the aggregate publication issue. No supplier identifiers or personal names are displayed on this page. This check concerns the risk of linking records across a publication; it does not establish whether anyone accessed or misused the information.</p>'+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Inspect the information-governance calculation')
-    section('privacy', 'A separate check identified a privacy risk', p(copy['privacy_intro'])+p(copy['privacy_action'])+disclosure('Show the evidence · the aggregate publication check',privacy_evidence))
+    privacy_evidence = '<p>The workbook’s Personal data check sheet records the aggregate publication issue. No supplier identifiers or personal names are displayed on this page. This check concerns the risk of linking records across a publication; it does not establish whether anyone accessed or misused the information.</p>'+source_link('projects/01_BCC_Payments/scripts/03_finance_pack.py','Information-governance calculations')
+    section('privacy', 'Publication checks identified a privacy risk', p(copy['privacy_intro'])+p(copy['privacy_action'])+disclosure('Publication risk assessment',privacy_evidence))
 
-    actions = table(['Team','Recommended action','How progress could be assessed'],copy['actions'],'A practical handover for Finance, AP and Information Governance')
+    actions = table(['Action owner','Recommended action','Success measure'],copy['actions'],'Action plan and proposed success measures')
     section('actions', 'Recommended actions', actions+p(copy['delivery']))
 
-    limitations = '<details class="evidence"><summary>Scope and interpretation</summary><div class="evidence-body"><ul><li>The publication covers payments over £500, rather than all council expenditure.</li><li>Cash payments are not budgets, commitments or full service costs.</li><li>Invoice references are absent; exceptions require internal verification.</li><li>35.4% of FY2025/26 payment value uses a generic PO-accrual category, limiting analysis by expenditure type.</li></ul></div></details>'
+    limitations = '<details class="evidence"><summary>Scope and limitations</summary><div class="evidence-body"><ul><li>The publication covers payments over £500, rather than all council expenditure.</li><li>Cash payments are not budgets, commitments or full service costs.</li><li>Invoice references are absent; exceptions require internal verification.</li><li>35.4% of FY2025/26 payment value uses a generic PO-accrual category, limiting analysis by expenditure type.</li></ul></div></details>'
     supporting = resources(project)
     download = '<div class="actions"><a class="button" href="../projects/01_BCC_Payments/outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx" download>Download the Excel finance pack <span aria-hidden="true">↓</span></a></div>'
-    section('files', 'Files and dashboard', '<p>Inspect the completed workbook, management summary, requirements brief and decisions note, or follow the scripts from cleaning to reporting.</p>'+download+supporting+limitations+'<h3>Power BI · next reporting view</h3>'+p(copy['dashboard']))
+    section('files', 'Deliverables and supporting files', '<p>Inspect the completed workbook, management summary, requirements brief and decisions note, or follow the scripts from cleaning to reporting.</p>'+download+supporting+limitations+'<h3>Power BI · next reporting view</h3>'+p(copy['dashboard']))
 
     nav = ''.join(f'<a href="#{identifier}"><span aria-hidden="true">{i:02d}</span>{e(title)}</a>' for i,(identifier,title) in enumerate(headings,1))
     tool_icons = ''.join(f'<span><img src="../assets/icons/{icon}" width="22" height="22" alt="">{name}</span>' for name,icon in [('Python','python.svg'),('SQL','sql.svg'),('Excel','excel.svg')])

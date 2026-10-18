@@ -55,7 +55,30 @@ def main():
             page.wait_for_url('**/case-studies/birmingham-payments.html')
             assert page.locator('h1').inner_text() == 'Explaining expenses and flagging payments for review'
             assert 'simulated' in page.locator('.scenario-note').inner_text()
-            assert page.locator('.question-card dt').all_text_contents() == ['I considered','Why it mattered','I clarified']
+            assert page.locator('.requirements-card dt').all_text_contents() == ['Business problem','Core questions','Business relevance','Defined scope']
+            framework = page.locator('.requirements-template')
+            assert framework.locator('summary').inner_text() == 'See my requirements elicitation template'
+            framework.locator('summary').focus()
+            page.keyboard.press('Enter')
+            assert framework.get_attribute('open') is not None
+            assert framework.locator('.framework-items > li').count() == 9
+            assert framework.locator('.framework-status--pending').count() == 4
+            assert framework.locator('.framework-status--assumption').count() == 1
+            assert framework.locator('.framework-status--not-applicable').inner_text() == 'Not applicable to this scope'
+            assert 'analyst-selected screening parameters' in framework.inner_text()
+            framework.locator('summary').focus()
+            page.keyboard.press('Enter')
+            assert framework.get_attribute('open') is None
+            assert page.locator('#data th').all_text_contents() == ['Dataset','Data owner','Analytical purpose','Availability']
+            first_request = page.locator('#data tbody tr').first.locator('td').all_text_contents()
+            assert first_request[:2] == ['Payment ledger','Finance']
+            assert page.locator('#comparison th').all_text_contents() == ['Source department','Standardised directorate']
+            assert page.locator('.evidence summary').all_text_contents() == [
+                'See my requirements elicitation template', 'SQL schema and relationships',
+                'Mapping logic and reconciliation checks', 'Reporting-period calculation',
+                'Supplier concentration and agency calculations', 'Duplicate-screening logic: SQL and Python',
+                'Publication risk assessment', 'Scope and limitations',
+            ]
             assert page.locator('.etl-flow strong').all_text_contents() == ['Extract','Transform','Load','Report']
             assert page.locator('.chart-panel').count() == 3
             for chart in page.locator('.chart-panel').all():
@@ -101,6 +124,8 @@ def main():
                 context = browser.new_context(viewport={'width':390,'height':844}, **options)
                 tab = context.new_page()
                 tab.goto(base+'case-studies/birmingham-payments.html',wait_until='networkidle')
+                tab.locator('.requirements-template summary').click()
+                assert tab.locator('.framework-status--not-applicable').is_visible()
                 tab.locator('#duplicates .evidence summary').click()
                 assert tab.locator('#duplicates pre').is_visible()
                 assert tab.locator('.finance-section').count() == 9
@@ -111,7 +136,7 @@ def main():
     finally:
         server.shutdown()
         server.server_close()
-    print('Passed: workbook/CSV arithmetic; exact department mappings; headline-to-chart reconciliation; homepage entry; scenario label; matching navigation; keyboard evidence and chart tables; workbook download; five viewport sizes; readable mobile charts; dark/no-JS/reduced-motion layouts; no overflow or request/script errors.')
+    print('Passed: workbook/CSV arithmetic; exact department mappings; headline-to-chart reconciliation; homepage entry; scenario label; requirements framework/statuses; separate dataset/owner columns; content-specific disclosures; matching navigation; keyboard evidence and chart tables; workbook download; five viewport sizes; readable mobile charts; dark/no-JS/reduced-motion layouts; no overflow or request/script errors.')
 
 
 if __name__ == '__main__':

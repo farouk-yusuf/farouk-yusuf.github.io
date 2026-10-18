@@ -30,12 +30,12 @@
 .finance-section > p { color:var(--muted); font-size:.94rem; line-height:1.8; }
 .finance-section > .table-scroll + p { margin-top:22px; }
 .finance-section .scenario-label { display:inline-block; color:var(--accent); font-size:.68rem; letter-spacing:.02em; border-bottom:1px solid var(--line); margin-bottom:12px; }
-.question-card { margin-top:25px; border:1px solid var(--line); border-radius:8px; padding:22px; background:var(--surface); }
+.requirements-card { margin-top:25px; border:1px solid var(--line); border-radius:8px; padding:22px; background:var(--surface); }
 .practice-label { display:block; color:var(--accent); font-size:.69rem; font-weight:650; margin-bottom:12px; }
-.question-card dl { margin:0; display:grid; gap:16px; }
-.question-card dl > div { display:grid; grid-template-columns:120px minmax(0,1fr); gap:18px; }
-.question-card dt { font-weight:650; font-size:.82rem; color:var(--ink); }
-.question-card dd { margin:0; color:var(--muted); font-size:.85rem; line-height:1.7; }
+.requirements-card dl { margin:0; display:grid; gap:16px; }
+.requirements-card dl > div { display:grid; grid-template-columns:135px minmax(0,1fr); gap:18px; }
+.requirements-card dt { font-weight:650; font-size:.82rem; color:var(--ink); }
+.requirements-card dd { margin:0; color:var(--muted); font-size:.85rem; line-height:1.7; }
 .finance-section .table-scroll { margin:20px 0; padding:0 0 4px; }
 .finance-section table { font-size:.8rem; line-height:1.65; }
 .finance-section th,.finance-section td { padding:13px 14px; }
@@ -49,12 +49,30 @@
 .practice-note .practice-label { margin-bottom:7px; }
 .practice-note p { color:var(--muted); font-size:.84rem; line-height:1.75; }
 .evidence { border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:22px 0 0; }
-.evidence summary { padding:14px 4px; font-weight:500; font-size:.8rem; }
-.evidence summary > span { font-size:.84rem; margin-right:5px; }
+.evidence summary { display:flex; align-items:center; justify-content:space-between; gap:18px; list-style:none; padding:14px 4px; font-weight:500; font-size:.8rem; }
+.evidence summary::-webkit-details-marker { display:none; }
+.evidence summary::after { content:''; width:7px; height:7px; flex-shrink:0; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:rotate(45deg); margin-right:5px; transition:transform .18s ease; }
+.evidence[open] > summary::after { transform:rotate(225deg); }
 .evidence-body { padding:4px 4px 20px; font-size:.84rem; }
 .evidence-body p,.evidence-body li { color:var(--muted); }
 .evidence-body pre { margin:16px 0; padding:18px; background:var(--soft); overflow:auto; max-width:100%; color:var(--ink); font-size:.76rem; line-height:1.7; border-radius:5px; }
 .evidence-link { display:block; width:fit-content; margin-top:12px; font-size:.78rem; }
+.framework-items { list-style:none; margin:22px 0 0; padding:0; }
+.framework-items > li { margin:0; padding:20px 0; border-top:1px solid var(--line); }
+.framework-items > li:last-child { padding-bottom:0; }
+.framework-item-heading { display:flex; align-items:baseline; flex-wrap:wrap; gap:8px 16px; margin-bottom:14px; }
+.framework-item-heading h3 { font-size:.94rem; margin:0; letter-spacing:-.02em; }
+.framework-status { display:inline-block; color:var(--muted); font-size:.67rem; line-height:1.5; border-bottom:1px solid var(--line); }
+.framework-status--defined { color:var(--accent); }
+.framework-status--pending { color:var(--warm); }
+.framework-items dl { display:grid; gap:10px; margin:0; }
+.framework-items dl > div { display:grid; grid-template-columns:125px minmax(0,1fr); gap:16px; }
+.framework-items dt { font-weight:600; color:var(--ink); font-size:.76rem; }
+.framework-items dd { margin:0; color:var(--muted); font-size:.8rem; line-height:1.7; }
+#data table { min-width:650px; }
+#data th:nth-child(1) { width:18%; }
+#data th:nth-child(2) { width:17%; }
+#data th:nth-child(3) { width:32%; }
 .model-diagram { display:flex; align-items:center; justify-content:center; gap:30px; padding:20px 0; }
 .model-fact { padding:18px; border:1px solid var(--accent); border-radius:6px; }
 .model-fact strong { display:block; font-family:monospace; font-size:.86rem; }
@@ -119,9 +137,12 @@
   .finance-metric > span { font-size:.76rem; margin-top:0; }
   .finance-section > p { font-size:.88rem; }
   .finance-section-heading { gap:9px; }
-  .question-card { padding:17px; }
-  .question-card dl > div { grid-template-columns:1fr; gap:5px; }
-  .question-card dd { font-size:.81rem; }
+  .requirements-card { padding:17px; }
+  .requirements-card dl > div { grid-template-columns:1fr; gap:5px; }
+  .requirements-card dd { font-size:.81rem; }
+  .framework-items dl > div { grid-template-columns:1fr; gap:4px; }
+  .framework-item-heading { gap:8px; }
+  .framework-status { font-size:.65rem; }
   .finance-section table { min-width:550px; font-size:.76rem; }
   #comparison .table-scroll table { min-width:0; }
   .finance-section th,.finance-section td { padding:10px; }

@@ -3,17 +3,38 @@
   "summary": "I analysed 247,785 payment records, compared expenditure across equivalent periods and flagged 281 potential duplicate payment pairs worth £4.45m for Accounts Payable review.",
   "scenario_note": "The published data, analysis and findings are real. The workplace brief and stakeholder conversations are simulated to show how I would approach the task within a finance team.",
   "brief": "During a finance meeting, I was asked to analyse expenditure trends and identify potential duplicate payments. To ensure the report was relevant, I first confirmed the reporting period and the required focus: cash payments, budget performance, or outstanding commitments.",
-  "questions": [
-    ["I considered", "Could ‘higher expenditure’ mean more cash paid, an overspend against a budget, or an increase in outstanding commitments?"],
-    ["Why it mattered", "Each question needs different records. Payment data shows cash outflow; it does not establish budget performance or committed costs."],
-    ["I clarified", "The report would compare cash payments over equivalent dates and identify exceptions for investigation. Budget and commitment reporting would need additional data."]
-  ],
   "data_intro": "Within the organisation, I would request authorised extracts from Finance and Accounts Payable (AP), agreeing the required fields and access before starting. For this project, I used Birmingham City Observatory’s published payments over £500, covering July 2024 to 23 July 2026.",
   "data_requests": [
-    ["Payment ledger · Finance", "Payment dates, amounts, departments and credits establish expenditure trends.", "Published payment records supplied these fields."],
-    ["Supplier master · Accounts Payable", "Supplier identifiers and names support supplier reporting and duplicate checks.", "Published names and identifiers supported screening; the internal supplier master was unavailable."],
-    ["Invoice references · Accounts Payable", "Invoice and credit references distinguish repeated invoices from legitimate payments.", "Not published. The findings remain a review list for AP."],
-    ["Budgets and commitments · Finance", "Budgets, purchase orders and unpaid commitments support budget-performance reporting.", "Not available here; excluded from the report’s scope."]
+    [
+      "Payment ledger",
+      "Finance",
+      "Payment dates, amounts, departments and credits establish expenditure trends.",
+      "Published payment records supply these fields."
+    ],
+    [
+      "Supplier master",
+      "Accounts Payable",
+      "Supplier identifiers and names support supplier reporting and duplicate checks.",
+      "Published names and identifiers support screening; the internal master is unavailable."
+    ],
+    [
+      "Invoice and credit records",
+      "Accounts Payable",
+      "Document references distinguish repeated invoices from legitimate payments.",
+      "Not published; internal verification remains necessary."
+    ],
+    [
+      "Budget data",
+      "Finance",
+      "Approved budgets and revisions support budget-variance analysis.",
+      "Not included in the payment dataset; budget performance is outside scope."
+    ],
+    [
+      "Commitment data",
+      "Finance",
+      "Purchase orders and unpaid commitments support committed-expenditure reporting.",
+      "Not included in the payment dataset; outstanding commitments are outside scope."
+    ]
   ],
   "etl_intro": "I built an ETL workflow: extract the published records, transform inconsistent fields, then load a SQL reporting model. This kept the cleaning rules separate from the queries and Excel outputs.",
   "mapping_intro": "Department names changed during a restructure. For example, ‘Adults Social Care Directorate’ and ‘Adult Social Care & Health Directorate’ both needed to report under ‘Adult Social Care & Health’. Comparing the original labels could make spending appear to disappear from one department and emerge in another. I standardised the names as shown in the table below.",
@@ -26,21 +47,136 @@
   "supplier_note": "The top ten suppliers received 40.5% of the financial year’s payment value. Agency-staff payments rose 28.8% over the matched year-to-date period. Concentration is a prompt to review contract and service context; it does not establish poor value for money.",
   "duplicates_intro": "My initial SQL check matched the same supplier and the same payment amount of at least £1,000, within three days. It returned 6,553 payment pairs. Repeated care-package amounts could create legitimate matches, so I refined the screening rule in Python before preparing the AP review list.",
   "duplicate_rules": [
-    ["Same supplier", "Match the supplier identifier, rather than relying on a similar name."],
-    ["Same amount, at least £1,000", "Keep the check focused on exact-value payment matches above the screening threshold."],
-    ["That supplier–amount combination appears exactly twice", "Exclude combinations repeated throughout the dataset, which can reflect recurring care-package payments."],
-    ["No more than three days apart", "Retain closely timed pairs; identify same-day matches for the first review pass."]
+    [
+      "Supplier identifier match",
+      "Match the supplier identifier, rather than relying on a similar name."
+    ],
+    [
+      "Exact amount match (£1,000 minimum)",
+      "Retain exact-value payment matches above the analyst-selected screening threshold."
+    ],
+    [
+      "Supplier–amount frequency of two",
+      "Retain combinations appearing exactly twice across the dataset; recurring care-package amounts can otherwise generate many legitimate matches."
+    ],
+    [
+      "Maximum payment interval of three days",
+      "Retain closely timed pairs and identify same-day matches for the first review pass."
+    ]
   ],
   "duplicates_result": "The refined rule identified 281 candidate pairs worth £4.45m, including 73 paid on the same day. I would start the invoice review with those 73 pairs. The amount represents one potentially repeated payment per pair, rather than the sum of both payments or a confirmed loss.",
   "duplicates_limit": "This refinement makes the review list more selective. It can still miss duplicates among recurring amounts, below £1,000 or more than three days apart. It can also flag legitimate transactions. Invoice references and AP investigation are needed to confirm the outcome.",
   "privacy_intro": "While checking the publication fields, I found a separate information-governance issue: identifiers on redacted payments also appeared beside names elsewhere in the published data. This linked 213 redacted payment records across 12 identifiers. I report only the aggregate finding here.",
   "privacy_action": "I pseudonymised identifiers for personal-data rows and replaced the display names in the reporting dataset. I would refer the publication issue to Information Governance so they could review how records are released together, rather than checking each redacted row in isolation.",
   "actions": [
-    ["Accounts Payable", "Check the 73 same-day pairs against invoice and credit references, then review the remaining candidates.", "Track reviewed, confirmed, cleared and unresolved pairs; record any recoveries only after confirmation."],
-    ["Finance / City Operations", "Reconcile the highways payment schedule and £12m credit before explaining the year-on-year movement.", "Record the reconciled movement and distinguish timing effects from continuing changes."],
-    ["Supplier-data owner", "Investigate the 260 supplier names linked to multiple supplier identifiers before merging or closing records.", "Track verified duplicate supplier records and the decisions taken."],
-    ["Information Governance", "Review identifiers on redacted payments and assess links across the publication.", "Document the assessment, publication changes and checks before the next release."]
+    [
+      "Accounts Payable",
+      "Check the 73 same-day pairs against invoice and credit references, then review the remaining candidates.",
+      "Track reviewed, confirmed, cleared and unresolved pairs; record any recoveries only after confirmation."
+    ],
+    [
+      "Finance",
+      "Coordinate with City Operations to reconcile the highways payment schedule and £12m credit before explaining the year-on-year movement.",
+      "Record the reconciled movement and distinguish timing effects from continuing changes."
+    ],
+    [
+      "Supplier data owner",
+      "Investigate the 260 supplier names linked to multiple supplier identifiers before merging or closing records.",
+      "Track verified duplicate supplier records and the decisions taken."
+    ],
+    [
+      "Information Governance",
+      "Review identifiers on redacted payments and assess links across the publication.",
+      "Document the assessment, publication changes and checks before the next release."
+    ]
   ],
   "delivery": "I produced a SQL reporting model, an Excel finance and payment-controls pack, a management summary and a data-quality log. These are completed analytical outputs; the council has not implemented or evaluated the recommendations as part of this portfolio project.",
-  "dashboard": "The Power BI dashboard will follow the same questions: expenditure trends, supplier and agency-staff concentration, and payment exceptions. Planned filters include reporting period, directorate and supplier. The Excel pack already contains the supporting measures and review tables."
+  "dashboard": "The Power BI dashboard will follow the same questions: expenditure trends, supplier and agency-staff concentration, and payment exceptions. Planned filters include reporting period, directorate and supplier. The Excel pack already contains the supporting measures and review tables.",
+  "requirements_intro": "I used my requirements elicitation framework to define two priorities: explain changes in cash expenditure across comparable periods, and provide Accounts Payable with a prioritised payment-exception list. Budget performance and outstanding commitments remained outside scope.",
+  "requirements_summary": [
+    [
+      "Business problem",
+      "Department changes complicated expenditure comparisons, while broad payment-matching rules generated a large, unverified exception list."
+    ],
+    [
+      "Core questions",
+      "Which departments and suppliers explain the expenditure movement? Which payment pairs should Accounts Payable investigate first?"
+    ],
+    [
+      "Business relevance",
+      "Finance needs a defensible explanation of expenditure trends. Accounts Payable needs a focused review list supported by clear screening rules."
+    ],
+    [
+      "Defined scope",
+      "Published payments over £500; FY2025/26 reporting and equivalent year-to-date comparisons. Invoice verification requires internal records."
+    ]
+  ],
+  "requirements_template": {
+    "intro": "I adapt this checklist to the business decision and operating context. The prompts below show the reusable framework and how I applied it to this portfolio scenario.",
+    "items": [
+      {
+        "element": "Business problem and decision",
+        "prompt": "Define the problem, its business relevance and the decision the analysis must support.",
+        "application": "Explain expenditure movements and prioritise potential duplicate payments for invoice review.",
+        "status": "Defined",
+        "state": "defined"
+      },
+      {
+        "element": "Stakeholders and ownership",
+        "prompt": "Identify the decision-maker, report users, data owners and action owners.",
+        "application": "Finance, Accounts Payable and Information Governance are assumed stakeholders for the scenario. Ownership would be confirmed at the outset of a live assignment.",
+        "status": "Scenario assumption",
+        "state": "assumption"
+      },
+      {
+        "element": "Scope and definitions",
+        "prompt": "Agree the population, reporting period, exclusions and definitions of the key measures.",
+        "application": "Payments over £500; cash outflow net of credits; matched 1 April–23 July comparisons. Budget variance and unpaid commitments are excluded.",
+        "status": "Defined",
+        "state": "defined"
+      },
+      {
+        "element": "Measures and screening parameters",
+        "prompt": "Specify KPIs, calculations and thresholds, including the rationale for exceptions.",
+        "application": "Net payments, year-on-year movement, supplier concentration and candidate payment pairs. The £1,000 threshold and three-day window are analyst-selected screening parameters; AP would confirm their suitability.",
+        "status": "Business confirmation required",
+        "state": "pending"
+      },
+      {
+        "element": "Data access and governance",
+        "prompt": "Confirm sources, required fields, access permissions and handling of sensitive information.",
+        "application": "Public payment data supports screening. Internal invoice and credit references are unavailable; access would need agreement with the data owner. Personal-data fields are protected in the reporting dataset.",
+        "status": "Internal access unresolved",
+        "state": "pending"
+      },
+      {
+        "element": "Data quality and validation",
+        "prompt": "Define checks for completeness, consistency, reconciliation and material limitations.",
+        "application": "Department-mapping coverage, unchanged payment-line count and payment-value reconciliation are checked in the cleaning script. Missing invoice references remain an explicit limitation.",
+        "status": "Checks implemented",
+        "state": "defined"
+      },
+      {
+        "element": "Deliverables and reporting cadence",
+        "prompt": "Agree the output format, level of detail, reporting frequency and delivery date.",
+        "application": "The SQL model, Excel pack, management summary and data-quality log are complete. Delivery deadlines and an operational reporting cadence would need stakeholder agreement.",
+        "status": "Outputs complete; cadence unconfirmed",
+        "state": "pending"
+      },
+      {
+        "element": "Acceptance and handover",
+        "prompt": "Set technical acceptance checks, business review criteria and the sign-off responsibility.",
+        "application": "Technical reconciliation checks are documented. AP would verify candidates against invoices; no operational acceptance, sign-off or realised savings are claimed.",
+        "status": "Stakeholder review outstanding",
+        "state": "pending"
+      },
+      {
+        "element": "Service-level targets",
+        "prompt": "Where relevant, establish the service-level agreement (SLA), target population and timing rules.",
+        "application": "This expenditure and payment-control review does not assess service-delivery performance. SLA targets are not required for its stated scope.",
+        "status": "Not applicable to this scope",
+        "state": "not-applicable"
+      }
+    ]
+  }
 }
