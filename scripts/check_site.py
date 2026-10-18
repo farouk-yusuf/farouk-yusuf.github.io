@@ -43,6 +43,10 @@ class Page(HTMLParser):
 
 def main():
     subprocess.run([sys.executable, str(ROOT/'scripts/build_site.py'), '--check'], check=True)
+    skills = json.loads((ROOT/'site/skills.json').read_text())
+    for tool in skills:
+        assert len(tool['items']) == 4, f'Expected four capabilities: {tool["name"]}'
+        assert (ROOT/'assets/icons'/tool['icon']).is_file(), f'Missing tool icon: {tool["name"]}'
     paths = [ROOT/'index.html', *sorted((ROOT/'case-studies').glob('*.html'))]
     pages = {}
     for path in paths:

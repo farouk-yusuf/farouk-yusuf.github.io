@@ -48,7 +48,8 @@ def main():
                     page.get_by_role('button', name='Show '+tool['name'], exact=True).click()
                     assert page.locator('[data-tool-slide]:visible h3').inner_text() == tool['name']
                     assert_viewport(page, (width,tool['name']))
-                assert page.get_by_role('button',name='Play automatic tool slideshow').is_visible()
+                assert page.locator('[data-tool-play], [data-tool-count], .tool-status').count() == 0
+                assert page.locator('[data-tool-slide]:visible li').count() == 4
                 for project in page.locator('.project-highlight').all():
                     project.scroll_into_view_if_needed()
                     assert_viewport(page, (width,'project'))
@@ -57,17 +58,19 @@ def main():
             page.set_viewport_size({'width':1440,'height':900})
             page.goto(base,wait_until='networkidle')
             assert page.locator('[data-tool-carousel]').bounding_box()['y'] + page.locator('[data-tool-carousel]').bounding_box()['height'] < 900
-            page.mouse.move(0,0)
-            page.wait_for_timeout(6900)
-            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'SQL', 'Automatic rotation did not advance'
-            page.locator('[data-tool-carousel]').hover()
-            current = page.locator('[data-tool-slide]:visible h3').inner_text()
-            page.wait_for_timeout(6900)
-            assert page.locator('[data-tool-slide]:visible h3').inner_text() == current, 'Hover failed to pause rotation'
-            page.get_by_role('button',name='Show ArcGIS',exact=True).focus()
+            page.get_by_role('button',name='Previous tool',exact=True).click()
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == skills[-1]['name']
+            page.get_by_role('button',name='Next tool',exact=True).click()
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == skills[0]['name']
+            page.keyboard.press('ArrowRight')
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'SQL'
+            page.keyboard.press('ArrowLeft')
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'Microsoft Excel'
+            page.get_by_role('button',name='Show R',exact=True).focus()
             page.keyboard.press('Enter')
-            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'ArcGIS'
-            assert page.get_by_role('button',name='Play automatic tool slideshow').is_visible()
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'R'
+            page.wait_for_timeout(7000)
+            assert page.locator('[data-tool-slide]:visible h3').inner_text() == 'R', 'Manual carousel changed without input'
 
             # The existing project pages remain reachable and retain their charts.
             for link in page.locator('.project-detail-link').all():
@@ -90,7 +93,8 @@ def main():
                 if settings.get('java_script_enabled') is False:
                     assert tab.locator('[data-tool-slide]:visible').count() == len(skills)
                 else:
-                    assert tab.get_by_role('button',name='Play automatic tool slideshow').is_visible()
+                    assert tab.locator('[data-tool-slide]:visible').count() == 1
+                    assert tab.get_by_role('button',name='Next tool',exact=True).is_visible()
                 assert tab.locator('.journey-card').evaluate_all('(cards) => cards.every(c=>getComputedStyle(c).opacity === "1")')
                 assert_viewport(tab,str(settings))
                 context.close()
@@ -99,7 +103,7 @@ def main():
     finally:
         server.shutdown()
         server.server_close()
-    print('Passed: exact introduction; 4 STAR summaries; 8 tool slides at 4 widths; autoplay and pause; keyboard selection; project links; dark mode; no-JS/reduced-motion support; no overflow or request/script errors.')
+    print(f'Passed: exact introduction; 4 STAR summaries; {len(skills)} slides with four capabilities at 4 widths; manual arrows and keyboard selection; project links; dark mode; no-JS/reduced-motion support; no overflow or request/script errors.')
 
 
 if __name__ == '__main__':

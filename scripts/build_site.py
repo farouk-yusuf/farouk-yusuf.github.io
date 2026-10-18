@@ -211,12 +211,11 @@ def skills_carousel():
     slides = []
     for index, tool in enumerate(SKILLS):
         items = ''.join(f'<li><strong>{e(name)}</strong><span>{e(description)}</span></li>' for name, description in tool['items'])
-        status = f'<p class="tool-status">{e(tool["status"])}</p>' if tool.get('status') else ''
         slides.append(f'''<section class="tool-slide" data-tool-slide role="group" aria-roledescription="slide" aria-label="{index+1} of {len(SKILLS)}: {e(tool['name'])}">
-        <div class="tool-identity"><img src="assets/icons/{e(tool['icon'])}" alt="" width="42" height="42"><h3>{e(tool['name'])}</h3></div><div class="tool-details"><ul>{items}</ul>{status}</div></section>''')
-    choices = ''.join(f'<button type="button" data-tool-select="{index}" aria-label="Show {e(tool["name"])}" aria-pressed="{str(index==0).lower()}"><img src="assets/icons/{e(tool["icon"])}" width="20" height="20" alt=""></button>' for index,tool in enumerate(SKILLS))
+        <div class="tool-identity"><img src="assets/icons/{e(tool['icon'])}" alt="" width="42" height="42"><h3>{e(tool['name'])}</h3></div><div class="tool-details"><ul>{items}</ul></div></section>''')
+    choices = ''.join(f'<button type="button" data-tool-select="{index}" aria-label="Show {e(tool["name"])}" title="{e(tool["name"])}" aria-pressed="{str(index==0).lower()}"><img src="assets/icons/{e(tool["icon"])}" width="20" height="20" alt=""></button>' for index,tool in enumerate(SKILLS))
     return f'''<section class="tool-carousel" data-tool-carousel role="region" aria-roledescription="carousel" aria-label="Tools and capabilities">
-      <div class="tool-carousel-top"><h2>Tools &amp; capabilities</h2><div class="tool-controls" data-tool-controls hidden><span class="tool-count" data-tool-count aria-hidden="true">1 / {len(SKILLS)}</span><button type="button" data-tool-previous aria-label="Previous tool">←</button><button type="button" data-tool-play aria-label="Pause automatic tool slideshow">Pause</button><button type="button" data-tool-next aria-label="Next tool">→</button></div></div>
+      <div class="tool-carousel-top"><h2>Tools &amp; capabilities</h2><div class="tool-controls" data-tool-controls hidden><button type="button" data-tool-previous aria-label="Previous tool"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button type="button" data-tool-next aria-label="Next tool"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button></div></div>
       <div data-tool-track>{''.join(slides)}</div><div class="tool-choices" data-tool-choices role="group" aria-label="Choose a tool" hidden>{choices}</div><p class="sr-only" data-tool-announcement role="status" aria-live="polite"></p>
     </section>'''
 

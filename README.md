@@ -29,7 +29,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 
 - `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
-- `site/skills.json`: tool-slide names, icons, capabilities and training/development status.
+- `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
 - `site/templates/home.html`: homepage structure; edit this rather than generated HTML.
 - `site/resources.json`: the original GitHub write-up and download links.
 - `scripts/build_site.py`: shared HTML components, homepage/research copy and chart definitions. Uses only the Python standard library.
@@ -46,7 +46,7 @@ node --check assets/js/site.js
 
 `build_site.py --check` checks freshness without changing files. `check_site.py` also checks local assets and fragment links, unique IDs, one main heading per page, data tables for charts and preservation of the 20 original project resource links. The original analytical scripts under `projects/` are separate and are not run by the website build.
 
-For browser review, check all pages at desktop and narrow phone widths, keyboard navigation, tool selection and pause controls, theme persistence and the chart data disclosures. The tool carousel advances every 6.5 seconds and pauses on hover, keyboard focus, a hidden tab, or when outside the viewport. Manual selection pauses rotation; reduced motion disables automatic rotation by default. Without JavaScript all tools remain visible. Do not treat build/link checks as validation of the original analytical calculations.
+For browser review, check all pages at desktop and narrow phone widths, keyboard navigation, tool selection, theme persistence and the chart data disclosures. The tool carousel is manual: visitors use the circular arrow controls, left/right keyboard arrows or tool icons. It never advances automatically and needs no Play/Pause control. Without JavaScript all tools remain visible. Do not treat build/link checks as validation of the original analytical calculations.
 
 With Playwright and Chromium installed, run `python3 scripts/check_homepage_browser.py` for automated homepage interaction checks. It starts a temporary local server and does not require a manually started development server.
 
