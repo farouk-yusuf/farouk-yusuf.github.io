@@ -1,0 +1,45 @@
+{
+  "title": "Finding the service gaps behind tenant satisfaction",
+  "summary": "I benchmarked Platform Housing’s tenant satisfaction, tested unusual year-on-year changes and examined complaint findings to recommend where customer-service teams should focus next.",
+  "scenario_note": "The datasets, calculations and workbook are real. The workplace brief, stakeholder roles and proposed follow-up actions are simulated to explain how I would use this analysis in a housing association. I did not work for Platform Housing.",
+  "brief": "Ahead of an annual board review, the Director of Customer Experience needs a clear account of tenant satisfaction: how Platform compares with similar landlords, where services fall behind and which changes need investigation before the report goes to the board.",
+  "requirements_intro": "I structured the brief around the decision, comparison group, measures and evidence needed. For this portfolio scenario, the resulting scope is an annual benchmark and a prioritised investigation plan; it is not an evaluation of individual tenants or a costed service redesign.",
+  "requirements_summary": [
+    ["Business problem", "An overall satisfaction score can conceal service weaknesses, while changes in recording can distort the annual performance story."],
+    ["Core questions", "How does Platform compare with similar landlords? Which services warrant attention? Are large changes comparable across years? Do escalated complaints support the same priorities?"],
+    ["Business relevance", "Give the board a defensible account of performance and help customer-experience, repairs and neighbourhood teams choose the next investigations."],
+    ["Defined scope", "Published 2023/24 and 2024/25 Tenant Satisfaction Measures, plus a separate comparison of Housing Ombudsman reports labelled 2025/26. No tenant-level records, intervention costs or implemented outcomes."]
+  ],
+  "requirements_template": {
+    "intro": "This is the framework I would use in a stakeholder discussion. The applications below distinguish analytical choices made here from decisions requiring an actual business owner.",
+    "items": [
+      {"element":"Decision and audience","state":"assumption","status":"Scenario assumption","prompt":"Who will use the report, and which decision should it support?","application":"A Director of Customer Experience briefs the board and agrees investigation priorities with Repairs and Neighbourhoods. These stakeholder interactions are simulated."},
+      {"element":"Comparison and reporting scope","state":"defined","status":"Defined in the analysis","prompt":"Which periods, housing stock and landlords form a relevant comparison?","application":"Use low-cost rental survey measures and a primary cohort of 17 housing associations with more than 40,000 homes, including Platform. Keep the separate 21-landlord Ombudsman sample and its reporting period explicit."},
+      {"element":"Measures and interpretation","state":"defined","status":"Defined in the analysis","prompt":"Which measures answer the brief, and how should differences be explained?","application":"Report satisfaction percentages, differences from the peer median and year-on-year movements. Distinguish survey perceptions, operational target compliance and Ombudsman findings. Associations guide investigation; they do not predict a satisfaction increase."},
+      {"element":"Data access and privacy","state":"pending","status":"Internal access required","prompt":"Which internal records would explain the published aggregates, and how would access be controlled?","application":"Request de-identified survey responses, repair-job histories and complaint records through the relevant data owners. Confirm permissions, minimum fields, retention and secure handling before linking records. None were available here."},
+      {"element":"Definitions and reconciliation","state":"pending","status":"Owner confirmation required","prompt":"Are denominators, targets and coding rules comparable, and do extracted totals reconcile?","application":"The workbook exposes large changes in repairs and case counts. Reconcile inclusion rules and source totals with service owners. Resolve the Ombudsman rate/count discrepancy and small peer-category extraction differences before formal reporting."},
+      {"element":"Delivery and acceptance","state":"pending","status":"Stakeholder agreement required","prompt":"Which deliverables, review dates and checks would make the report ready for use?","application":"An Excel benchmark, a concise board narrative and an investigation log are the proposed outputs. Agree the deadline, owners and acceptance criteria; require unresolved data issues to be corrected or explicitly qualified."},
+      {"element":"Service targets and follow-up","state":"pending","status":"Operational agreement required","prompt":"Which existing targets apply, and how would an intervention be assessed?","application":"The published repair comparison uses a 28-day target in both years. Confirm its coverage before treating it as comparable. Agree service measures, resources and review dates for any pilot; no new target or benefit estimate is assumed."}
+    ]
+  },
+  "data_requests": [
+    ["Tenant survey responses", "Customer insight", "Compare service experiences and investigate differences across tenant groups.", "Published landlord-level TSM returns only; no respondent-level data."],
+    ["Repair-job records", "Repairs", "Reconcile repair counts, completion dates and the 28-day target.", "Published rates and counts recorded in the workbook; no job histories."],
+    ["Complaint case records", "Customer experience", "Review themes, escalation and response times.", "Published TSM aggregates and Ombudsman reports; no internal case files."],
+    ["Landlord comparator data", "Performance and insight", "Select a relevant peer cohort and calculate benchmark medians.", "Public Regulator of Social Housing returns and 21 Ombudsman reports."]
+  ],
+  "data_intro": "Inside a housing association, I would normally request these records from their owners and agree definitions before joining them. Here, I used public regulatory returns and report extracts. The evidence supports landlord-level comparisons, but cannot explain an individual tenant’s experience.",
+  "priorities_intro": "I combined the size of Platform’s gaps with the way service scores move together across landlords. The strongest association with overall satisfaction concerns well-maintained homes. Listening and communication also combine meaningful shortfalls with strong associations, making them sensible starting points for a service review.",
+  "priorities": [
+    ["TP06", "Listening and acting", "Review how tenant feedback reaches service teams and how actions are reported back."],
+    ["TP07", "Keeping tenants informed", "Review repair updates, expected completion dates and explanations when plans change."],
+    ["TP04", "Well-maintained homes", "Investigate repeat repairs and unresolved maintenance issues alongside tenant feedback."]
+  ],
+  "actions": [
+    ["Repairs and performance", "Reconcile the repair population and completion measure before attributing the annual change to service performance.", "A documented bridge between years, agreed definitions and an explained residual change."],
+    ["Customer experience", "Test clearer updates and feedback follow-through with a defined tenant group.", "Compare survey feedback, repeat contacts and unresolved issues before and after the pilot; agree targets first."],
+    ["Neighbourhood services", "Investigate communal-area satisfaction by estate and review cleaning and inspection records.", "A local issue list linked to inspection evidence, accountable owners and review dates."],
+    ["Complaints and insight", "Review repairs-related findings and reconcile the Ombudsman extraction against the original reports.", "An agreed findings total, explained rate denominator and a verified set of recurring service themes."]
+  ],
+  "dashboard": "A planned Power BI view would show satisfaction and peer gaps by measure, with year and comparator-group filters. It should keep survey results, operational performance and Ombudsman outcomes on separate views, display cohort sizes and flag unresolved comparisons. Tenant-group or estate filters would require internal data; no dashboard or implemented service improvement is claimed."
+}

@@ -15,7 +15,7 @@ Each project folder has a README, the scripts to rerun the analysis, and an `out
 
 ## Website development
 
-The website is static HTML, CSS and JavaScript. It runs on GitHub Pages with no Node packages, framework or deployment build step. Charts are generated SVGs with captions, source notes and expandable data tables; they work without JavaScript or an external chart service. Fonts are served locally.
+The website is static HTML, CSS and JavaScript. It runs on GitHub Pages with no Node packages, framework or deployment build step. Charts use responsive HTML or generated SVGs with captions, source notes and expandable data tables; they work without JavaScript or an external chart service. Fonts are served locally.
 
 From the repository root:
 
@@ -28,8 +28,11 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 ### Editing and rebuilding
 
 - `site/birmingham.json`: Birmingham’s agreed finance narrative, simulated brief, data request and recommendations.
+- `site/platform.json`: Platform Housing’s tailored brief, requirements framework, data-access assessment and proposed service actions.
+- `scripts/housing_story.py`: Platform Housing story and responsive HTML charts, populated from the committed benchmarking workbook.
+- `scripts/story_workbook.py` and `scripts/story_components.py`: shared standard-library workbook reader and evidence markup for the Birmingham and Platform stories.
 - `scripts/birmingham_story.py`: Birmingham page renderer; reads the committed Excel workbook, key-figures CSV, SQL results and department mapping code using the Python standard library.
-- `assets/css/finance.css`: Birmingham’s responsive charts, evidence disclosures, tables and finance-page layout.
+- `assets/css/finance.css`: shared evidence-led case-study layout, responsive HTML charts, requirements frameworks and disclosures for Birmingham and Platform Housing.
 - `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline, dated employment events and milestone labels. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
@@ -80,3 +83,11 @@ The Birmingham case study presents the simulated finance brief separately from a
 The initial SQL query produces 6,553 candidate pairs. The refinement in `03_finance_pack.py` keeps supplier–amount combinations occurring exactly twice, then checks the three-day gap. The final list has 281 pairs, including 73 same-day pairs. Its £4.45m value counts one potentially repeated amount per pair; it is not a confirmed loss or a delivered saving.
 
 Run `python3 scripts/check_finance_browser.py` with Playwright and Chromium installed to check the figures against existing workbook/CSV outputs, department mappings, matching navigation, evidence disclosures, downloads and responsive reading layouts. The raw payment CSV is not committed, so these website checks do not rerun the original analysis or independently validate the source publication. The workbook and other original resource links remain available.
+
+### Platform Housing service story
+
+The Platform page separates its simulated board brief from the actual published-data analysis. It explains the 17-landlord TSM cohort (including Platform), uses five accessible HTML charts with data tables, and links recommendations to peer gaps, landlord-level associations and complaint categories. The requirements framework identifies outstanding internal access, definition checks, acceptance criteria and service-owner decisions. All original resource links remain available.
+
+Read [the evidence review](projects/02_Platform_Housing/outputs/03_Website_Validation_Notes.md) alongside the preserved workbook. It qualifies survey comparability, treats possible recording changes as hypotheses, and flags the unresolved Ombudsman rate/count discrepancy: 51/137 gives 37.2%, while the extraction records 38%. The repairs category contains 43 findings, of which 23 are adverse. The website holds the rate/ranking from a formal conclusion pending source verification.
+
+Run `python3 scripts/check_housing_browser.py` with Playwright and Chromium to verify workbook arithmetic, cohort definitions, evidence disclosures, downloads, navigation and responsive reading. These checks use committed outputs; they do not rerun the original pipeline without its raw files.

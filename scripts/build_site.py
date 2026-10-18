@@ -12,6 +12,7 @@ from pathlib import Path
 from string import Template
 
 from birmingham_story import render as render_birmingham
+from housing_story import render as render_housing
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
@@ -114,15 +115,6 @@ def chart(title, subtitle, drawing, headers, rows, source):
 def charts(project):
     slug = project['slug']
     source = project['source']
-    if slug == 'platform-housing':
-        pairs = [('Communal areas',-9.1),('Kept informed',-7.3),('Neighbourhood',-6.0),('Listen and act',-4.9),('ASB handling',-4.2),('Well maintained',-2.0),('Time taken to repair',-1.5),('Fair treatment',-1.4),('Overall',0.0),('Repairs',1.3),('Safe home',1.4),('Complaints',2.0)]
-        a = chart('Overall satisfaction masks gaps in communication and neighbourhood services.', 'Percentage-point gap to the median of 17 large housing associations. Zero means at the median.',
-          bars([x[0] for x in pairs],[x[1] for x in pairs],unit=' pts',maximum=5),
-          ['Satisfaction measure','Gap to median (percentage points)'],pairs,source)
-        b = chart('The recorded repairs population changed sharply.', 'Counts and rates answer different questions. The target remained 28 days; comparability needs confirmation.',
-          bars(['Earlier year','Later year'],[90250,13872],maximum=120000),
-          ['Measure','Earlier year','Later year'],[['Repairs counted',90250,13872],['Within target (rounded)','92%','62%']],source)
-        return a,b
     if slug == 'severn-trent':
         rows = list(csv.DictReader((ROOT/'projects/03_Severn_Trent/outputs/st_yearly_summary.csv').open()))
         years = [r['year'] for r in rows]
@@ -296,6 +288,11 @@ def section(id_, title, content):
 
 
 def project_page(project,index):
+    if project['slug'] == 'platform-housing':
+        content = render_housing(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
+        copy = json.loads((ROOT/'site/platform.json').read_text())
+        emit('case-studies/platform-housing.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css',)))
+        return
     if project['slug'] == 'birmingham-payments':
         content = render_birmingham(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
         copy = json.loads((ROOT/'site/birmingham.json').read_text())

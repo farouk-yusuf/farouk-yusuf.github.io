@@ -6,59 +6,17 @@ is separate; this renderer reads its committed outputs, not the unavailable raw 
 import ast
 import csv
 from decimal import Decimal
-from html import escape
 import json
 from pathlib import Path
-import posixpath
-import re
-import xml.etree.ElementTree as ET
-from zipfile import ZipFile
+from story_workbook import read_sheet
+from story_components import e, p, source_link, disclosure, note, metric
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / 'projects/01_BCC_Payments'
-NS = {'m': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
-REL_NS = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
-GITHUB = 'https://github.com/farouk-yusuf/farouk-yusuf.github.io/blob/main/'
-
-
-def e(value):
-    return escape(str(value), quote=True)
-
-
-def p(text):
-    return f'<p>{e(text)}</p>'
-
-
-def source_link(path, label):
-    return f'<a class="evidence-link" href="{GITHUB}{e(path)}" target="_blank" rel="noopener">{e(label)} <span aria-hidden="true">↗</span></a>'
 
 
 def workbook_rows(name):
-    """Read one named worksheet, including sparse cells and inline/shared strings."""
-    with ZipFile(PROJECT/'outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx') as archive:
-        shared = []
-        if 'xl/sharedStrings.xml' in archive.namelist():
-            shared = [''.join(si.itertext()) for si in ET.fromstring(archive.read('xl/sharedStrings.xml')).findall('m:si', NS)]
-        workbook = ET.fromstring(archive.read('xl/workbook.xml'))
-        sheet = next(s for s in workbook.findall('m:sheets/m:sheet', NS) if s.attrib['name'] == name)
-        relations = ET.fromstring(archive.read('xl/_rels/workbook.xml.rels'))
-        target = next(r.attrib['Target'] for r in relations if r.attrib['Id'] == sheet.attrib[REL_NS+'id'])
-        path = target.lstrip('/') if target.startswith('/') else posixpath.normpath('xl/'+target)
-        rows = []
-        for row in ET.fromstring(archive.read(path)).findall('m:sheetData/m:row', NS):
-            cells = {}
-            for cell in row.findall('m:c', NS):
-                column = re.match('[A-Z]+', cell.attrib['r'])[0]
-                value = cell.find('m:v', NS)
-                value = value.text if value is not None else ''
-                if cell.attrib.get('t') == 's':
-                    value = shared[int(value)]
-                elif cell.attrib.get('t') == 'inlineStr':
-                    value = ''.join(cell.find('m:is', NS).itertext())
-                cells[column] = value
-            rows.append(cells)
-        headers = rows[0]
-        return [{title: row.get(column, '') for column, title in headers.items()} for row in rows[1:]]
+    return read_sheet(PROJECT/'outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx', name)
 
 
 def evidence_data():
@@ -81,19 +39,6 @@ def code_excerpt(filename, start, end=None):
     if end:
         excerpt = excerpt[:excerpt.index(end)]
     return f'<pre tabindex="0" role="region" aria-label="Code excerpt"><code>{e(excerpt.strip())}</code></pre>'
-
-
-def disclosure(title, body, *, css_class=''):
-    classes = 'evidence' + (f' {css_class}' if css_class else '')
-    return f'<details class="{e(classes)}"><summary>{e(title)}</summary><div class="evidence-body">{body}</div></details>'
-
-
-def note(label, text):
-    return f'<aside class="practice-note"><span class="practice-label">{e(label)}</span>{p(text)}</aside>'
-
-
-def metric(value, label):
-    return f'<div class="finance-metric"><strong>{e(value)}</strong><span>{e(label)}</span></div>'
 
 
 def comparison_bars(labels, values, highlights=()):
