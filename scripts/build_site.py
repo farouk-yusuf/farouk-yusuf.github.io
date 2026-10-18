@@ -234,30 +234,35 @@ def toolkit_icon(name, css_class=''):
 
 
 def about_section():
-    cards, links, stops, toolkit = [], [], [], []
+    cards, links, stops, toolkit, events = [], [], [], [], []
+    for event in ABOUT['events']:
+        events.append(f'<div class="route-event route-event--{e(event["kind"])}" data-route-event="{e(event["kind"])}" data-position="{event["position"]}" style="--event:{event["position"]};--lane:{event["lane"]}"><span class="route-event-dot">{"♡" if event["kind"] == "wedding" else ""}</span><p><span>{e(event["date"])}</span><strong>{e(event["label"])}</strong>{e(event["organisation"])}</p></div>')
     for index, milestone in enumerate(ABOUT['milestones']):
         chapter_id = f'journey-{index+1:02d}'
-        life = '<p class="route-life-static"><span aria-hidden="true">♡</span> 2023 · Got married</p>' if index == 2 else ''
+        related_events = [event for event in ABOUT['events'] if event['after'] == index]
+        life = '<ul class="route-life-static" aria-label="Along the way">' + ''.join(f'<li class="route-life-entry route-life-entry--{e(event["kind"])}"><span class="route-event-symbol" aria-hidden="true">{"♡" if event["kind"] == "wedding" else "·"}</span><div><span>{e(event["date"])}</span><strong>{e(event["label"])}</strong><span>{e(event["organisation"])}</span></div></li>' for event in related_events) + '</ul>' if related_events else ''
         cards.append(f'''<li class="route-chapter" id="{chapter_id}" data-route-chapter data-stop="{milestone['position']}">
           <article class="route-card"><div class="route-card-top"><span class="route-date">{e(milestone['date'])}</span><span class="route-pickup">{toolkit_icon(milestone['item'])}<span>{e(milestone['item_label'])}</span></span></div>
           <h3>{e(milestone['title'])}</h3>{paragraph(milestone['text'])}<p class="route-takeaway">{e(milestone['note'])}</p></article>{life}</li>''')
         links.append(f'<a href="#{chapter_id}" data-route-jump="{index}" aria-label="Jump to {e(milestone["date"])}: {e(milestone["tag"])}" title="{e(milestone["date"])} · {e(milestone["tag"])}"><span aria-hidden="true"></span></a>')
         stops.append(f'<div class="route-stop" data-route-stop style="--stop:{milestone["position"]}"><span class="route-stop-dot"></span><span class="route-tag">{e(milestone["tag"])}</span></div>')
         toolkit.append(f'<span class="route-tool" data-route-tool>{toolkit_icon(milestone["item"])}<span>{e(milestone["item_label"])}</span></span>')
-    carry = ''.join(f'<g class="walker-item" data-walker-item="{index}" transform="translate({18+(index%2)*15} {38+(index//2)*14})"><use href="#kit-{e(m["item"])}" width="16" height="16"/></g>' for index,m in enumerate(ABOUT['milestones']))
-    walker = f'''<div class="route-walker" data-route-walker data-frame="0" aria-hidden="true"><svg viewBox="0 0 90 116"><g class="walker-facing">
-      <path class="walker-leg walker-leg--back" d="m43 68-3 24-10 16"/><path class="walker-arm walker-arm--back" d="m45 39-14 19-4 14"/>
-      <path class="walker-body" d="M37 34q11-6 20 2l4 33q-11 8-24 0Z"/><path class="walker-backpack" d="M34 38h-9v26h11Z"/>
-      <path class="walker-leg walker-leg--front" d="m52 70 5 21 11 17"/><path class="walker-arm walker-arm--front" d="m54 40 12 14 4 13"/>
-      <circle class="walker-head" cx="49" cy="20" r="12"/><path class="walker-hair" d="M37 21q-3-18 11-18 15 0 14 17l-7-7-17 5Z"/><circle cx="56" cy="20" r="1.3" fill="var(--bg)"/>
-      <g class="walker-carried">{carry}</g></g></svg></div>'''
+    # Small milestone patches accumulate on the backpack, then travel with the analyst.
+    carry = ''.join(f'<g class="walker-item" data-walker-item="{index}" transform="translate({22+(index%2)*9} {59+(index//2)*10})"><use href="#kit-{e(m["item"])}" width="9" height="9"/></g>' for index,m in enumerate(ABOUT['milestones']))
+    walker_svg = Template((ROOT/'assets/illustrations/journey-walker.svg').read_text()).substitute(carry=carry)
+    partner_svg = (ROOT/'assets/illustrations/journey-partner.svg').read_text()
+    walker = f'<div class="route-walker" data-route-walker data-frame="0" data-outfit="graduate" aria-hidden="true">{partner_svg}{walker_svg}</div>'
+    confetti = ''.join(f'<i style="--piece:{index};--drift:{(index%7-3)*31}px;--rise:{70+(index%5)*20}px"></i>' for index in range(18))
+    celebration = f'<div class="route-celebration" data-route-celebration aria-hidden="true"><div class="route-confetti">{confetti}</div><span class="route-love">♡ ✧ ♡</span><strong>Congratulations!</strong><span>Love and a new chapter</span></div>'
     template = Template((ROOT/'site/templates/journey.html').read_text())
     ending = ABOUT['ending']
     return template.substitute(
         symbols=(ROOT/'assets/illustrations/journey-toolkit.svg').read_text(),
         opening=e(ABOUT['opening']), cards=''.join(cards), chapter_links=''.join(links),
-        year_ticks=''.join(f'<span class="route-year" style="--year:{(year-2016)/10}">{year}</span>' for year in range(2016,2027)),
-        axis_stops=''.join(stops), walker=walker, toolkit=''.join(toolkit),
+        year_ticks=''.join(f'<span class="route-year" style="--year:{(year-2019)/7}">{year}</span>' for year in range(2019,2027)),
+        axis_stops=''.join(stops), events=''.join(events), walker=walker, celebration=celebration, toolkit=''.join(toolkit),
+        additional_experience=e(ABOUT['additional_experience']),
+        chevening_source=e(ABOUT['chevening_source']),
         ending_heading=e(ending['heading']), ending_lead=e(ending['lead']),
         ending_points=''.join(f'<li>{e(point)}</li>' for point in ending['points']),
     )

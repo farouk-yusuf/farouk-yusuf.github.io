@@ -12,6 +12,9 @@
   const carried = [...route.querySelectorAll('[data-walker-item]')];
   const walker = route.querySelector('[data-route-walker]');
   const ending = route.querySelector('.route-ending');
+  const events = [...route.querySelectorAll('[data-route-event]')];
+  const weddingPosition = Number(route.querySelector('[data-route-event="wedding"]').dataset.position);
+  const celebration = route.querySelector('[data-route-celebration]');
   const viewToggle = route.querySelector('[data-route-view]');
   const desktop = matchMedia('(min-width: 768px) and (min-height: 760px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,6 +29,30 @@
   let stride = 0;
   let framePending = false;
   let stopTimer;
+  let celebrationTimer;
+  let previousTravel = null;
+  let celebrated = false;
+
+  function stopCelebrating() {
+    celebration.classList.remove('is-celebrating');
+    clearTimeout(celebrationTimer);
+  }
+
+  function updateMilestones(travel) {
+    const wedding = Math.abs(travel - weddingPosition) < 0.033;
+    const graduation = travel < 0.045 || Math.abs(travel - 2/7) < 0.025 || Math.abs(travel - 3/7) < 0.018;
+    walker.dataset.outfit = wedding ? 'wedding' : travel >= 0.96 ? 'business' : graduation ? 'graduate' : 'explorer';
+    events.forEach(event => event.classList.toggle('is-past', travel >= Number(event.dataset.position)));
+    // Celebrate only a forward crossing near the marriage pin, once per visit.
+    // Chapter jumps past 2023 must not launch an unrelated celebration.
+    if (!celebrated && wedding && previousTravel !== null && previousTravel < weddingPosition && travel >= weddingPosition) {
+      celebrated = true;
+      celebration.classList.add('is-celebrating');
+      celebrationTimer = setTimeout(stopCelebrating, 3000);
+    }
+    if (!wedding) stopCelebrating();
+    previousTravel = travel;
+  }
 
   function stopWalking() {
     walker.dataset.frame = '0';
@@ -38,6 +65,7 @@
     const progress = Math.max(0, Math.min(1, (scrollY - start) / span));
     const travel = Math.min(1, progress / 0.84);
     const finished = progress >= 0.95;
+    updateMilestones(travel);
     active = positions.reduce((last, position, index) => travel + 0.003 >= position ? index : last, 0);
     route.style.setProperty('--route-travel', `${-travel * length}px`);
     route.dataset.routeCurrent = String(active + 1);
@@ -94,6 +122,9 @@
       ending.querySelectorAll('a').forEach(link => link.removeAttribute('tabindex'));
       clearTimeout(stopTimer);
       stopWalking();
+      stopCelebrating();
+      previousTravel = null;
+      walker.dataset.outfit = 'graduate';
       links.forEach(link => link.removeAttribute('aria-current'));
     }
   }

@@ -28,7 +28,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 ### Editing and rebuilding
 
 - `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
-- `site/about.json`: the agreed homepage introduction and the personal/professional timeline. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
+- `site/about.json`: the agreed homepage introduction and the personal/professional timeline, dated employment events and milestone labels. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
 - `site/templates/home.html`: homepage structure; edit this rather than generated HTML.
 - `site/templates/journey.html`: accessible HTML structure for the walking journey and ending panel.
@@ -54,9 +54,11 @@ With Playwright and Chromium installed, run `python3 scripts/check_homepage_brow
 
 ### Power BI and organisation logos
 
-The About journey uses a six-screen scroll section on desktop, with a sticky scene and a native scroll handler. It does not intercept wheel or touch input and needs no external animation library. The walker stays at 35% of the viewport, switches between four poses only while scrolling, reverses with scroll direction and collects six SVG toolkit items. HTML callouts, year ticks, a 2023 marriage pin and the ending panel remain readable in document order. Chapter dots support native links and keyboard activation, including direct URL fragments.
+The About journey uses a six-screen scroll section on desktop, with a sticky scene and a native scroll handler. It does not intercept wheel or touch input and needs no external animation library. The walker stays at 35% of the viewport, switches between four poses only while scrolling, reverses with scroll direction and accumulates six milestone patches on an illustrated backpack. Graduation dates add a cap and gown; the 2023 marriage pin adds a wedding suit and an illustrated partner in a wedding dress, with one finite three-second celebration on the first nearby forward crossing. The final chapter switches to business attire. HTML callouts, year ticks from 2019 to 2026, employment start/end pins and the ending panel remain readable in document order. Chapter dots support native links and keyboard activation, including direct URL fragments.
 
-Below 768px, on short viewports, with reduced motion, without JavaScript or when printing, the route becomes a static list. Desktop visitors can also choose **Read as a list**. Chapter body copy is limited to 45 words; takeaway lines are separate. `python3 scripts/check_journey_browser.py` validates movement, reversal, pickups, chapter jumps and reading fallbacks with Playwright.
+Below 768px, on short viewports, with reduced motion, without JavaScript or when printing, the route becomes a static list. Desktop visitors can also choose **Read as a list**. Chapter body copy is limited to 45 words; takeaway lines are separate. `python3 scripts/check_journey_browser.py` validates movement, reversal, patches, date-driven outfits, the finite wedding celebration, CV employment markers, chapter jumps and reading fallbacks with Playwright.
+
+Employment dates come from the supplied CV: University of Birmingham Research Associate (September 2021–January 2022), Charis Care Solutions Support Worker (February–December 2022), and freelance NatCen interviewer (September 2024–January 2025). Outlier is described as freelance but remains undated because it is absent from that CV. The CV itself is not published. Chevening is described without an applicant count or acceptance-rate claim; its official programme background is linked.
 
 The user-supplied portrait is at `assets/images/headshot-3.png`, copied unchanged from `assets.zip`; the three supplied organisation logos are in `assets/logos/`. The build also supports a replacement portrait named `headshot-3.jpg`, `.jpeg` or `.webp`. Do not substitute a generated portrait.
 
