@@ -25,23 +25,74 @@
     if (!savedTheme) setTheme(event.matches ? 'dark' : 'light');
   });
 
-  const filters = document.querySelector('[data-project-filters]');
-  const cards = [...document.querySelectorAll('[data-sector]')];
-  if (filters && cards.length) {
-    filters.hidden = false;
-    filters.addEventListener('click', event => {
-      const button = event.target.closest('button[data-filter]');
-      if (!button) return;
-      filters.querySelectorAll('button').forEach(item => {
-        item.setAttribute('aria-pressed', String(item === button));
+  const carousel = document.querySelector('[data-tool-carousel]');
+  if (carousel) {
+    const slides = [...carousel.querySelectorAll('[data-tool-slide]')];
+    const selectors = [...carousel.querySelectorAll('[data-tool-select]')];
+    const playButton = carousel.querySelector('[data-tool-play]');
+    const announcement = carousel.querySelector('[data-tool-announcement]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let current = 0;
+    let wantsPlay = !reducedMotion.matches;
+    let hovered = false;
+    let focused = false;
+    let visible = true;
+    let timer;
+
+    function schedule() {
+      window.clearTimeout(timer);
+      playButton.textContent = wantsPlay ? 'Pause' : 'Play';
+      playButton.setAttribute('aria-label', wantsPlay ? 'Pause automatic tool slideshow' : 'Play automatic tool slideshow');
+      if (wantsPlay && !hovered && !focused && visible && !document.hidden) {
+        timer = window.setTimeout(() => show(current + 1), 6500);
+      }
+    }
+
+    function show(index, manual = false) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, position) => { slide.hidden = position !== current; });
+      selectors.forEach((button, position) => {
+        button.setAttribute('aria-pressed', String(position === current));
       });
-      let visible = 0;
-      cards.forEach(card => {
-        card.hidden = button.dataset.filter !== 'all' && card.dataset.sector !== button.dataset.filter;
-        if (!card.hidden) visible += 1;
-      });
-      document.querySelector('[data-filter-status]').textContent = `${visible} ${visible === 1 ? 'project' : 'projects'} shown`;
+      carousel.querySelector('[data-tool-count]').textContent = `${current + 1} / ${slides.length}`;
+      if (manual) {
+        wantsPlay = false;
+        announcement.textContent = slides[current].innerText.replace(/\s+/g, ' ').trim();
+      }
+      schedule();
+    }
+
+    carousel.querySelector('[data-tool-controls]').hidden = false;
+    carousel.querySelector('[data-tool-choices]').hidden = false;
+    carousel.classList.add('tool-carousel--ready');
+    carousel.querySelector('[data-tool-previous]').addEventListener('click', () => show(current - 1, true));
+    carousel.querySelector('[data-tool-next]').addEventListener('click', () => show(current + 1, true));
+    selectors.forEach(button => {
+      button.addEventListener('click', () => show(Number(button.dataset.toolSelect), true));
     });
+    playButton.addEventListener('click', () => {
+      wantsPlay = !wantsPlay;
+      schedule();
+    });
+    carousel.addEventListener('mouseenter', () => { hovered = true; schedule(); });
+    carousel.addEventListener('mouseleave', () => { hovered = false; schedule(); });
+    carousel.addEventListener('focusin', () => { focused = true; schedule(); });
+    carousel.addEventListener('focusout', event => {
+      focused = carousel.contains(event.relatedTarget);
+      schedule();
+    });
+    document.addEventListener('visibilitychange', schedule);
+    reducedMotion.addEventListener('change', event => {
+      if (event.matches) { wantsPlay = false; schedule(); }
+    });
+    if ('IntersectionObserver' in window) {
+      const visibility = new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting;
+        schedule();
+      }, { threshold: 0.1 });
+      visibility.observe(carousel);
+    }
+    show(0);
   }
 
   document.querySelectorAll('[data-optional-image]').forEach(image => {

@@ -1,48 +1,72 @@
 {
   "introduction": [
-    "My name is Farouk. For the past six years, I have focused on gathering, cleaning, analysing, and modelling structured and unstructured data to inform evidence-based policies within the media, migration, and international development sectors. Although I have long engaged in academic research, my primary expertise is data analysis.",
-    "To support my transition into the commercial sector, I have undertaken two key initiatives: first, I completed a rigorous, government-funded bootcamp in Data and AI automation tailored to contemporary business requirements. Second, I have spent the last six months on intensive, self-directed learning, using real-world business data from several prominent UK organisations. This portfolio showcases four sector-based projects that demonstrate my research experience, data skills, and advanced training."
+    "For the past six years, my academic and applied research has focused on gathering, cleaning, analysing, and modelling structured and unstructured data across media, migration, and international development.",
+    "I am now transitioning into commercial data analysis, leveraging my experience in defining key questions, validating data integrity, testing hypotheses, and effectively communicating findings. To facilitate this transition, I recently completed a government-funded Data and AI automation bootcamp with The Development Manager and developed the independent projects detailed below, using publicly available data from UK organisations."
   ],
   "opening": "What I enjoy most is analysing data. My route here has taken me from studying rainfall and rice yields in Nigeria to interviewing newspaper readers, researching migration and learning how AI can support analysis. Along the way, I moved countries, made lasting friendships and got married.",
   "milestones": [
     {
-      "date": "Before 2020", "chapter": "The starting point", "title": "Geography gave my curiosity a method.", "kind": "study",
+      "date": "Before 2020",
+      "chapter": "The starting point",
+      "title": "Geography gave my curiosity a method.",
+      "kind": "study",
       "text": "I graduated as the best student in my geography programme, with first-class honours and As in all my core statistics courses. My undergraduate research examined how rainfall variability affected rice yields in a Nigerian local government area, using statistical analysis and ArcGIS.",
       "note": "An early connection between analysing data and understanding people’s livelihoods."
     },
     {
-      "date": "2020–2021", "chapter": "A new country", "title": "Chevening brought me to Birmingham.", "kind": "move",
+      "date": "2020–2021",
+      "chapter": "A new country",
+      "title": "Chevening brought me to Birmingham.",
+      "kind": "move",
       "text": "A Chevening scholarship brought me from Nigeria to the UK to study an MSc in Conflict, Statebuilding and Development. I made good friends, graduated with a distinction and scored 82 in my dissertation. My supervisor encouraged me to pursue a PhD.",
       "note": "My dissertation investigated newspaper framing and how audiences interpreted it."
     },
     {
-      "date": "During my MSc", "chapter": "Reading between the headlines", "title": "I studied the message and spoke to its audience.", "kind": "research",
+      "date": "During my MSc",
+      "chapter": "Reading between the headlines",
+      "title": "I studied the message and spoke to its audience.",
+      "kind": "research",
       "text": "I analysed how northern and southern newspapers framed conflict involving Fulani herders, then interviewed audiences to investigate framing effects. Among the southern audiences I interviewed, frequent newspaper readers expressed perceptions that aligned with the coverage’s negative portrayals.",
       "note": "These skills transfer to customer research: examining messages and investigating how people interpret them."
     },
     {
-      "date": "2022", "chapter": "Going deeper", "title": "A second master’s, then ESRC-funded research.", "kind": "study",
+      "date": "2022",
+      "chapter": "Going deeper",
+      "title": "A second master’s, then ESRC-funded research.",
+      "kind": "study",
       "text": "My MA in Social Research deepened my training in qualitative and quantitative methods, research design and tools. I scored 75% in the quantitative module. Research associate work added practical experience, and ESRC funding supported my move into doctoral research.",
       "note": "A stronger foundation for designing studies and evaluating evidence."
     },
     {
-      "date": "2023", "chapter": "Life alongside the work", "title": "I got married.", "kind": "personal",
+      "date": "2023",
+      "chapter": "Life alongside the work",
+      "title": "I got married.",
+      "kind": "personal",
       "text": "A personal milestone alongside my research and the life I was building in the UK.",
       "note": ""
     },
     {
-      "date": "During my PhD", "chapter": "Listening in different places", "title": "Online conversations tell part of the story.", "kind": "research",
+      "date": "During my PhD",
+      "chapter": "Listening in different places",
+      "title": "Online conversations tell part of the story.",
+      "kind": "research",
       "text": "My PhD examines skilled Nigerians’ aspirations to migrate to the UK. I analyse social media discussions and interview people about their experiences. The sources do not always align: online material offers valuable evidence, while interviews help me explore its context. I taught myself Python during the research.",
       "note": "Relevant to social listening: understanding the needs, concerns and motivations people express online."
     },
     {
-      "date": "2025", "chapter": "Following a new interest", "title": "Exploring language models at Oxford.", "kind": "study",
+      "date": "2025",
+      "chapter": "Following a new interest",
+      "title": "Exploring language models at Oxford.",
+      "kind": "study",
       "text": "At the University of Oxford’s Spring School in Large Language Models, I learned more about machine learning and AI, including fine-tuning. I also tested human and AI coding in my research, investigating disagreements before trusting the headline results.",
       "note": "A growing toolkit, with the same interest in checking what the results mean."
     },
     {
-      "date": "2026 · Now", "chapter": "The next chapter", "title": "Bringing my analytical experience into business.", "kind": "work",
-      "text": "I completed a government-funded Data and AI automation bootcamp and spent six months on intensive, self-directed learning. I learned SQL for the council payments project and applied my skills to real UK organisational data. The four projects here show how I investigate business questions and communicate recommendations.",
+      "date": "2026 · Now",
+      "chapter": "The next chapter",
+      "title": "Bringing my analytical experience into business.",
+      "kind": "work",
+      "text": "I recently completed a government-funded Data and AI automation bootcamp with The Development Manager. I learned SQL for the council payments project and applied my skills to publicly available UK organisational data. The four projects here show how I investigate business questions and communicate recommendations.",
       "note": "Looking for an analyst role where I can keep learning and put that experience to work."
     }
   ]

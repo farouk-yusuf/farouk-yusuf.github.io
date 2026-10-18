@@ -9,11 +9,13 @@ import csv
 import json
 from html import escape
 from pathlib import Path
+from string import Template
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
 RESOURCES = json.loads((ROOT / 'site/resources.json').read_text())
 ABOUT = json.loads((ROOT / 'site/about.json').read_text())
+SKILLS = json.loads((ROOT / 'site/skills.json').read_text())
 OUTPUTS = {}
 EXTERNAL_ARROW = '<svg class="arrow-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10"/></svg>'
 
@@ -170,7 +172,7 @@ def header(prefix=''):
     return f'''<a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header"><div class="container nav">
       <a class="brand" href="{prefix}index.html"><span class="brand-mark" aria-hidden="true">FY</span>Farouk Yusuf<span class="sr-only">, home</span></a>
-      <nav class="nav-links" aria-label="Main navigation"><a href="{prefix}index.html#projects">Selected work</a><a href="{prefix}index.html#research">Research</a><a href="{prefix}index.html#about">About</a><a href="{prefix}index.html#contact">Contact ↗</a><button class="theme-button" data-theme-toggle aria-pressed="false" hidden>Dark mode</button></nav>
+      <button class="theme-button" data-theme-toggle aria-pressed="false" hidden>Dark mode</button>
     </div></header>'''
 
 
@@ -179,27 +181,52 @@ def footer(prefix=''):
 
 
 def document(title, description, content, prefix=''):
+    home_styles = '<link rel="stylesheet" href="assets/css/home.css">' if not prefix else ''
     return f'''<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)} | Farouk Yusuf</title><meta name="description" content="{e(description)}">
 <meta name="theme-color" content="#1b302b"><link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{prefix}assets/css/site.css"><script src="{prefix}assets/js/site.js" defer></script></head>
+<link rel="stylesheet" href="{prefix}assets/css/site.css">{home_styles}<script src="{prefix}assets/js/site.js" defer></script></head>
 <body>{header(prefix)}{content}{footer(prefix)}</body></html>\n'''.replace('↗', EXTERNAL_ARROW)
 
 
-def project_card(project, index):
-    previews = [
-        bars(['2025 YTD','2026 YTD'],[559,677],unit='m',maximum=850,compact=True),
-        bars(['Communal areas','Kept informed','Listen and act'],[-9.1,-7.3,-4.9],unit=' pts',maximum=3,compact=True),
-        line(['2020','2021','2022','2023','2024','2025'],[61.0,59.7,44.8,60.3,62.1,36.5],high=75),
-        bars(['Mar 2026','Aug 2026'],[89544,96303],maximum=125000,compact=True),
-    ]
-    labels=['Matched-period payments · £m','Gap to large-landlord median · percentage points','Reported spills · thousands','Incomplete RTT pathways · waiting-list size']
-    tags=''.join(f'<span class="tag">{e(t)}</span>' for t in project['tools'])
-    # A single real anchor makes the entire card accessible by mouse and keyboard.
-    return f'''<a class="project-card" data-sector="{e(project['sector'])}" href="case-studies/{project['slug']}.html">
-      <div class="card-visual" aria-hidden="true"><p class="card-chart-label">{e(labels[index])}</p>{previews[index]}</div>
-      <div class="card-body">{organisation(project)}<h3>{e(project['title'])}</h3><p>{e(project['summary'])}</p><div class="card-bottom"><div class="tags">{tags}</div><span>Read case study <span class="card-arrow" aria-hidden="true">↗</span></span></div></div></a>'''
+def project_highlight(project, index):
+    highlight = project['highlight']
+    steps = []
+    for label in ('Situation', 'Task', 'Action', 'Results', 'Implications'):
+        copy = highlight[label.lower()]
+        if project['slug'] == 'severn-trent' and label == 'Situation':
+            copy = 'Storm overflows can release sewage into rivers when the sewer system is overwhelmed. ' + copy
+        steps.append(f'<div class="star-step star-step--{label.lower()}"><dt>{label}</dt><dd>{e(copy)}</dd></div>')
+    tags = ''.join(f'<span class="tag">{e(tool)}</span>' for tool in project['tools'])
+    return f'''<article class="project-highlight" aria-labelledby="project-{index}-title">
+      <div class="project-art"><img class="sector-image" src="assets/illustrations/{e(highlight['image'])}" alt="{e(highlight['image_alt'])}" width="640" height="400" loading="lazy">
+      <div class="project-art-footer"><span class="eyebrow">{e(project['sector'])}</span><div class="project-key"><strong>{e(highlight['key_figure'])}</strong><span>{e(highlight['key_label'])}</span></div><div class="tags">{tags}</div><span class="image-note">Illustrative sector image</span></div></div>
+      <div class="project-narrative">{organisation(project)}<h3 id="project-{index}-title"><a href="case-studies/{project['slug']}.html">{e(highlight['headline'])}</a></h3>
+      <dl class="star-list">{''.join(steps)}</dl><a class="project-detail-link" href="case-studies/{project['slug']}.html">View analysis and supporting files <span aria-hidden="true">↗</span><span class="sr-only">: {e(project['organisation'])}</span></a></div>
+    </article>'''
+
+
+def skills_carousel():
+    slides = []
+    for index, tool in enumerate(SKILLS):
+        items = ''.join(f'<li><strong>{e(name)}</strong><span>{e(description)}</span></li>' for name, description in tool['items'])
+        status = f'<p class="tool-status">{e(tool["status"])}</p>' if tool.get('status') else ''
+        slides.append(f'''<section class="tool-slide" data-tool-slide role="group" aria-roledescription="slide" aria-label="{index+1} of {len(SKILLS)}: {e(tool['name'])}">
+        <div class="tool-identity"><img src="assets/icons/{e(tool['icon'])}" alt="" width="42" height="42"><h3>{e(tool['name'])}</h3></div><div class="tool-details"><ul>{items}</ul>{status}</div></section>''')
+    choices = ''.join(f'<button type="button" data-tool-select="{index}" aria-label="Show {e(tool["name"])}" aria-pressed="{str(index==0).lower()}"><img src="assets/icons/{e(tool["icon"])}" width="20" height="20" alt=""></button>' for index,tool in enumerate(SKILLS))
+    return f'''<section class="tool-carousel" data-tool-carousel role="region" aria-roledescription="carousel" aria-label="Tools and capabilities">
+      <div class="tool-carousel-top"><h2>Tools &amp; capabilities</h2><div class="tool-controls" data-tool-controls hidden><span class="tool-count" data-tool-count aria-hidden="true">1 / {len(SKILLS)}</span><button type="button" data-tool-previous aria-label="Previous tool">←</button><button type="button" data-tool-play aria-label="Pause automatic tool slideshow">Pause</button><button type="button" data-tool-next aria-label="Next tool">→</button></div></div>
+      <div data-tool-track>{''.join(slides)}</div><div class="tool-choices" data-tool-choices role="group" aria-label="Choose a tool" hidden>{choices}</div><p class="sr-only" data-tool-announcement role="status" aria-live="polite"></p>
+    </section>'''
+
+
+def profile_picture():
+    for extension in ('jpg', 'jpeg', 'png', 'webp'):
+        filename = f'assets/images/headshot-3.{extension}'
+        if (ROOT / filename).is_file():
+            return f'<figure class="profile-picture"><img src="{filename}" alt="Farouk Yusuf" width="400" height="500" fetchpriority="high"><figcaption>Farouk Yusuf · Birmingham, UK</figcaption></figure>'
+    return '<div class="profile-placeholder" role="img" aria-label="Placeholder for Farouk Yusuf’s profile photograph"><span class="profile-initials" aria-hidden="true">FY</span><p>Farouk Yusuf</p><span>Birmingham, UK</span></div>'
 
 
 
@@ -213,16 +240,10 @@ def about_section():
           <span class="journey-chapter">{e(milestone['chapter'])}</span><h3>{e(milestone['title'])}</h3>
           {paragraph(milestone['text'])}{note}</article>
         </li>''')
-    portrait = ''
-    for extension in ('jpg', 'jpeg', 'png', 'webp'):
-        filename = f'assets/images/headshot-3.{extension}'
-        if (ROOT / filename).is_file():
-            portrait = f'<figure class="journey-portrait"><img src="{filename}" alt="Farouk Yusuf" width="400" height="500" loading="lazy"><figcaption>Farouk Yusuf · Birmingham, UK</figcaption></figure>'
-            break
     return f'''<section class="section container" id="about">
-      <div class="journey-intro"><div><span class="eyebrow">03 / The person behind the projects</span>
+      <div class="journey-intro"><div><span class="eyebrow">About me</span>
       <h2>How I got here.</h2><p>{e(ABOUT['opening'])}</p>
-      <a class="text-link" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Experience on LinkedIn ↗</a></div>{portrait}</div>
+      <a class="text-link" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Experience on LinkedIn ↗</a></div></div>
       <p class="journey-invitation"><span aria-hidden="true">↓</span> Follow the chapters, from Nigeria to the next opportunity.</p>
       <ol class="journey" aria-label="My personal and professional journey" data-journey>{''.join(steps)}</ol>
       <div class="journey-work"><h3>Alongside the research.</h3><div class="journey-work-grid">
@@ -234,26 +255,15 @@ def about_section():
 
 
 def home():
-    filters=''.join(f'<button type="button" data-filter="{e(s)}" aria-pressed="false">{e(s)}</button>' for s in ['Local government','Housing','Utilities','NHS'])
-    cards=''.join(project_card(p,i) for i,p in enumerate(PROJECTS))
-    intro_html=''.join(paragraph(text) for text in ABOUT['introduction'])
-    hero_chart=bars(['March 2026','August 2026'],[89544,96303],maximum=125000,compact=True)
-    content=f'''<main id="main">
-    <section class="hero container"><div class="hero-grid"><div>
-      <div class="availability">Birmingham, UK · Open to analyst opportunities</div>
-      <h1>Good analysis starts with <em>a closer look.</em></h1>
-      <div class="intro">{intro_html}</div>
-      <div class="actions"><a class="button" href="#projects">Explore my work <span aria-hidden="true">↗</span></a><a class="text-link" href="#about">A little about me →</a></div>
-      <p class="hero-note">SQL · Python · Excel · Power BI · A research background that makes me question the first answer.</p>
-    </div><aside class="evidence-card" aria-label="A finding from my NHS analysis"><div class="paper"><div class="paper-top"><span>A closer look / 04</span><span>NHS performance</span></div><h2>A recovery worth protecting.</h2>{hero_chart}<p class="paper-note">UHB’s waiting list grew 7.5% after March. I looked at referrals and completed pathways to understand the pressure.</p><a class="text-link" href="case-studies/uhb-waiting-times.html">Read the analysis →</a></div><div class="evidence-footer"><span>Public data. Independent analysis.</span><span>Apr 2023–Aug 2026</span></div></aside></div></section>
-    <div class="container skills-row"><strong>Evidence before conclusions</strong><span>Local government</span><span>Social housing</span><span>Regulated utilities</span><span>NHS performance</span></div>
-    <section class="section container" id="projects"><div class="section-heading"><div><span class="eyebrow">01 / Selected work</span><h2>Behind the headline number.</h2></div><p>Four independent projects on UK public data. Each follows a question through to a practical recommendation.</p></div>
-    <div class="filter-row" data-project-filters role="group" aria-label="Filter projects by sector" hidden><button type="button" data-filter="all" aria-pressed="true">All projects</button>{filters}</div><p class="sr-only" data-filter-status role="status" aria-live="polite">4 projects shown</p><div class="project-grid">{cards}</div><p class="project-caption">Each case study includes methods, limitations and the original analysis files. Power BI dashboards are being developed separately.</p></section>
-    <section class="section container" id="research"><div class="research-feature"><div><span class="eyebrow">02 / Research that shaped my approach</span><h2>The disagreement changed my research.</h2><p>During my PhD, I tested human and AI coding before applying it to a corpus of 29,182 cleaned social media posts about leaving Nigeria.</p><p class="quote">The average looked reassuring. The question-level breakdown told a more complicated story.</p><p>I investigated disagreements, revised the coding rules and set aside a finer scheme when the pilot proved unstable.</p><div class="actions"><a class="button" href="case-studies/research-validation.html">Explore the research <span aria-hidden="true">↗</span></a></div></div><div class="research-proof"><div class="proof-line"><strong>Test the measurement.</strong><span>A question had drifted from the theory it was meant to capture.</span></div><div class="proof-line"><strong>Make the workflow usable.</strong><span>I built a coding app with saved progress and CSV export.</span></div><div class="proof-line"><strong>Keep the uncertainty visible.</strong><span>Some questions performed poorly despite strong overall agreement.</span></div></div></div></section>
-    {about_section()}
-    <section class="section container" id="contact"><div class="contact"><div><span class="eyebrow">Let’s talk</span><h2>Bring a closer look to your team.</h2><p>I’m open to data analyst, performance and insight opportunities.</p></div><div><p><a href="mailto:faroukyusuf.code@gmail.com">faroukyusuf.code@gmail.com</a></p><div class="actions"><a class="button" href="https://www.linkedin.com/in/farouk-yusuf-fy" target="_blank" rel="noopener">Connect on LinkedIn <span aria-hidden="true">↗</span></a></div></div></div></section>
-    </main>'''
-    emit('index.html', document('Data & performance analyst portfolio','Farouk Yusuf, Birmingham-based researcher moving into data analysis. Explore independent SQL, Python and Excel projects in NHS performance, housing, utilities and council finance.',content))
+    template = Template((ROOT/'site/templates/home.html').read_text())
+    content = template.substitute(
+        introduction=''.join(paragraph(text) for text in ABOUT['introduction']),
+        portrait=profile_picture(),
+        skills=skills_carousel(),
+        projects=''.join(project_highlight(project, index) for index,project in enumerate(PROJECTS,1)),
+        about=about_section(),
+    )
+    emit('index.html', document('Data analyst portfolio', 'Farouk Yusuf: six years in academic and applied research, transitioning into commercial data analysis. Explore independent SQL, Python and Excel projects using UK public data.', content))
 
 
 def resources(project):

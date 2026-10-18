@@ -1,0 +1,10 @@
+[
+  {"name":"Microsoft Excel","icon":"excel.svg","items":[["XLOOKUP","Match records across tables"],["Data validation","Control inputs"],["PivotTables","Summarise performance"],["Charts","Communicate trends"]]},
+  {"name":"SQL","icon":"sql.svg","items":[["Joins","Combine related tables"],["Aggregations","Calculate reporting measures"],["Star schemas","Structure analytical data"],["Exception queries","Flag records for review"]]},
+  {"name":"Python","icon":"python.svg","items":[["pandas / NumPy","Clean and analyse data"],["PDF extraction","Turn reports into tables"],["Modelling","Test explanations"],["matplotlib","Visualise findings"]]},
+  {"name":"Microsoft Power BI","icon":"power-bi.svg","items":[["Data preparation","Clean and transform data"],["Data modelling","Connect reporting tables"],["Measures","Calculate reporting metrics"],["Interactive reporting","Explore performance"]],"status":"Training completed · Portfolio dashboards in development"},
+  {"name":"ArcGIS","icon":"arcgis.svg","items":[["Spatial analysis","Explore geographical patterns"],["Mapping","Present location-based findings"]]},
+  {"name":"Google Analytics","icon":"google-analytics.svg","items":[["User acquisition","Understand where visitors come from"],["Traffic sources","Compare acquisition channels"],["Engagement","Monitor platform usage"]]},
+  {"name":"Google Sheets","icon":"google-sheets.svg","items":[["Records","Organise and maintain data"],["Usage tracking","Monitor activity over time"],["Reporting","Summarise progress"]]},
+  {"name":"Power Automate","icon":"power-automate.svg","items":[["Workflow automation","Connect steps in repeatable processes"]],"status":"Covered in Data and AI bootcamp training"}
+]
