@@ -27,6 +27,9 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 
 ### Editing and rebuilding
 
+- `site/birmingham.json`: Birmingham’s agreed finance narrative, simulated brief, data request and recommendations.
+- `scripts/birmingham_story.py`: Birmingham page renderer; reads the committed Excel workbook, key-figures CSV, SQL results and department mapping code using the Python standard library.
+- `assets/css/finance.css`: Birmingham’s responsive charts, evidence disclosures, tables and finance-page layout.
 - `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline, dated employment events and milestone labels. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
@@ -69,3 +72,11 @@ Logo provenance is documented in [assets/logos/README.md](assets/logos/README.md
 ### Before external publication
 
 The research page retains the existing unpublished thesis figures and the supervisor-sign-off caveat. Confirm clearance for exact results. The Severn Trent case study explicitly flags an unreconciled low-uptime monitor count (87 in the narrative versus 90 in the yearly CSV). Resolve the denominator before reporting one total. The UHB scenario remains labelled as a scenario because the baseline outperformed both forecast models.
+
+### Birmingham finance story
+
+The Birmingham case study presents the simulated finance brief separately from actual analysis and results. Each section links to relevant source code or workbook evidence. Its navigation uses the same titles as the sections. Three responsive HTML charts show matched-period payments, directorate contributions to the change, and the duplicate-screening stages, with data tables for all three.
+
+The initial SQL query produces 6,553 candidate pairs. The refinement in `03_finance_pack.py` keeps supplier–amount combinations occurring exactly twice, then checks the three-day gap. The final list has 281 pairs, including 73 same-day pairs. Its £4.45m value counts one potentially repeated amount per pair; it is not a confirmed loss or a delivered saving.
+
+Run `python3 scripts/check_finance_browser.py` with Playwright and Chromium installed to check the figures against existing workbook/CSV outputs, department mappings, matching navigation, evidence disclosures, downloads and responsive reading layouts. The raw payment CSV is not committed, so these website checks do not rerun the original analysis or independently validate the source publication. The workbook and other original resource links remain available.

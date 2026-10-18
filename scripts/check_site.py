@@ -21,6 +21,8 @@ class Page(HTMLParser):
         self.headings = 0
         self.figures = 0
         self.tables = 0
+        self.figure_stack = []
+        self.chart_tables = []
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -35,10 +37,22 @@ class Page(HTMLParser):
             raise AssertionError(f'Missing image alt: {self.path}')
         if tag == 'h1':
             self.headings += 1
-        if tag == 'figure' and 'chart-panel' in a.get('class', ''):
-            self.figures += 1
+        if tag == 'figure':
+            is_chart = 'chart-panel' in a.get('class', '')
+            record = {'tables':0} if is_chart else None
+            self.figure_stack.append(record)
+            if is_chart:
+                self.figures += 1
+                self.chart_tables.append(record)
         if tag == 'table':
             self.tables += 1
+            for figure in self.figure_stack:
+                if figure is not None:
+                    figure['tables'] += 1
+
+    def handle_endtag(self, tag):
+        if tag == 'figure' and self.figure_stack:
+            self.figure_stack.pop()
 
 
 def main():
@@ -58,7 +72,7 @@ def main():
         page.feed(path.read_text())
         assert page.headings == 1, f'Expected exactly one h1: {path}'
         assert not page.duplicates, f'Duplicate IDs in {path}: {page.duplicates}'
-        assert page.figures == page.tables, f'Chart missing its data table: {path}'
+        assert all(figure['tables'] >= 1 for figure in page.chart_tables), f'Chart missing its data table: {path}'
         pages[path] = page
     checked = 0
     for path, page in pages.items():

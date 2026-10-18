@@ -1,0 +1,46 @@
+{
+  "title": "Explaining expenses and flagging payments for review",
+  "summary": "I analysed 247,785 payment records, compared expenditure across equivalent periods and flagged 281 potential duplicate payment pairs worth £4.45m for Accounts Payable review.",
+  "scenario_note": "The published data, analysis and findings are real. The workplace brief and stakeholder conversations are simulated to show how I would approach the task within a finance team.",
+  "brief": "During a finance meeting, I was asked to analyse expenditure trends and identify potential duplicate payments. To ensure the report was relevant, I first confirmed the reporting period and the required focus: cash payments, budget performance, or outstanding commitments.",
+  "questions": [
+    ["I considered", "Could ‘higher expenditure’ mean more cash paid, an overspend against a budget, or an increase in outstanding commitments?"],
+    ["Why it mattered", "Each question needs different records. Payment data shows cash outflow; it does not establish budget performance or committed costs."],
+    ["I clarified", "The report would compare cash payments over equivalent dates and identify exceptions for investigation. Budget and commitment reporting would need additional data."]
+  ],
+  "data_intro": "Within the organisation, I would request authorised extracts from Finance and Accounts Payable (AP), agreeing the required fields and access before starting. For this project, I used Birmingham City Observatory’s published payments over £500, covering July 2024 to 23 July 2026.",
+  "data_requests": [
+    ["Payment ledger · Finance", "Payment dates, amounts, departments and credits establish expenditure trends.", "Published payment records supplied these fields."],
+    ["Supplier master · Accounts Payable", "Supplier identifiers and names support supplier reporting and duplicate checks.", "Published names and identifiers supported screening; the internal supplier master was unavailable."],
+    ["Invoice references · Accounts Payable", "Invoice and credit references distinguish repeated invoices from legitimate payments.", "Not published. The findings remain a review list for AP."],
+    ["Budgets and commitments · Finance", "Budgets, purchase orders and unpaid commitments support budget-performance reporting.", "Not available here; excluded from the report’s scope."]
+  ],
+  "etl_intro": "I built an ETL workflow: extract the published records, transform inconsistent fields, then load a SQL reporting model. This kept the cleaning rules separate from the queries and Excel outputs.",
+  "mapping_intro": "Department names changed during a restructure. For example, ‘Adults Social Care Directorate’ and ‘Adult Social Care & Health Directorate’ both needed to report under ‘Adult Social Care & Health’. Comparing the original labels could make spending appear to disappear from one department and emerge in another. I standardised the names as shown in the table below.",
+  "corporate_note": "I also combined Council Management, Finance, HR, OD & Transformation, and Strategy, Insight & Governance into ‘Corporate services (combined)’ for the year-on-year comparison. The restructure moved budgets between these departments, so separate comparisons could mistake organisational changes for changes in spending.",
+  "validation_note": "The cleaning script checks that every department has a mapping, the payment-line count stays unchanged, and the total payment value is preserved within one penny. These checks catch dropped records or altered amounts before reporting.",
+  "spending_intro": "The export ended on 23 July 2026. I compared 1 April to 23 July in both years, so a partial July was not compared with a full month. Net payments rose from £558.64m to £677.46m: an increase of £118.82m, or 21.3%.",
+  "spending_interpretation": "City Operations and Adult Social Care & Health made the largest positive contributions to the increase. Lower payments in corporate services and City Housing partly offset them. This is a change in cash paid, rather than evidence of an overspend against budget.",
+  "highways_note": "Within City Operations, Birmingham Highways payments increased from £20.63m to £87.58m. A £12m credit also required reconciliation. I would ask City Operations to confirm the contract payment schedule and credit before treating the increase as a continuing cost pressure.",
+  "suppliers_intro": "I then checked supplier concentration and agency-staff expenditure. These checks help Finance identify where a small number of suppliers or a growing expenditure category warrants a closer review.",
+  "supplier_note": "The top ten suppliers received 40.5% of the financial year’s payment value. Agency-staff payments rose 28.8% over the matched year-to-date period. Concentration is a prompt to review contract and service context; it does not establish poor value for money.",
+  "duplicates_intro": "My initial SQL check matched the same supplier and the same payment amount of at least £1,000, within three days. It returned 6,553 payment pairs. Repeated care-package amounts could create legitimate matches, so I refined the screening rule in Python before preparing the AP review list.",
+  "duplicate_rules": [
+    ["Same supplier", "Match the supplier identifier, rather than relying on a similar name."],
+    ["Same amount, at least £1,000", "Keep the check focused on exact-value payment matches above the screening threshold."],
+    ["That supplier–amount combination appears exactly twice", "Exclude combinations repeated throughout the dataset, which can reflect recurring care-package payments."],
+    ["No more than three days apart", "Retain closely timed pairs; identify same-day matches for the first review pass."]
+  ],
+  "duplicates_result": "The refined rule identified 281 candidate pairs worth £4.45m, including 73 paid on the same day. I would start the invoice review with those 73 pairs. The amount represents one potentially repeated payment per pair, rather than the sum of both payments or a confirmed loss.",
+  "duplicates_limit": "This refinement makes the review list more selective. It can still miss duplicates among recurring amounts, below £1,000 or more than three days apart. It can also flag legitimate transactions. Invoice references and AP investigation are needed to confirm the outcome.",
+  "privacy_intro": "While checking the publication fields, I found a separate information-governance issue: identifiers on redacted payments also appeared beside names elsewhere in the published data. This linked 213 redacted payment records across 12 identifiers. I report only the aggregate finding here.",
+  "privacy_action": "I pseudonymised identifiers for personal-data rows and replaced the display names in the reporting dataset. I would refer the publication issue to Information Governance so they could review how records are released together, rather than checking each redacted row in isolation.",
+  "actions": [
+    ["Accounts Payable", "Check the 73 same-day pairs against invoice and credit references, then review the remaining candidates.", "Track reviewed, confirmed, cleared and unresolved pairs; record any recoveries only after confirmation."],
+    ["Finance / City Operations", "Reconcile the highways payment schedule and £12m credit before explaining the year-on-year movement.", "Record the reconciled movement and distinguish timing effects from continuing changes."],
+    ["Supplier-data owner", "Investigate the 260 supplier names linked to multiple supplier identifiers before merging or closing records.", "Track verified duplicate supplier records and the decisions taken."],
+    ["Information Governance", "Review identifiers on redacted payments and assess links across the publication.", "Document the assessment, publication changes and checks before the next release."]
+  ],
+  "delivery": "I produced a SQL reporting model, an Excel finance and payment-controls pack, a management summary and a data-quality log. These are completed analytical outputs; the council has not implemented or evaluated the recommendations as part of this portfolio project.",
+  "dashboard": "The Power BI dashboard will follow the same questions: expenditure trends, supplier and agency-staff concentration, and payment exceptions. Planned filters include reporting period, directorate and supplier. The Excel pack already contains the supporting measures and review tables."
+}

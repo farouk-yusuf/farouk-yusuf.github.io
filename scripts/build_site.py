@@ -11,6 +11,8 @@ from html import escape
 from pathlib import Path
 from string import Template
 
+from birmingham_story import render as render_birmingham
+
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
 RESOURCES = json.loads((ROOT / 'site/resources.json').read_text())
@@ -112,14 +114,6 @@ def chart(title, subtitle, drawing, headers, rows, source):
 def charts(project):
     slug = project['slug']
     source = project['source']
-    if slug == 'birmingham-payments':
-        a = chart('Agency payments rose alongside overall spending.', 'Matched period: 1 April–23 July, £m. These categories overlap and must not be added together.',
-          bars(['Total · 2025', 'Total · 2026', 'Agency · 2025', 'Agency · 2026'], [559,677,34,43], maximum=800),
-          ['Payment group','2025 (£m)','2026 (£m)'], [['All payments',559,677],['Agency staff',34,43]], source)
-        b = chart('The tighter rule produces a more selective review list.', 'Candidate payment pairs; the 73 same-day pairs are a subset of the 281 refined matches.',
-          bars(['Initial matches','Refined matches','Same-day subset'], [6553,281,73], maximum=8000),
-          ['Rule','Candidate pairs'], [['Initial matching rule',6553],['One-off-amount condition',281],['Same-day subset',73]], source)
-        return a,b
     if slug == 'platform-housing':
         pairs = [('Communal areas',-9.1),('Kept informed',-7.3),('Neighbourhood',-6.0),('Listen and act',-4.9),('ASB handling',-4.2),('Well maintained',-2.0),('Time taken to repair',-1.5),('Fair treatment',-1.4),('Overall',0.0),('Repairs',1.3),('Safe home',1.4),('Complaints',2.0)]
         a = chart('Overall satisfaction masks gaps in communication and neighbourhood services.', 'Percentage-point gap to the median of 17 large housing associations. Zero means at the median.',
@@ -180,13 +174,14 @@ def footer(prefix=''):
     return f'''<footer class="container site-footer"><p>© 2026 Farouk Yusuf · Birmingham, UK<br>Independent portfolio analyses of published data. Organisation names and marks identify the subjects of the analysis; no affiliation or endorsement is implied.</p><a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io" target="_blank" rel="noopener">Source code ↗</a></footer>'''
 
 
-def document(title, description, content, prefix=''):
+def document(title, description, content, prefix='', styles=()):
     home_styles = '<link rel="stylesheet" href="assets/css/home.css"><link rel="stylesheet" href="assets/css/journey.css"><script src="assets/js/journey.js" defer></script>' if not prefix else ''
+    extra_styles = ''.join(f'<link rel="stylesheet" href="{prefix}assets/css/{e(style)}">' for style in styles)
     return f'''<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)} | Farouk Yusuf</title><meta name="description" content="{e(description)}">
 <meta name="theme-color" content="#1b302b"><link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{prefix}assets/css/site.css">{home_styles}<script src="{prefix}assets/js/site.js" defer></script></head>
+<link rel="stylesheet" href="{prefix}assets/css/site.css">{home_styles}{extra_styles}<script src="{prefix}assets/js/site.js" defer></script></head>
 <body>{header(prefix)}{content}{footer(prefix)}</body></html>\n'''.replace('↗', EXTERNAL_ARROW)
 
 
@@ -301,6 +296,11 @@ def section(id_, title, content):
 
 
 def project_page(project,index):
+    if project['slug'] == 'birmingham-payments':
+        content = render_birmingham(project, PROJECTS[(index+1)%len(PROJECTS)], chart=chart, table=table, organisation=organisation, resources=resources)
+        copy = json.loads((ROOT/'site/birmingham.json').read_text())
+        emit('case-studies/birmingham-payments.html', document(copy['title'], copy['summary'], content, '../', styles=('finance.css',)))
+        return
     first_chart,second_chart=charts(project)
     metrics=''.join(f'<div class="metric"><strong>{e(v)}</strong><span>{e(label)}</span></div>' for v,label in project['metrics'])
     actions=''.join(f'<h3>{e(owner)}</h3>{paragraph(action)}' for owner,action in project['actions'])
