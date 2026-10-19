@@ -136,10 +136,4 @@
     document.fonts?.ready.then(measureSlides);
   }
 
-  document.querySelectorAll('[data-optional-image]').forEach(image => {
-    const hide = () => { image.closest('[data-image-container]').hidden = true; };
-    image.addEventListener('error', hide);
-    if (image.complete && image.naturalWidth === 0) hide();
-  });
-
 })();

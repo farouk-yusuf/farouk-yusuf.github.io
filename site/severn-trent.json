@@ -34,6 +34,5 @@
     ["Operations and asset planning", "Review the 13 observed high-spill sites reporting no improvement action. Check investigation status, local conditions and the current work programme before selecting interventions.", "A verified site-level explanation and an agreed next step, supported by engineering and environmental evidence."],
     ["Wastewater performance", "Reconcile the 21 missing spill counts, 11 new IDs, 18 removed IDs and two large increases before formal reporting.", "Each review item resolved or qualified in an approved exception log, with clear denominators."],
     ["Insight and modelling", "Validate the longer-term screening with local rainfall and event-level data; test sensitivity to the rainfall adjustment and screening thresholds.", "A documented assessment of whether site priorities remain stable under alternative assumptions."]
-  ],
-  "dashboard": "A planned Power BI report would separate the annual performance view from maintenance and high-spill exception lists. Filters could include year, river basin and asset type, with monitor-operation and missing-data flags visible. A site detail view should show reported activity beside spill counts. Any rainfall-adjusted measure must be labelled exploratory, with the model and cohort explained. No live dashboard is claimed."
+  ]
 }

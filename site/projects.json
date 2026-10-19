@@ -64,8 +64,6 @@
       "Supplier-number and personal-name details are deliberately excluded from the website."
     ],
     "reflection": "The useful output was a more selective review rule. A large exception count can look impressive while creating little practical value for the team expected to check it.",
-    "dashboard": "bcc-dashboard.png",
-    "dashboard_plan": "The completed Power BI report covers spending trends, the full matched-period supplier comparison and potential duplicate-payment review. Its three exported pages and PDF are available in the case study.",
     "report_url": "case-studies/birmingham-payments.html#report",
     "highlight": {
       "headline": "Explaining expenses and flagging payments for review",
@@ -145,8 +143,6 @@
       "Four extracted Ombudsman reports reconcile within one or two findings because a category label could not be read. The detailed decisions note records this limitation."
     ],
     "reflection": "Choosing a relevant comparison group changed the story. Platform was around the large-landlord average, while the measure-level gaps still gave the board specific issues to investigate.",
-    "dashboard": "",
-    "dashboard_plan": "A future Power BI view could combine peer benchmarking, measure-level gaps and a separate data-quality panel. Keep the 17-landlord TSM comparison distinct from the 21-landlord Ombudsman comparison.",
     "highlight": {
       "headline": "Comparing tenant satisfaction and identifying service priorities",
       "situation": "Platform’s overall satisfaction score offers a broad view of tenant experience, but conceals differences between services. Comparisons with smaller landlords can also distort its relative performance.",
@@ -224,8 +220,6 @@
       "The 2021 overflow-level totals differ from the EA summary by eight spills and seven hours; this small discrepancy is recorded in the data-quality log."
     ],
     "reflection": "A favourable headline needs the same scrutiny as a poor one. Better monitor coverage also changes what is observed, so I made that part of the interpretation rather than treating it as background detail.",
-    "dashboard": "",
-    "dashboard_plan": "The planned dashboard can separate annual context from site prioritisation: rainfall and monitoring coverage on one page, high-spill and repeat-monitor exceptions on another. Reconcile the 2025 low-uptime count before publishing it.",
     "highlight": {
       "headline": "Assessing sewage-spill reductions and prioritising sites for review",
       "situation": "Severn Trent reported fewer sewage spills in 2025, but lower rainfall may explain part of the improvement. Gaps in monitoring can also understate spills when sensors fail to record events.",
@@ -303,8 +297,6 @@
       "The models failed their back-test relative to the baseline. The outlook is a scenario, and the published milestones require checking against current planning guidance."
     ],
     "reflection": "Reporting that a simple baseline beat my models made the analysis more useful. A planning audience needs to understand the conditions under which an outlook might be wrong.",
-    "dashboard": "uhb-dashboard.png",
-    "dashboard_plan": "The planned Power BI report can cover milestones, starts and stops, specialty hotspots and scenario assumptions. Show the baseline model alongside the more complex forecasts so users can judge their value.",
     "highlight": {
       "headline": "Explaining waiting-list growth and assessing future pressure",
       "situation": "UHB improved its waiting-time performance by March 2026. By August, its waiting list had grown and fewer pathways met the 18-week standard.",

@@ -40,6 +40,5 @@
     ["Customer experience", "Test clearer updates and feedback follow-through with a defined tenant group.", "Compare survey feedback, repeat contacts and unresolved issues before and after the pilot; agree targets first."],
     ["Neighbourhood services", "Investigate communal-area satisfaction by estate and review cleaning and inspection records.", "A local issue list linked to inspection evidence, accountable owners and review dates."],
     ["Complaints and insight", "Review repairs-related findings and reconcile the Ombudsman extraction against the original reports.", "An agreed findings total, explained rate denominator and a verified set of recurring service themes."]
-  ],
-  "dashboard": "A planned Power BI view would show satisfaction and peer gaps by measure, with year and comparator-group filters. It should keep survey results, operational performance and Ombudsman outcomes on separate views, display cohort sizes and flag unresolved comparisons. Tenant-group or estate filters would require internal data; no dashboard or implemented service improvement is claimed."
+  ]
 }

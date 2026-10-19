@@ -36,7 +36,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `scripts/birmingham_story.py`: Birmingham page renderer; reads the committed Excel workbook, key-figures CSV, SQL results and department mapping code using the Python standard library.
 - `assets/css/finance.css`: shared evidence-led case-study layout, responsive HTML charts, requirements frameworks and disclosures for the four project pages.
 - `scripts/story_charts.py` and `assets/css/story-charts.css`: paired-dot comparisons, time-series and slope plots, count comparisons, rainfall scatter, stock-flow waterfall and back-test lines. Labels use HTML at a fixed readable font size; SVG draws the geometry only. Chart selection follows the analytical question rather than a default format.
-- `site/projects.json`: project copy, facts, limitations, dashboard plans and approved homepage STAR highlights.
+- `site/projects.json`: project copy, facts, limitations, report links and approved homepage STAR highlights.
 - `site/about.json`: the agreed homepage introduction and the personal/professional timeline, dated employment events and milestone labels. The MSc dissertation mark is 82; the MA quantitative-module mark is 75%.
 - `site/skills.json`: tool-slide names, icons and four business-focused capabilities per slide.
 - `site/templates/home.html`: homepage structure; edit this rather than generated HTML.
@@ -46,7 +46,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `assets/css/site.css`: shared layout, responsive styles, dark mode and print rules.
 - `assets/css/home.css`: compact homepage layout, tool slides and detailed project highlights.
 - `assets/css/journey.css` and `assets/js/journey.js`: the walking timeline, continuous scroll-driven poses, chapter controls and static reading layouts.
-- `assets/js/site.js`: progressive enhancements for theme choice, the tool carousel and optional dashboard images.
+- `assets/js/site.js`: progressive enhancements for theme choice and the tool carousel.
 - `index.html` and `case-studies/*.html`: generated pages committed for GitHub Pages. Update their source and rebuild rather than editing these files directly.
 
 ```sh
@@ -73,7 +73,7 @@ The current portrait is `assets/images/headshot.jpeg`, copied unchanged from the
 
 The prepared [GitHub profile README](github-profile/README.md) is separate from this repository's development documentation. Its [setup guide](github-profile/SETUP.md) explains the required public `farouk-yusuf/farouk-yusuf` repository and sidebar settings. Publishing this draft in the portfolio repository does not activate the GitHub profile panel.
 
-The Birmingham Power BI report is complete and presented as three static page previews and a downloadable PDF at `case-studies/birmingham-payments.html#report`. The gallery uses native HTML disclosures, real-text summaries, full-size image links and the complete supporting data download; it works without JavaScript. The original `assets/bcc-dashboard.png` path now contains its spending overview. Two further previews are in `assets/reports/`. The public export's payment-review scope caption and headings were corrected; see `projects/01_BCC_Payments/outputs/Birmingham_Payments_Report_Notes.md`. This does not change the source PBIX or create a live embed. UHB's Power BI report remains planned; retain `assets/uhb-dashboard.png` for a future supplied export.
+The portfolio has one Power BI report: Birmingham, presented as three static page previews and a downloadable PDF at `case-studies/birmingham-payments.html#report`. The gallery uses native HTML disclosures, real-text summaries, full-size image links and the complete supporting data download; it works without JavaScript. The original `assets/bcc-dashboard.png` path contains its spending overview. Two further previews are in `assets/reports/`. The public export's payment-review scope caption and headings were corrected; see `projects/01_BCC_Payments/outputs/Birmingham_Payments_Report_Notes.md`. This does not change the source PBIX or create a live embed. The other projects retain their analytical write-ups and supporting files without planned dashboard sections. General GitHub links point to Farouk's profile; project evidence links point to the relevant repository files.
 
 Logo provenance is documented in [assets/logos/README.md](assets/logos/README.md). Organisation names and marks identify the subjects of independent analysis and do not imply employment, affiliation or endorsement.
 

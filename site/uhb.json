@@ -34,6 +34,5 @@
     ["ENT and Ophthalmology leadership", "Review the 110 remaining 52+ week pathways alongside pathway stage, clinical priority and available appointments.", "A verified service-level review list and agreed actions; track long waits and completed pathways monthly."],
     ["Gynaecology and operational planning", "Investigate list growth, referral patterns, appointment supply and cancellations before proposing additional activity.", "An evidenced account of the pressure and an agreed plan with feasible activity assumptions."],
     ["Performance and planning", "Refresh the outlook monthly, retain the no-change baseline and test alternatives before using a model to set capacity targets.", "Back-test results reported alongside assumptions; explain forecast revisions and monitor errors."]
-  ],
-  "dashboard": "A planned Power BI report would separate trust trends, the starts/stops balance, specialty priorities and model validation. Filters could include month, specialty and comparator trust. It should show the residual beside the balance, label planning scenarios clearly and keep the baseline visible. Patient-level drill-through would require authorised internal data and access controls; it is outside this public portfolio."
+  ]
 }

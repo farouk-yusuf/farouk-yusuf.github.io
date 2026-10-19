@@ -103,7 +103,7 @@ def header(prefix=''):
 
 
 def footer(prefix=''):
-    return f'''<footer class="container site-footer"><p>© 2026 Farouk Yusuf · Birmingham, UK<br>Independent portfolio analyses of published data. Organisation names and marks identify the subjects of the analysis; no affiliation or endorsement is implied.</p><a href="https://github.com/farouk-yusuf/farouk-yusuf.github.io" target="_blank" rel="noopener">Source code ↗</a></footer>'''
+    return f'''<footer class="container site-footer"><p>© 2026 Farouk Yusuf · Birmingham, UK<br>Independent portfolio analyses of published data. Organisation names and marks identify the subjects of the analysis; no affiliation or endorsement is implied.</p><a href="https://github.com/farouk-yusuf" target="_blank" rel="noopener">GitHub ↗</a></footer>'''
 
 
 def document(title, description, content, prefix='', styles=()):

@@ -108,8 +108,6 @@ caption { text-align:left; font-weight:600; padding:10px 0; }
 .resource-list a:hover { border-color:var(--accent); }
 .resource-list small { color:var(--muted); font-size:.7rem; flex-shrink:0; }
 .next-project { border-top:1px solid var(--line); padding:35px 0 60px; display:flex; align-items:center; justify-content:space-between; gap:30px; }
-.dashboard-preview { background:var(--surface); border:1px solid var(--line); padding:18px; border-radius:8px; margin:20px 0; }
-.dashboard-preview img { display:block; width:100%; }
 @media (max-width:1000px) {
   .container { width:calc(100% - 48px); }
   .case-layout { grid-template-columns:150px minmax(0,1fr); gap:30px; }
