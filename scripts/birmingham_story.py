@@ -68,7 +68,8 @@ def report_gallery(report):
           <div class="report-page-body"><figure><img src="{e(image)}" alt="{e(page['alt'])}" width="2214" height="1269" loading="lazy" decoding="async"><figcaption>Power BI · PDF export · Page {index} of 3</figcaption></figure>
           <div class="report-page-links"><a href="{e(image)}" target="_blank" rel="noopener">Open full-size preview<span class="sr-only">: {e(page['title'])}</span> <span aria-hidden="true">↗</span></a><a href="{e(pdf)}#page={index}" target="_blank" rel="noopener">Open PDF page<span class="sr-only">: {e(page['title'])}</span> <span aria-hidden="true">↗</span></a></div></div>
         </details>''')
-    return p(report['intro'])+actions+'<div class="report-gallery">'+''.join(pages)+'</div><p class="report-coverage">'+e(report['coverage'])+'</p>'
+    interactive = f'''<div class="interactive-report"><h3>Explore the payments yourself</h3><p>Filter departments and spend categories, search the full supplier comparison, and examine all 281 potential duplicate pairs. The interactive web dashboard opens in your browser without a Microsoft sign-in.</p><a class="button" href="../{e(report['interactive'])}">Open interactive dashboard <span aria-hidden="true">↗</span></a></div>'''
+    return interactive+p(report['intro'])+actions+'<div class="report-gallery">'+''.join(pages)+'</div><p class="report-coverage">'+e(report['coverage'])+'</p>'
 
 
 def render(project, next_project, *, chart, table, organisation, resources):
@@ -137,7 +138,7 @@ def render(project, next_project, *, chart, table, organisation, resources):
     actions = table(['Action owner','Recommended action','Success measure'],copy['actions'],'Action plan and proposed success measures')
     section('actions', 'Recommended actions', actions+p(copy['delivery']))
 
-    section('report', 'Power BI report', report_gallery(copy['report']))
+    section('report', 'Interactive dashboard and Power BI report', report_gallery(copy['report']))
 
     limitations = '<details class="evidence"><summary>Scope and limitations</summary><div class="evidence-body"><ul><li>The publication covers payments over £500, rather than all council expenditure.</li><li>Cash payments are not budgets, commitments or full service costs.</li><li>Invoice references are absent; exceptions require internal verification.</li><li>35.4% of FY2025/26 payment value uses a generic PO-accrual category, limiting analysis by expenditure type.</li></ul></div></details>'
     supporting = resources(project)
@@ -149,7 +150,7 @@ def render(project, next_project, *, chart, table, organisation, resources):
     metrics = metric('21.3%','increase in net payments over matched dates')+metric('281','potential duplicate payment pairs · £4.45m')+metric('73','same-day pairs to investigate first')
     return f'''<main class="container finance-case" id="main">
       <div class="breadcrumb"><a href="../index.html#projects">Selected projects</a> / Local government</div>
-      <header class="finance-hero">{organisation(project,'../')}<span class="eyebrow">Expenditure analysis &amp; payment controls</span><h1>{e(copy['title'])}</h1><p class="lead">{e(copy['summary'])}</p><div class="finance-meta"><span>July 2024–23 July 2026</span><span>My role: independent analyst</span><div class="finance-tools">{tool_icons}</div></div><div class="actions"><a class="button" href="#report">View the Power BI report <span aria-hidden="true">↓</span></a><a class="text-link" href="../{e(copy['report']['pdf'])}" download>Download PDF <span aria-hidden="true">↓</span></a></div></header>
+      <header class="finance-hero">{organisation(project,'../')}<span class="eyebrow">Expenditure analysis &amp; payment controls</span><h1>{e(copy['title'])}</h1><p class="lead">{e(copy['summary'])}</p><div class="finance-meta"><span>July 2024–23 July 2026</span><span>My role: independent analyst</span><div class="finance-tools">{tool_icons}</div></div><div class="actions"><a class="button" href="../{e(copy['report']['interactive'])}">Open interactive dashboard <span aria-hidden="true">↗</span></a><a class="text-link" href="#report">View the Power BI report <span aria-hidden="true">↓</span></a></div></header>
       <aside class="scenario-note" aria-label="About this case study"><strong>About this case study</strong><p>{e(copy['scenario_note'])}</p></aside>
       <div class="finance-metrics" aria-label="Results at a glance">{metrics}</div>
       <div class="finance-layout"><nav class="finance-nav" aria-label="On this page"><strong>Follow the analysis</strong>{nav}</nav><div class="finance-content">{''.join(sections)}</div></div>

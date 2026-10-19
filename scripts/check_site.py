@@ -65,7 +65,7 @@ def main():
     assert len(about['milestones']) == 6, 'The journey should have six chapters'
     for chapter in about['milestones']:
         assert chapter['text'].strip(), f'Chapter is missing its approved copy: {chapter["date"]}'
-    paths = [ROOT/'index.html', *sorted((ROOT/'case-studies').glob('*.html'))]
+    paths = [ROOT/'index.html', *sorted((ROOT/'case-studies').glob('*.html')), *sorted((ROOT/'dashboards').glob('*.html'))]
     pages = {}
     for path in paths:
         page = Page(path)

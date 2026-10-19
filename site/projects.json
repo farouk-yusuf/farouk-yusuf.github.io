@@ -77,7 +77,8 @@
       "image": "local-government.svg",
       "image_alt": "Illustration of a civic building and financial reporting documents",
       "key_prefix": "Found"
-    }
+    },
+    "interactive_url": "dashboards/birmingham-payments.html"
   },
   {
     "slug": "platform-housing",

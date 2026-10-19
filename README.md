@@ -47,6 +47,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `assets/css/home.css`: compact homepage layout, tool slides and detailed project highlights.
 - `assets/css/journey.css` and `assets/js/journey.js`: the walking timeline, continuous scroll-driven poses, chapter controls and static reading layouts.
 - `assets/js/site.js`: progressive enhancements for theme choice and the tool carousel.
+- `dashboards/birmingham-payments.html`: standalone interactive web dashboard, adapted from the user's supplied Claude HTML, with embedded public-safe aggregates and no external runtime dependencies. See [dashboard notes](dashboards/README.md) for scope and validation.
 - `index.html` and `case-studies/*.html`: generated pages committed for GitHub Pages. Update their source and rebuild rather than editing these files directly.
 
 ```sh
@@ -74,6 +75,8 @@ The current portrait is the user's selected colour headshot, `assets/images/head
 The prepared [GitHub profile README](github-profile/README.md) is separate from this repository's development documentation. Its [setup guide](github-profile/SETUP.md) explains the required public `farouk-yusuf/farouk-yusuf` repository and sidebar settings. Publishing this draft in the portfolio repository does not activate the GitHub profile panel.
 
 The portfolio has one Power BI report: Birmingham, presented as three static page previews and a downloadable PDF at `case-studies/birmingham-payments.html#report`. The gallery uses native HTML disclosures, real-text summaries, full-size image links and the complete supporting data download; it works without JavaScript. The original `assets/bcc-dashboard.png` path contains its spending overview. Two further previews are in `assets/reports/`. The public export's payment-review scope caption and headings were corrected; see `projects/01_BCC_Payments/outputs/Birmingham_Payments_Report_Notes.md`. This does not change the source PBIX or create a live embed. The other projects retain their analytical write-ups and supporting files without planned dashboard sections. General GitHub links point to Farouk's profile; project evidence links point to the relevant repository files.
+
+Birmingham also has an [interactive web dashboard](dashboards/birmingham-payments.html), linked from its homepage project and case study. Its filters, charts, searchable supplier table and payment-review list run locally in the browser. This is a separate HTML implementation, not a Power BI embed; JavaScript is required for its interactions. Without it, links to the PDF and workbook remain available. Run `python3 scripts/check_bcc_dashboard.py` to reconcile its complete supplier, monthly and candidate-pair data to the validated workbook and test its browser interactions. Add `--source-csv /path/to/payments-to-suppliers-over-gbp500.csv` to reconcile its finer category, matched-month and agency aggregates to the original CSV too.
 
 Logo provenance is documented in [assets/logos/README.md](assets/logos/README.md). Organisation names and marks identify the subjects of independent analysis and do not imply employment, affiliation or endorsement.
 

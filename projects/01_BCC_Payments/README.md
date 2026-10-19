@@ -11,6 +11,13 @@ review-page caption, selected supplier view and static PDF coverage. The public
 export does not provide live Power BI filters; the complete data workbook is linked
 alongside it.
 
+The [interactive web dashboard](https://farouk-yusuf.github.io/dashboards/birmingham-payments.html)
+offers browser filters, charts, the full searchable supplier comparison and all 281
+candidate pairs without a Microsoft sign-in. It uses the same publication snapshot
+as the Power BI pack. It is a separate HTML implementation; the Power BI PDF remains
+available. [Implementation and reconciliation notes](../../dashboards/README.md)
+explain its additional category detail and privacy handling.
+
 Data: Birmingham City Council "Payments to Suppliers over £500", City Observatory (Open Government Licence), Jul 2024 to Jul 2026.
 
 - `scripts/01_clean.py` standardises directorates, suppliers and categories; pseudonymises individuals
