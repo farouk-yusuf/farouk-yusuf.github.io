@@ -4,6 +4,13 @@ The tasks a council finance or accounts-payable analyst would be given: monthly 
 
 **Start here:** `outputs/00_Management_Summary.md` and `outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx`
 
+The completed three-page [Power BI report PDF](outputs/Birmingham_Payments_PowerBI_Report.pdf)
+is also available as page previews in the [portfolio case study](https://farouk-yusuf.github.io/case-studies/birmingham-payments.html#report).
+Read [the export notes](outputs/Birmingham_Payments_Report_Notes.md) for the corrected
+review-page caption, selected supplier view and static PDF coverage. The public
+export does not provide live Power BI filters; the complete data workbook is linked
+alongside it.
+
 Data: Birmingham City Council "Payments to Suppliers over £500", City Observatory (Open Government Licence), Jul 2024 to Jul 2026.
 
 - `scripts/01_clean.py` standardises directorates, suppliers and categories; pseudonymises individuals

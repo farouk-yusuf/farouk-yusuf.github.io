@@ -13,7 +13,8 @@
     "tools": [
       "SQL",
       "Python",
-      "Excel"
+      "Excel",
+      "Power BI"
     ],
     "metrics": [
       [
@@ -64,7 +65,8 @@
     ],
     "reflection": "The useful output was a more selective review rule. A large exception count can look impressive while creating little practical value for the team expected to check it.",
     "dashboard": "bcc-dashboard.png",
-    "dashboard_plan": "The planned Power BI report can separate spend trends, supplier concentration and payment exceptions. Any public version should use aggregated controls data and exclude identifiers for individuals.",
+    "dashboard_plan": "The completed Power BI report covers spending trends, the full matched-period supplier comparison and potential duplicate-payment review. Its three exported pages and PDF are available in the case study.",
+    "report_url": "case-studies/birmingham-payments.html#report",
     "highlight": {
       "headline": "Explaining expenses and flagging payments for review",
       "situation": "Birmingham City Council’s published payment records show spending information, but changes in department names, repeated payment amounts and limited invoice details make it difficult to interpret how the money was spent.",

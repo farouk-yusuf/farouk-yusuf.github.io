@@ -56,6 +56,21 @@ def movement_bars(groups):
     return f'<p class="finance-axis-note"><span>Lower payments ←</span><span>→ Higher payments</span></p><ul class="finance-bars">{"".join(rows)}</ul>'
 
 
+def report_gallery(report):
+    """Native disclosures keep exported pages usable with keyboard and without JS."""
+    pdf = '../'+report['pdf']
+    actions = f'<div class="actions report-actions"><a class="button" href="{e(pdf)}" download>Download the Power BI report <span aria-hidden="true">↓</span></a><a class="text-link" href="{e("../"+report["data"])}" download>Download supporting data <span aria-hidden="true">↓</span></a><span class="report-format">PDF · 3 pages</span></div>'
+    pages = []
+    for index,page in enumerate(report['pages'],1):
+        image = '../'+page['image']
+        pages.append(f'''<details class="report-page"{' open' if index==1 else ''}>
+          <summary><span class="report-page-number" aria-hidden="true">{index:02d}</span><span class="report-page-label"><strong>{e(page['title'])}</strong><span>{e(page['summary'])}</span></span></summary>
+          <div class="report-page-body"><figure><img src="{e(image)}" alt="{e(page['alt'])}" width="2214" height="1269" loading="lazy" decoding="async"><figcaption>Power BI · PDF export · Page {index} of 3</figcaption></figure>
+          <div class="report-page-links"><a href="{e(image)}" target="_blank" rel="noopener">Open full-size preview<span class="sr-only">: {e(page['title'])}</span> <span aria-hidden="true">↗</span></a><a href="{e(pdf)}#page={index}" target="_blank" rel="noopener">Open PDF page<span class="sr-only">: {e(page['title'])}</span> <span aria-hidden="true">↗</span></a></div></div>
+        </details>''')
+    return p(report['intro'])+actions+'<div class="report-gallery">'+''.join(pages)+'</div><p class="report-coverage">'+e(report['coverage'])+'</p>'
+
+
 def render(project, next_project, *, chart, table, organisation, resources):
     copy = json.loads((ROOT/'site/birmingham.json').read_text())
     data = evidence_data()
@@ -122,17 +137,19 @@ def render(project, next_project, *, chart, table, organisation, resources):
     actions = table(['Action owner','Recommended action','Success measure'],copy['actions'],'Action plan and proposed success measures')
     section('actions', 'Recommended actions', actions+p(copy['delivery']))
 
+    section('report', 'Power BI report', report_gallery(copy['report']))
+
     limitations = '<details class="evidence"><summary>Scope and limitations</summary><div class="evidence-body"><ul><li>The publication covers payments over £500, rather than all council expenditure.</li><li>Cash payments are not budgets, commitments or full service costs.</li><li>Invoice references are absent; exceptions require internal verification.</li><li>35.4% of FY2025/26 payment value uses a generic PO-accrual category, limiting analysis by expenditure type.</li></ul></div></details>'
     supporting = resources(project)
     download = '<div class="actions"><a class="button" href="../projects/01_BCC_Payments/outputs/BCC_Spend_and_Payment_Controls_Pack.xlsx" download>Download the Excel finance pack <span aria-hidden="true">↓</span></a></div>'
-    section('files', 'Deliverables and supporting files', '<p>Inspect the completed workbook, management summary, requirements brief and decisions note, or follow the scripts from cleaning to reporting.</p>'+download+supporting+limitations+'<h3>Power BI · next reporting view</h3>'+p(copy['dashboard']))
+    section('files', 'Deliverables and supporting files', '<p>Inspect the completed workbook, management summary, requirements brief and decisions note, or follow the scripts from cleaning to reporting.</p>'+download+supporting+limitations)
 
     nav = ''.join(f'<a href="#{identifier}"><span aria-hidden="true">{i:02d}</span>{e(title)}</a>' for i,(identifier,title) in enumerate(headings,1))
-    tool_icons = ''.join(f'<span><img src="../assets/icons/{icon}" width="22" height="22" alt="">{name}</span>' for name,icon in [('Python','python.svg'),('SQL','sql.svg'),('Excel','excel.svg')])
+    tool_icons = ''.join(f'<span><img src="../assets/icons/{icon}" width="22" height="22" alt="">{name}</span>' for name,icon in [('Python','python.svg'),('SQL','sql.svg'),('Excel','excel.svg'),('Power BI','power-bi.svg')])
     metrics = metric('21.3%','increase in net payments over matched dates')+metric('281','potential duplicate payment pairs · £4.45m')+metric('73','same-day pairs to investigate first')
     return f'''<main class="container finance-case" id="main">
       <div class="breadcrumb"><a href="../index.html#projects">Selected projects</a> / Local government</div>
-      <header class="finance-hero">{organisation(project,'../')}<span class="eyebrow">Expenditure analysis &amp; payment controls</span><h1>{e(copy['title'])}</h1><p class="lead">{e(copy['summary'])}</p><div class="finance-meta"><span>July 2024–23 July 2026</span><span>My role: independent analyst</span><div class="finance-tools">{tool_icons}</div></div></header>
+      <header class="finance-hero">{organisation(project,'../')}<span class="eyebrow">Expenditure analysis &amp; payment controls</span><h1>{e(copy['title'])}</h1><p class="lead">{e(copy['summary'])}</p><div class="finance-meta"><span>July 2024–23 July 2026</span><span>My role: independent analyst</span><div class="finance-tools">{tool_icons}</div></div><div class="actions"><a class="button" href="#report">View the Power BI report <span aria-hidden="true">↓</span></a><a class="text-link" href="../{e(copy['report']['pdf'])}" download>Download PDF <span aria-hidden="true">↓</span></a></div></header>
       <aside class="scenario-note" aria-label="About this case study"><strong>About this case study</strong><p>{e(copy['scenario_note'])}</p></aside>
       <div class="finance-metrics" aria-label="Results at a glance">{metrics}</div>
       <div class="finance-layout"><nav class="finance-nav" aria-label="On this page"><strong>Follow the analysis</strong>{nav}</nav><div class="finance-content">{''.join(sections)}</div></div>

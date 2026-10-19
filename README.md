@@ -73,7 +73,7 @@ The current portrait is `assets/images/headshot.jpeg`, copied unchanged from the
 
 The prepared [GitHub profile README](github-profile/README.md) is separate from this repository's development documentation. Its [setup guide](github-profile/SETUP.md) explains the required public `farouk-yusuf/farouk-yusuf` repository and sidebar settings. Publishing this draft in the portfolio repository does not activate the GitHub profile panel.
 
-The dashboards are planned work. When ready, add `assets/bcc-dashboard.png` and `assets/uhb-dashboard.png`, then rebuild. The original paths are preserved. Missing previews are omitted at build time; if a published image subsequently fails, JavaScript hides its container. No dashboard or deployment is implied by a placeholder.
+The Birmingham Power BI report is complete and presented as three static page previews and a downloadable PDF at `case-studies/birmingham-payments.html#report`. The gallery uses native HTML disclosures, real-text summaries, full-size image links and the complete supporting data download; it works without JavaScript. The original `assets/bcc-dashboard.png` path now contains its spending overview. Two further previews are in `assets/reports/`. The public export's payment-review scope caption and headings were corrected; see `projects/01_BCC_Payments/outputs/Birmingham_Payments_Report_Notes.md`. This does not change the source PBIX or create a live embed. UHB's Power BI report remains planned; retain `assets/uhb-dashboard.png` for a future supplied export.
 
 Logo provenance is documented in [assets/logos/README.md](assets/logos/README.md). Organisation names and marks identify the subjects of independent analysis and do not imply employment, affiliation or endorsement.
 

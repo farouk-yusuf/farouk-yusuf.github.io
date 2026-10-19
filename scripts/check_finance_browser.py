@@ -5,6 +5,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import shutil
+import struct
 from threading import Thread
 
 from playwright.sync_api import sync_playwright
@@ -103,6 +104,34 @@ def main():
             assert 'transform("size") == 2' in page.locator('#duplicates pre').inner_text()
             assert 'the sum of both payments or a confirmed loss' in page.locator('#duplicates').inner_text()
             assert page.locator('#comparison tbody tr').count() == 5
+            report = page.locator('#report')
+            assert report.locator('.report-page').count() == 3
+            assert report.locator('.report-page[open]').count() == 1
+            assert 'Adult Social Care & Health is selected' in report.inner_text()
+            assert 'all 281 candidate pairs' in report.inner_text()
+            assert page.get_by_role('link',name='View the Power BI report',exact=True).get_attribute('href') == '#report'
+            for index,preview in enumerate(report.locator('.report-page').all()):
+                summary = preview.locator('summary')
+                summary.focus()
+                if index:
+                    page.keyboard.press('Enter')
+                assert preview.get_attribute('open') is not None
+                image = preview.locator('img')
+                image.scroll_into_view_if_needed()
+                page.wait_for_function('el=>el.complete && el.naturalWidth>0',arg=image.element_handle())
+                assert image.evaluate('(el)=>[el.naturalWidth,el.naturalHeight]') == [2214,1269]
+                image_response = page.request.get(base+image.get_attribute('src').removeprefix('../'))
+                assert image_response.ok
+                assert struct.unpack('>II',image_response.body()[16:24]) == (2214,1269)
+                assert preview.get_by_role('link',name='Open PDF page',exact=False).get_attribute('href').endswith(f'#page={index+1}')
+                page.keyboard.press('Escape')
+            with page.expect_download() as report_download:
+                report.get_by_role('link',name='Download the Power BI report',exact=False).click()
+            assert report_download.value.suggested_filename == 'Birmingham_Payments_PowerBI_Report.pdf'
+            assert Path(report_download.value.path()).read_bytes().startswith(b'%PDF')
+            with page.expect_download() as data_download:
+                report.get_by_role('link',name='Download supporting data',exact=False).click()
+            assert data_download.value.suggested_filename == 'BCC_PowerBI_Starter.xlsx'
             for link in page.locator('.finance-nav a').all():
                 target = link.get_attribute('href')
                 assert link.inner_text()[2:].strip() == page.locator(target+' h2').inner_text()
@@ -115,7 +144,7 @@ def main():
             assert download.value.suggested_filename == 'BCC_Spend_and_Payment_Controls_Pack.xlsx'
             for width in (1440,1024,768,390,320):
                 page.set_viewport_size({'width':width,'height':900})
-                for identifier in ('brief','data','comparison','spending','duplicates','actions','files'):
+                for identifier in ('brief','data','comparison','spending','duplicates','actions','report','files'):
                     page.locator('#'+identifier).scroll_into_view_if_needed()
                     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), (width,identifier)
                 # Charts stay legible at phone widths; only wide evidence tables scroll.
@@ -134,7 +163,10 @@ def main():
                 assert tab.locator('.framework-status--not-applicable').is_visible()
                 tab.locator('#duplicates .evidence summary').click()
                 assert tab.locator('#duplicates pre').is_visible()
-                assert tab.locator('.finance-section').count() == 9
+                assert tab.locator('.finance-section').count() == 10
+                tab.locator('#report').scroll_into_view_if_needed()
+                tab.locator('.report-page summary').nth(2).click()
+                assert tab.locator('.report-page-body').nth(2).is_visible()
                 assert tab.evaluate('document.documentElement.scrollWidth<=innerWidth')
                 context.close()
             browser.close()
@@ -142,7 +174,7 @@ def main():
     finally:
         server.shutdown()
         server.server_close()
-    print('Passed: workbook/CSV arithmetic; exact department mappings; headline-to-chart reconciliation; homepage entry; scenario label; requirements framework/statuses; separate dataset/owner columns; content-specific disclosures; matching navigation; keyboard evidence and chart tables; workbook download; five viewport sizes; readable mobile charts; dark/no-JS/reduced-motion layouts; no overflow or request/script errors.')
+    print('Passed: workbook/CSV arithmetic; exact department mappings; headline-to-chart reconciliation; homepage entry; scenario label; requirements framework/statuses; content-specific disclosures; matching navigation; keyboard evidence and chart tables; three report previews at full resolution; PDF/data/workbook downloads; five viewport sizes; readable mobile charts; dark/no-JS/reduced-motion report layouts; no overflow or request/script errors.')
 
 
 if __name__ == '__main__':

@@ -64,6 +64,10 @@
 .star-step dd { font-size:.85rem; line-height:1.7; color:var(--muted); margin:0; }
 .star-step--results dd { color:var(--ink); }
 .project-detail-link { display:inline-flex; align-items:center; gap:12px; font-size:.79rem; font-weight:650; margin-top:18px; min-height:30px; }
+.project-report-link { display:inline-flex; align-items:center; gap:8px; font-size:.79rem; font-weight:650; margin:18px 0 0 24px; min-height:30px; }
+@media (max-width:600px) {
+  .project-report-link { display:flex; width:fit-content; margin:10px 0 0; min-height:44px; }
+}
 .home-project-note { color:var(--muted); font-size:.7rem; margin-top:20px; }
 .home-contact { display:flex; justify-content:space-between; gap:45px; border-top:1px solid var(--line); padding-block:38px; }
 .home-contact .eyebrow { margin-bottom:8px; }

@@ -90,8 +90,33 @@
       "Document the assessment, publication changes and checks before the next release."
     ]
   ],
-  "delivery": "I produced a SQL reporting model, an Excel finance and payment-controls pack, a management summary and a data-quality log. These are completed analytical outputs; the council has not implemented or evaluated the recommendations as part of this portfolio project.",
-  "dashboard": "The Power BI dashboard will follow the same questions: expenditure trends, supplier and agency-staff concentration, and payment exceptions. Planned filters include reporting period, directorate and supplier. The Excel pack already contains the supporting measures and review tables.",
+  "delivery": "I produced a SQL reporting model, an Excel finance and payment-controls pack, a three-page Power BI report, a management summary and a data-quality log. The council has not implemented or evaluated the recommendations as part of this portfolio project.",
+  "report": {
+    "intro": "I built three Power BI views to explain payment changes, examine supplier movements and prioritise potential duplicates for invoice checks. Browse the exported pages below, open a page at full size or download the report.",
+    "pdf": "projects/01_BCC_Payments/outputs/Birmingham_Payments_PowerBI_Report.pdf",
+    "data": "projects/01_BCC_Payments/power-bi/BCC_PowerBI_Starter.xlsx",
+    "coverage": "The PDF captures the visible report views. The supporting data workbook contains the complete matched-period supplier comparison and all 281 candidate pairs; redacted individual accounts are pooled by department.",
+    "pages": [
+      {
+        "title": "Spending overview",
+        "image": "assets/bcc-dashboard.png",
+        "summary": "Net payments rose £118.82m, or 21.3%, over equivalent dates. City Operations had the largest increase.",
+        "alt": "Power BI spending overview with prior and current payment cards, a monthly line chart and a diverging department comparison."
+      },
+      {
+        "title": "Supplier movements",
+        "image": "assets/reports/birmingham-suppliers.png",
+        "summary": "Adult Social Care & Health is selected in this view, showing a £68.46m increase and its largest supplier payment movements.",
+        "alt": "Power BI supplier table showing payments in 2025 and 2026 and their changes for Adult Social Care and Health."
+      },
+      {
+        "title": "Payment review",
+        "image": "assets/reports/birmingham-payment-review.png",
+        "summary": "281 candidate pairs worth £4.45m, including 73 same-day pairs, require invoice checks. Coverage: July 2024–23 July 2026.",
+        "alt": "Power BI payment-review page with candidate counts, department and timing selectors, and a table of amounts and payment dates."
+      }
+    ]
+  },
   "requirements_intro": "I used my requirements elicitation framework to define two priorities: explain changes in cash expenditure across comparable periods, and provide Accounts Payable with a prioritised payment-exception list. Budget performance and outstanding commitments remained outside scope.",
   "requirements_summary": [
     [

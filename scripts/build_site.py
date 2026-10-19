@@ -126,11 +126,12 @@ def project_highlight(project, index):
             copy = 'Storm overflows can release sewage into rivers when the sewer system is overwhelmed. ' + copy
         steps.append(f'<div class="star-step star-step--{label.lower()}"><dt>{label}</dt><dd>{e(copy)}</dd></div>')
     tags = ''.join(f'<span class="tag">{e(tool)}</span>' for tool in project['tools'])
+    report_link = f'<a class="project-report-link" href="{e(project["report_url"])}">View Power BI report <span aria-hidden="true">↗</span></a>' if project.get('report_url') else ''
     return f'''<article class="project-highlight" aria-labelledby="project-{index}-title">
       <div class="project-art"><img class="sector-image" src="assets/illustrations/{e(highlight['image'])}" alt="{e(highlight['image_alt'])}" width="640" height="400" loading="lazy">
       <div class="project-art-footer"><span class="eyebrow">{e(project['sector'])}</span><div class="project-key">{('<span class="project-key-prefix">' + e(highlight['key_prefix']) + '</span>') if highlight.get('key_prefix') else ''}<strong>{e(highlight['key_figure'])}</strong><span>{e(highlight['key_label'])}</span></div><div class="tags">{tags}</div></div></div>
       <div class="project-narrative">{organisation(project)}<h3 id="project-{index}-title"><a href="case-studies/{project['slug']}.html">{e(highlight['headline'])}</a></h3>
-      <dl class="star-list">{''.join(steps)}</dl><a class="project-detail-link" href="case-studies/{project['slug']}.html">View analysis and supporting files <span aria-hidden="true">↗</span><span class="sr-only">: {e(project['organisation'])}</span></a></div>
+      <dl class="star-list">{''.join(steps)}</dl><a class="project-detail-link" href="case-studies/{project['slug']}.html">View analysis and supporting files <span aria-hidden="true">↗</span><span class="sr-only">: {e(project['organisation'])}</span></a>{report_link}</div>
     </article>'''
 
 

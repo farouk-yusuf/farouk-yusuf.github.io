@@ -9,6 +9,30 @@
 .finance-tools { display:flex; flex-wrap:wrap; gap:15px; }
 .finance-tools > span { display:flex; align-items:center; gap:6px; }
 .finance-tools img { width:20px; height:20px; object-fit:contain; }
+.report-actions { gap:16px 24px; }
+.report-format { color:var(--muted); font-size:.76rem; }
+.report-gallery { display:grid; gap:14px; margin:26px 0 18px; }
+.report-page { margin:0; min-width:0; border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.report-page > summary { display:grid; grid-template-columns:25px minmax(0,1fr) 10px; align-items:center; gap:14px; list-style:none; padding:20px; color:var(--ink); }
+.report-page > summary::-webkit-details-marker { display:none; }
+.report-page > summary::after { content:''; width:7px; height:7px; border-right:1.5px solid var(--accent); border-bottom:1.5px solid var(--accent); transform:rotate(45deg); }
+.report-page[open] > summary::after { transform:rotate(225deg); }
+.report-page-number { align-self:start; color:var(--accent); font-size:.76rem; padding-top:2px; font-variant-numeric:tabular-nums; }
+.report-page-label { display:grid; gap:7px; }
+.report-page-label > strong { font-family:var(--heading); font-weight:650; font-size:.98rem; }
+.report-page-label > span { color:var(--muted); font-weight:400; font-size:.8rem; line-height:1.65; }
+.report-page-body { padding:0 20px 18px; }
+.report-page-body img { display:block; width:100%; height:auto; border:1px solid var(--line); background:#fff; }
+.report-page-body figcaption { margin-top:10px; color:var(--muted); font-size:.73rem; }
+.report-page-links { display:flex; flex-wrap:wrap; gap:8px 24px; margin-top:6px; }
+.report-page-links a { display:inline-flex; align-items:center; gap:6px; min-height:44px; color:var(--accent); font-size:.78rem; font-weight:600; }
+.finance-section > .report-coverage { font-size:.8rem; line-height:1.7; }
+@media (max-width:600px) {
+  .report-page > summary { grid-template-columns:20px minmax(0,1fr) 8px; gap:10px; padding:16px 12px; }
+  .report-page-body { padding:0 12px 12px; }
+  .report-page-links { gap:0 18px; }
+  .report-actions .button { width:100%; }
+}
 .scenario-note { display:flex; align-items:baseline; gap:24px; padding:17px 20px; border-left:2px solid var(--chart-muted); background:var(--soft); font-size:.78rem; color:var(--muted); }
 .scenario-note > strong { flex-shrink:0; color:var(--ink); font-weight:600; }
 .finance-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; padding:30px 0 34px; border-bottom:1px solid var(--line); margin-bottom:38px; }
