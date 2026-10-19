@@ -149,8 +149,8 @@ def skills_carousel():
 
 
 def profile_picture():
-    portraits = [('assets/images/headshot.jpeg',400,400)]
-    portraits += [(f'assets/images/headshot-3.{extension}',400,500) for extension in ('jpg','jpeg','png','webp')]
+    portraits = [('assets/images/headshot-3.png',1086,1448),('assets/images/headshot.jpeg',400,400)]
+    portraits += [(f'assets/images/headshot-3.{extension}',400,500) for extension in ('jpg','jpeg','webp')]
     for filename,width,height in portraits:
         if (ROOT / filename).is_file():
             return f'<figure class="profile-picture"><img src="{filename}" alt="Farouk Yusuf" width="{width}" height="{height}" fetchpriority="high"><figcaption>Farouk Yusuf · Birmingham, UK</figcaption></figure>'
