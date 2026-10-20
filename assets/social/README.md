@@ -10,9 +10,11 @@ illustrations or synthetic dashboard screenshots are included.
 | `birmingham-dashboard.png` | Interactive Birmingham payments dashboard |
 | `birmingham-power-bi.png` | Power BI report PDF or Birmingham case study |
 | `nhs-waiting-times.png` | NHS waiting-times case study |
+| `platform-housing.png` | Platform Housing tenant satisfaction case study |
+| `severn-trent.png` | Severn Trent storm overflow case study |
 
 Download a PNG to use as a custom Featured thumbnail. The homepage, interactive
-dashboard, Birmingham case study and NHS case study also declare the appropriate
+dashboard and all four public-data case studies also declare the appropriate
 cover through Open Graph and Twitter metadata. Existing LinkedIn cards may retain
 a cached image; changing a site's metadata does not guarantee an existing card
 will refresh. A direct PDF link cannot declare HTML Open Graph metadata, so use
@@ -41,3 +43,7 @@ Organisation marks follow [the existing provenance notes](../logos/README.md).
 The NHS mark identifies the sector, not a UHB-specific logo. Covers explicitly
 identify the work as independent analysis of public data. Logos do not imply
 employment, commissioning or endorsement.
+
+Project covers use a larger logo above the organisation name. The portfolio grid
+also gives the logos more space. The NHS SVG's surrounding whitespace is cropped
+in CSS for clearer display; its mark, proportions and colours are unchanged.

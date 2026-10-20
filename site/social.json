@@ -17,6 +17,18 @@
     "image": "assets/social/birmingham-power-bi.png",
     "alt": "Birmingham City Council logo beside the actual Power BI spending overview, with payment cards and charts."
   },
+  "case-studies/platform-housing.html": {
+    "title": "Platform Housing | Tenant Satisfaction Benchmarking",
+    "description": "Explore 12 tenant satisfaction measures across a cohort of 17 housing associations, service priorities and data checks. Independent analysis by Farouk Yusuf.",
+    "image": "assets/social/platform-housing.png",
+    "alt": "Platform Housing Group logo beside an actual chart comparing tenant satisfaction with the peer median."
+  },
+  "case-studies/severn-trent.html": {
+    "title": "Severn Trent | Storm Overflow Performance and Monitoring",
+    "description": "Explore six years of storm overflow returns, monitoring failures and priorities for review. Independent analysis by Farouk Yusuf.",
+    "image": "assets/social/severn-trent.png",
+    "alt": "Severn Trent logo beside an actual chart of recorded storm overflow spills from 2020 to 2025."
+  },
   "case-studies/uhb-waiting-times.html": {
     "title": "NHS Waiting Times | Performance Analysis and Forecasting",
     "description": "Explore 41 monthly datasets across 23 specialties, waiting-list movements and forecast validation. Independent analysis by Farouk Yusuf.",
