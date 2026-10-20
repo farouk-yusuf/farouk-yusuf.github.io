@@ -1,0 +1,26 @@
+{
+  "index.html": {
+    "title": "Farouk Yusuf | Data Analysis Portfolio",
+    "description": "Four independent UK public-data projects. Explore the analysis, interactive dashboard, Power BI report, SQL queries and supporting workbooks.",
+    "image": "assets/social/portfolio.png",
+    "alt": "Farouk Yusuf data analysis portfolio with four organisation logos and real project charts."
+  },
+  "dashboards/birmingham-payments.html": {
+    "title": "Birmingham Payments | Interactive Dashboard",
+    "description": "Explore spending trends, search the complete supplier comparison and examine potential duplicate payment pairs. Independent analysis by Farouk Yusuf.",
+    "image": "assets/social/birmingham-dashboard.png",
+    "alt": "Birmingham City Council logo beside an actual screenshot of Farouk Yusuf's interactive payments dashboard."
+  },
+  "case-studies/birmingham-payments.html": {
+    "title": "Birmingham Payments | Analysis and Power BI Report",
+    "description": "Follow the expenditure analysis and payment checks, inspect the Power BI report and explore supporting evidence. Independent public-data project by Farouk Yusuf.",
+    "image": "assets/social/birmingham-power-bi.png",
+    "alt": "Birmingham City Council logo beside the actual Power BI spending overview, with payment cards and charts."
+  },
+  "case-studies/uhb-waiting-times.html": {
+    "title": "NHS Waiting Times | Performance Analysis and Forecasting",
+    "description": "Explore 41 monthly datasets across 23 specialties, waiting-list movements and forecast validation. Independent analysis by Farouk Yusuf.",
+    "image": "assets/social/nhs-waiting-times.png",
+    "alt": "NHS mark beside the actual 18-week performance chart from Farouk Yusuf's waiting-times analysis."
+  }
+}

@@ -47,6 +47,7 @@ Use the existing checkout. Cloud tasks are already isolated; do not create a Git
 - `assets/css/home.css`: compact homepage layout, tool slides and detailed project highlights.
 - `assets/css/journey.css` and `assets/js/journey.js`: the walking timeline, continuous scroll-driven poses, chapter controls and static reading layouts.
 - `assets/js/site.js`: progressive enhancements for theme choice and the tool carousel.
+- `site/social.json`, `scripts/social_preview.py` and `assets/social/`: link-preview titles, descriptions and covers for LinkedIn Featured. Covers use real project screenshots and existing organisation logos; [preparation notes](assets/social/README.md) explain rendering and cached previews.
 - `dashboards/birmingham-payments.html`: standalone interactive web dashboard, adapted from the user's supplied Claude HTML, with embedded public-safe aggregates and no external runtime dependencies. See [dashboard notes](dashboards/README.md) for scope and validation.
 - `index.html` and `case-studies/*.html`: generated pages committed for GitHub Pages. Update their source and rebuild rather than editing these files directly.
 

@@ -14,6 +14,7 @@ from birmingham_story import render as render_birmingham
 from housing_story import render as render_housing
 from water_story import render as render_water
 from nhs_story import render as render_nhs
+from social_preview import metadata as social_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = json.loads((ROOT / 'site/projects.json').read_text())
@@ -106,13 +107,15 @@ def footer(prefix=''):
     return f'''<footer class="container site-footer"><p>© 2026 Farouk Yusuf · Birmingham, UK<br>Independent portfolio analyses of published data. Organisation names and marks identify the subjects of the analysis; no affiliation or endorsement is implied.</p><a href="https://github.com/farouk-yusuf" target="_blank" rel="noopener">GitHub ↗</a></footer>'''
 
 
-def document(title, description, content, prefix='', styles=()):
+def document(title, description, content, prefix='', styles=(), page_path=None):
     home_styles = '<link rel="stylesheet" href="assets/css/home.css"><link rel="stylesheet" href="assets/css/journey.css"><script src="assets/js/journey.js" defer></script>' if not prefix else ''
     extra_styles = ''.join(f'<link rel="stylesheet" href="{prefix}assets/css/{e(style)}">' for style in styles)
+    preview = social_metadata(page_path)
+    preview = preview+'\n' if preview else ''
     return f'''<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)} | Farouk Yusuf</title><meta name="description" content="{e(description)}">
-<meta name="theme-color" content="#1b302b"><link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
+{preview}<meta name="theme-color" content="#1b302b"><link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{prefix}assets/css/site.css">{home_styles}{extra_styles}<script src="{prefix}assets/js/site.js" defer></script></head>
 <body>{header(prefix)}{content}{footer(prefix)}</body></html>\n'''.replace('↗', EXTERNAL_ARROW)
 
@@ -214,7 +217,7 @@ def home():
         projects=''.join(project_highlight(project, index) for index,project in enumerate(PROJECTS,1)),
         about=about_section(),
     )
-    emit('index.html', document('Data analyst portfolio', 'Farouk Yusuf: six years in academic and applied research, transitioning into commercial data analysis. Explore independent SQL, Python and Excel projects using UK public data.', content))
+    emit('index.html', document('Data analyst portfolio', 'Farouk Yusuf: six years in academic and applied research, transitioning into commercial data analysis. Explore independent SQL, Python and Excel projects using UK public data.', content, page_path='index.html'))
 
 
 def resources(project):
@@ -241,7 +244,7 @@ def project_page(project,index):
     renderer, filename = renderers[project['slug']]
     copy = json.loads((ROOT/'site'/filename).read_text())
     content = renderer(project,PROJECTS[(index+1)%len(PROJECTS)],chart=chart,table=table,organisation=organisation,resources=resources)
-    emit(f"case-studies/{project['slug']}.html",document(copy['title'],copy['summary'],content,'../',styles=('finance.css','story-charts.css')))
+    emit(f"case-studies/{project['slug']}.html",document(copy['title'],copy['summary'],content,'../',styles=('finance.css','story-charts.css'),page_path=f"case-studies/{project['slug']}.html"))
 
 
 def research():
